@@ -1,5 +1,7 @@
 package codehows.dream.nutritionpirates.entity;
 
+import java.sql.Date;
+
 import codehows.dream.nutritionpirates.constants.ProductName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,4 +55,11 @@ public class Order {
 
 	private boolean isShipping;
 
+	private Date orderDate;
+
+	private boolean invisible;
+
+	public void updateInvisible(boolean invisible) {
+		this.invisible = invisible;
+	}
 }

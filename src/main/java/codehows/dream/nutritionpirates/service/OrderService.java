@@ -1,17 +1,23 @@
 package codehows.dream.nutritionpirates.service;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import codehows.dream.nutritionpirates.constants.ProductName;
+import codehows.dream.nutritionpirates.dto.MesOrderDTO;
 import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.Orderer;
@@ -46,6 +52,7 @@ public class OrderService {
 	public void insert(MesOrderInsertDTO mesOrderInsertDTO) {
 		Orderer orderer = insertOrderer(mesOrderInsertDTO.getOrderName(), mesOrderInsertDTO.getOrderNumber());
 
+		Date nowDate = Date.valueOf(LocalDate.now());
 		//예상 납기일 계산
 
 		orderRepository.save(Order.builder()
@@ -55,20 +62,34 @@ public class OrderService {
 			.individual(mesOrderInsertDTO.isIndividual())
 			.urgency(mesOrderInsertDTO.isUrgency())
 			.expectedDeliveryDate(String.valueOf(LocalDate.now()))
+			.orderDate(nowDate)
+			.invisible(false)
 			.build());
+	}
+
+	private ProductName getProductName(String product) {
+		switch (product) {
+			case "양배추즙":
+				return ProductName.CABBAGE_JUICE;
+			case "흑마늘즙":
+				return ProductName.BLACK_GARLIC_JUICE;
+			case "매실스틱":
+				return ProductName.PLUM_JELLY_STICK;
+			case "석류스틱":
+				return ProductName.POMEGRANATE_JELLY_STICK;
+			default:
+				return null;
+		}
 	}
 
 	public void readExcel(MultipartFile excel) {
 		try {
 			// Directly create Workbook from MultipartFile input stream
-
 			Workbook workbook = new XSSFWorkbook(excel.getInputStream());
 			Sheet sheet = workbook.getSheetAt(0);
-
 			for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
 				Row row = sheet.getRow(i);
 				MesOrderInsertDTO mesOrderInsertDTO = new MesOrderInsertDTO();
-
 				for (int j = 0; j < 6; j++) {
 					String cellValue = row.getCell(j).toString();
 					switch (j) {
@@ -115,5 +136,34 @@ public class OrderService {
 			case "석류스틱" -> ProductName.POMEGRANATE_JELLY_STICK;
 			default -> null;
 		};
+	}
+
+	public List<MesOrderDTO> getOrderList(Pageable pageable) {
+		List<MesOrderDTO> list = new ArrayList<>();
+		Page<Order> pages = orderRepository.findAll(pageable);
+
+		pages.forEach((e) -> {
+			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
+			list.add(MesOrderDTO.builder()
+				.orderId(e.getId())
+				.ordererName(orderer.getName())
+				.orderDate(e.getOrderDate())
+				.expectedDeliveryDate(e.getExpectedDeliveryDate())
+				.product(e.getProduct().getValue())
+				.quantity(e.getQuantity())
+				.urgency(e.isUrgency())
+				.build());
+		});
+
+		return list;
+	}
+
+	public void cancelOrder(Long id) {
+		Order order = orderRepository.findById(id).orElse(null);
+		order.updateInvisible(true);
+	}
+
+	public List<Orderer> getOrderer() {
+		return ordererRepository.findAll();
 	}
 }

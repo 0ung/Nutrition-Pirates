@@ -6,6 +6,13 @@ public enum ProductName {
 	POMEGRANATE_JELLY_STICK("석류 스틱"),
 	PLUM_JELLY_STICK("매실 스틱");
 
-	ProductName(String s) {
+	private final String value;
+
+	ProductName(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
 	}
 }
