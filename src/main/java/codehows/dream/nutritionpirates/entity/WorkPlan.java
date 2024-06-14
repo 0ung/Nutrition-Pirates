@@ -2,7 +2,8 @@ package codehows.dream.nutritionpirates.entity;
 
 import java.sql.Date;
 
-import codehows.dream.dummy.constants.Facilitys;
+import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.Process;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,7 +52,7 @@ public class WorkPlan {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Facilitys facility;
+	private Facility facility;
 
 	//반제품
 	private String semiProduct;

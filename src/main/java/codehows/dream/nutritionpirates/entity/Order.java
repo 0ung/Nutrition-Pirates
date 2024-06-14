@@ -1,6 +1,6 @@
 package codehows.dream.nutritionpirates.entity;
 
-import codehows.dream.dummy.constants.ProductName;
+import codehows.dream.nutritionpirates.constants.ProductName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

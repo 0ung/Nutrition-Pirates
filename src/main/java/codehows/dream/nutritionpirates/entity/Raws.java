@@ -2,8 +2,8 @@ package codehows.dream.nutritionpirates.entity;
 
 import java.sql.Date;
 
-import codehows.dream.dummy.constants.RawProductName;
-import codehows.dream.dummy.constants.RawsReason;
+import codehows.dream.nutritionpirates.constants.RawProductName;
+import codehows.dream.nutritionpirates.constants.RawsReason;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
