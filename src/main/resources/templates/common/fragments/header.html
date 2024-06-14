@@ -1,0 +1,39 @@
+<!--사이드바-->
+
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="HeaderFragment">
+    <nav class="sidebarNav">
+        <div class="sidebar text-center align-center">
+            <div class="title-container">
+                <a href="/boardList">뉴트리션 해적단</a>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="/boardList">수주관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/boardManagement">원자재 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard">생산 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/userManagement">재고 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard2">출하 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/fileManagement">설비 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/fileManagement">LOT 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/fileManagement">시간 관리</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
