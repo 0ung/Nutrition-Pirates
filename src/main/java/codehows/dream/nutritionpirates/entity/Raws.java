@@ -9,12 +9,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Raws {
 
 	@Id
@@ -30,6 +31,7 @@ public class Raws {
 
 	@Column(nullable = false)
 	private int quantity;
+
 
 	//주문날짜
 	@Column(nullable = false)
@@ -50,4 +52,13 @@ public class Raws {
 
 	//사용기한
 	private Date deadLine;
+
+	@Builder
+	public Raws(String rawsCode,String partner, RawProductName product, int quantity, Date orderDate) {
+		this.rawsCode = rawsCode;
+		this.partner = partner;
+		this.product = product;
+		this.quantity = quantity;
+		this.orderDate = orderDate;
+	}
 }
