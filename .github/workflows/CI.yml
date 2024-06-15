@@ -19,7 +19,9 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-
+      - name: checkApplicationFile
+        run: cat ./src/test/resources/appliction_test.yml
+        
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
