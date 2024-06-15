@@ -1,11 +1,14 @@
 package codehows.dream.nutritionpirates.service;
 
-import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
+import codehows.dream.nutritionpirates.constants.ProductName;
+import codehows.dream.nutritionpirates.dto.MesOrderDTO;
+import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
+import codehows.dream.nutritionpirates.entity.Order;
+import codehows.dream.nutritionpirates.entity.Orderer;
+import codehows.dream.nutritionpirates.repository.OrderRepository;
+import codehows.dream.nutritionpirates.repository.OrdererRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -16,15 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import codehows.dream.nutritionpirates.constants.ProductName;
-import codehows.dream.nutritionpirates.dto.MesOrderDTO;
-import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
-import codehows.dream.nutritionpirates.entity.Order;
-import codehows.dream.nutritionpirates.entity.Orderer;
-import codehows.dream.nutritionpirates.repository.OrderRepository;
-import codehows.dream.nutritionpirates.repository.OrdererRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -166,4 +165,41 @@ public class OrderService {
 	public List<Orderer> getOrderer() {
 		return ordererRepository.findAll();
 	}
+
+	@Transactional
+	public Workbook getHistory() {
+		List<Order> list = orderRepository.findAll();
+		Workbook workbook = new XSSFWorkbook();
+
+		// Create a sheet with a name
+		Sheet sheet = workbook.createSheet(LocalDate.now() + " 주문 내역");
+
+		// Create header row
+		Row headerRow = sheet.createRow(0);
+		String[] headers = new String[]{"수주 번호", "발주처", "전화번호", "수주일", "제품명",
+				"수량", "개인", "긴급", "납품여부", "취소여부"};
+
+		for (int i = 0; i < headers.length; i++) {
+			headerRow.createCell(i).setCellValue(headers[i]);
+		}
+
+		// Fill data rows
+		for (int i = 1; i < list.size() + 1; i++) {
+			Row row = sheet.createRow(i);
+			Order data = list.get(i - 1);
+			Orderer orderer = ordererRepository.findById(data.getOrderer().getId()).orElse(null);
+			row.createCell(0).setCellValue(data.getId());
+			row.createCell(1).setCellValue(orderer != null ? orderer.getName() : "N/A");
+			row.createCell(2).setCellValue(orderer != null ? orderer.getPhoneNumber() : "N/A");
+			row.createCell(3).setCellValue(data.getOrderDate().toString());
+			row.createCell(4).setCellValue(data.getProduct().getValue());
+			row.createCell(5).setCellValue(data.getQuantity());
+			row.createCell(6).setCellValue(data.isIndividual());
+			row.createCell(7).setCellValue(data.isUrgency());
+			row.createCell(8).setCellValue(data.isShipping());
+			row.createCell(9).setCellValue(data.isIndividual());
+		}
+		return workbook;
+	}
+
 }
