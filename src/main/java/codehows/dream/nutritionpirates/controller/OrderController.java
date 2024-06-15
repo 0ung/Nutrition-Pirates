@@ -83,9 +83,13 @@ public class OrderController {
 		try {
 			Workbook workbook = orderService.getHistory();
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
 			String fileName = "수주 내역.xlsx";
-			String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8");
-			response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + encodedFileName);
+			String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+
+			// Set headers for different browsers
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+			response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
 
 			workbook.write(response.getOutputStream());
 			workbook.close();
@@ -95,5 +99,6 @@ public class OrderController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
 
 }
