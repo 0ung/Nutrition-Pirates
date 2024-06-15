@@ -24,7 +24,7 @@ jobs:
         run: ls -al
 
       - name: checkApplicationFile
-        run: cat src/test/resources/appliction_test.yml
+        run: cat src/test/resources/application_test.yml
         
       - name: Cache Gradle packages
         uses: actions/cache@v2
