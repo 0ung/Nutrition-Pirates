@@ -1,15 +1,14 @@
 package codehows.dream.nutritionpirates;
 
 import codehows.dream.nutritionpirates.constants.ProductName;
-import codehows.dream.nutritionpirates.controller.OrderController;
 import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
-import codehows.dream.nutritionpirates.entity.Orderer;
 import codehows.dream.nutritionpirates.service.OrderService;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -20,13 +19,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@WebMvcTest
 @TestPropertySource(locations = "classpath:application_test.yml")
 public class OrderControllerTest {
 
@@ -41,8 +40,10 @@ public class OrderControllerTest {
 	@BeforeEach
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+
 	}
 
+	@DisplayName("수주 데이터 입력")
 	@Test
 	void testInsertOrder() throws Exception {
 		MesOrderInsertDTO mesOrderInsertDTO = new MesOrderInsertDTO();
@@ -59,6 +60,7 @@ public class OrderControllerTest {
 				.andExpect(status().isCreated());
 	}
 
+	@DisplayName("수주 데이터 엑셀 입력")
 	@Test
 	void testReadExcel() throws Exception {
 		File file = new File("src/test/resources/testdata.xlsx");
@@ -70,17 +72,21 @@ public class OrderControllerTest {
 				.andExpect(status().isCreated());
 	}
 
+	@DisplayName("수주 데이터 페이지네이션")
 	@Test
 	void testGetList() throws Exception {
 		mockMvc.perform(get("/order/0"))
 				.andExpect(status().isOk());
 	}
 
+	@DisplayName("수주 취소")
 	@Test
 	void testCancelOrder() throws Exception {
 		mockMvc.perform(delete("/order/1"))
 				.andExpect(status().isOk());
 	}
+
+	@DisplayName("발주처 조회")
 
 	@Test
 	void testGetOrderer() throws Exception {
@@ -88,6 +94,7 @@ public class OrderControllerTest {
 				.andExpect(status().isOk());
 	}
 
+	@DisplayName("엑셀 다운로드")
 	@Test
 	void testGetExcel() throws Exception {
 		when(orderService.getHistory()).thenReturn(new XSSFWorkbook());
