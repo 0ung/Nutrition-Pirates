@@ -19,6 +19,10 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
+          
+      - name: checkApplicationFile
+        run: ls -al
+
       - name: checkApplicationFile
         run: cat ./src/test/resources/appliction_test.yml
         
