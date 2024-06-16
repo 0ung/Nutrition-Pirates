@@ -123,6 +123,18 @@ public class WorkPlanDuration {
 
     }
 
+    public double filterWaiting(int input) {
+        int max = Routing.FILTER_ROUTING;
+        double waitingTime = Routing.FILTER_WAITING_TIME;
+        return waitingCal(input, max, waitingTime);
+    }
+
+    public double sterilizationWaiting(int input) {
+        int max = Routing.STERILIZATION_ROUTING;
+        double waitingTime = Routing.STERILIZATION_WAITING_TIME;
+        return waitingCal(input, max, waitingTime);
+    }
+
     public double inspectionWaiting(int input) {
         int max = Routing.INSPECTION_ROUTING;
         double waitingTime = Routing.INSPECTION_WAITING_TIME;

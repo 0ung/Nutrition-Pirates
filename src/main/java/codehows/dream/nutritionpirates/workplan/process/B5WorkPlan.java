@@ -1,7 +1,6 @@
 package codehows.dream.nutritionpirates.workplan.process;
 
 import codehows.dream.nutritionpirates.entity.WorkPlan;
-import codehows.dream.nutritionpirates.workplan.WorkPlans;
 
 public class B5WorkPlan implements WorkPlans {
     @Override
@@ -12,5 +11,10 @@ public class B5WorkPlan implements WorkPlans {
     @Override
     public WorkPlan createWorkPlan() {
         return null;
+    }
+
+    @Override
+    public double expectTime(int input) {
+        return 0;
     }
 }

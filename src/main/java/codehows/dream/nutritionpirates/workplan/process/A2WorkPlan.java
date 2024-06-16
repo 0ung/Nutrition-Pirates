@@ -2,7 +2,6 @@ package codehows.dream.nutritionpirates.workplan.process;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
-import codehows.dream.nutritionpirates.workplan.WorkPlans;
 
 public class A2WorkPlan implements WorkPlans {
     @Override
@@ -11,7 +10,7 @@ public class A2WorkPlan implements WorkPlans {
     }
 
     @Override
-    public WorkPlan createWorkPlan() {
+    public WorkPlan createWorkPlan(int input) {
         return WorkPlan.builder()
                 .facility(Facility.weighing)
                 .build();

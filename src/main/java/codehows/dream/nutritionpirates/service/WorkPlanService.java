@@ -6,7 +6,7 @@ import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
 import codehows.dream.nutritionpirates.workplan.WorkPlanDuration;
 import codehows.dream.nutritionpirates.workplan.WorkPlanFactoryProvider;
-import codehows.dream.nutritionpirates.workplan.WorkPlans;
+import codehows.dream.nutritionpirates.workplan.process.WorkPlans;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
