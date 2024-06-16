@@ -5,8 +5,10 @@ import codehows.dream.nutritionpirates.dto.MesOrderDTO;
 import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.Orderer;
+import codehows.dream.nutritionpirates.entity.ProcessPlan;
 import codehows.dream.nutritionpirates.repository.OrderRepository;
 import codehows.dream.nutritionpirates.repository.OrdererRepository;
+import codehows.dream.nutritionpirates.repository.ProcessPlanRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,7 +35,7 @@ public class OrderService {
 
 	private final OrderRepository orderRepository;
 	private final OrdererRepository ordererRepository;
-
+	private final ProcessPlanService processPlanService;
 	public Orderer insertOrderer(String ordererName, String ordererNumber) {
 		Orderer orderer = ordererRepository.findByName(ordererName).orElse(null);
 		// 발주처가 있을때
@@ -52,9 +54,7 @@ public class OrderService {
 		Orderer orderer = insertOrderer(mesOrderInsertDTO.getOrderName(), mesOrderInsertDTO.getOrderNumber());
 
 		Date nowDate = Date.valueOf(LocalDate.now());
-		//예상 납기일 계산
-
-		orderRepository.save(Order.builder()
+		Order order = orderRepository.save(Order.builder()
 			.orderer(orderer)
 			.product(mesOrderInsertDTO.getProduct())
 			.quantity(mesOrderInsertDTO.getQuantity())
@@ -64,6 +64,11 @@ public class OrderService {
 			.orderDate(nowDate)
 			.invisible(false)
 			.build());
+
+		//검토가 먼저 일어나야겟지?
+
+		//생산계획 생성
+		processPlanService.createProcessPlan(order);
 	}
 
 	private ProductName getProductName(String product) {

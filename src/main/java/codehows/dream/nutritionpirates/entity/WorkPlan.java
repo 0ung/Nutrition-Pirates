@@ -15,12 +15,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class WorkPlan {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,18 +42,18 @@ public class WorkPlan {
 	@JoinColumn(name = "lotCode")
 	private LotCode lotCode;
 
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String worker;
 
 	private String processCompletionTime;
 
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private Date startTime;
 
 	private Date endTime;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private Facility facility;
 
 	//반제품
