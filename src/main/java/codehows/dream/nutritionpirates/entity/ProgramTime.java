@@ -15,4 +15,5 @@ import lombok.Setter;
 public class ProgramTime {
 	@Id
 	private Date currentProgramTime;
+
 }

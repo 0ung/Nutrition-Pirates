@@ -62,4 +62,8 @@ public class Order {
 	public void updateInvisible(boolean invisible) {
 		this.invisible = invisible;
 	}
+
+	public void updateExpectedDeliveryDate(String date) {
+		this.expectedDeliveryDate = date;
+	}
 }

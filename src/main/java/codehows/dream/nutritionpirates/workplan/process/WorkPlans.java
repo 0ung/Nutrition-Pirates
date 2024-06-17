@@ -5,6 +5,6 @@ import codehows.dream.nutritionpirates.workplan.WorkPlanDuration;
 
 public interface WorkPlans {
     final WorkPlanDuration WORK_PLAN_DURATION = new WorkPlanDuration();
-    void execute();
+    void execute(WorkPlan workPlan);
     WorkPlan createWorkPlan(int input);
 }

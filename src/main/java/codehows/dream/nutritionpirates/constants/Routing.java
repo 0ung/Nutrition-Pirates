@@ -51,7 +51,7 @@ public class Routing {
 
 	//혼합기 (cycle hour)
 	public static final int MIX_ROUTING = 60;
-	public static final double MIX_ROUTING_TIME = 1;
+	public static final double MIX_ROUTING_TIME = 8;
 	public static final double MIX_WAITING_TIME = 1;
 
 	public static final double FREEZE_TIME = 8;

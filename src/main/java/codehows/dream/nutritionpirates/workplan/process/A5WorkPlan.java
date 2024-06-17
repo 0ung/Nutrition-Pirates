@@ -1,6 +1,9 @@
 package codehows.dream.nutritionpirates.workplan.process;
 
+import static codehows.dream.nutritionpirates.workplan.process.CommonMethod.*;
+
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 
 public class A5WorkPlan implements WorkPlans {
@@ -10,15 +13,18 @@ public class A5WorkPlan implements WorkPlans {
     }
 
     @Override
-    public WorkPlan createWorkPlan() {
+    public WorkPlan createWorkPlan(int input) {
         return WorkPlan.builder()
-                .facility(Facility.sterilizer1).build();
+                .facility(Facility.sterilizer1)
+            .process(Process.A5)
+            .processCompletionTime(expectTime(input))
+            .semiProduct("즙 "+ input)
+            .build();
     }
 
-    @Override
-    public double expectTime(int input) {
+    public String expectTime(int input) {
         double executeTime = WORK_PLAN_DURATION.sterilizationDuration(input);
         double waitingTime = WORK_PLAN_DURATION.sterilizationWaiting(input);
-        return executeTime + waitingTime;
+        return getString(executeTime + waitingTime);
     }
 }
