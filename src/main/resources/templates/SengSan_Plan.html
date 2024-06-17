@@ -24,217 +24,89 @@
     <link href="/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
     <link href="/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
     <link href="/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
-    <link href="/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
+    <link href="/css/sengsan.css" type="text/css" rel="stylesheet" id="sengsan.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/order/orderer",
+            success: (response)=>{
+                response.forEach(
+                    (e)=>{
+                        console.log(e.id);
+                        console.log(e.name);
+                        console.log(e.phoneNumber);
+                    }
+                )
+            },
+            error: (error)=>{
+                console.log(error)
+            }
+        })
+    </script>
+
+    <style>
+
+        .sengsan_container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 200px;
+        }
+        .sengsan_choice {
+            width: 100%;
+            height: 50px;
+            margin-top: 10px;
+            background-color: #cccccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+            font-weight: bold;
+        }
+        .sengsan_choice + .sengsan_choice::before {
+            content: '';
+            width: 100%;
+            height: 1px;
+            background-color: black;
+            position: absolute;
+            top: -1px;
+            left: 0;
+        }
+        .steps-container {
+            display: flex;
+            width: 100%;
+        }
+
+        .steps {
+            flex: 1;
+        }
+
+        .steps:first-child {
+            flex: 0 0 20%;
+        }
+
+        .steps:last-child {
+            flex: 0 0 80%;
+        }
+        .steps_font{
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .active {
+            background-color: #2B2B2F;
+            color: white;
+        }
+
+
+    </style>
 </head>
-<style>
 
-    .centered {
-        display: flex; /* Flexbox 컨테이너로 설정 */
-        justify-content: center; /* 가로 방향 가운데 정렬 */
-        align-items: center; /* 세로 방향 가운데 정렬 */
-    }
-
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        margin: 1rem auto;
-        background-color: white;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #1b1b1b;
-        color: #ddd;
-    }
-
-    tbody tr:hover {
-        background-color: #d3d3d3;
-        cursor: pointer;
-    }
-
-    /* Adjust column widths */
-    th:nth-child(1),
-    td:nth-child(1) {
-        width: 5%; /* Adjusted for 번호 */
-    }
-
-    th:nth-child(2),
-    td:nth-child(2) {
-        width: 15%; /* Adjusted for 발주처 */
-    }
-
-    th:nth-child(3),
-    td:nth-child(3) {
-        width: 15%; /* Adjusted for 제품명 */
-    }
-
-    th:nth-child(4),
-    td:nth-child(4) {
-        width: 10%; /* Adjusted for 수량(BOX) */
-    }
-
-    th:nth-child(5),
-    td:nth-child(5) {
-        width: 10%; /* Adjusted for 수주일 */
-    }
-
-    th:nth-child(6),
-    td:nth-child(6) {
-        width: 10%; /* Adjusted for 예상 납기일 */
-    }
-
-    th:nth-child(7),
-    td:nth-child(7) {
-        width: 10%; /* Adjusted for 공정 상태 */
-    }
-
-    th:nth-child(8),
-    td:nth-child(8),
-    th:nth-child(9),
-    td:nth-child(9) {
-        width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
-    }
-
-    .search-container {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: linear-gradient(to right, #5c5c5c, #f5f5f5);
-        padding: 30px;
-        border-radius: 15px;
-        transition: background 0.3s ease;
-        perspective: 1000px;
-    }
-
-    .label {
-        position: absolute;
-        top: 50%;
-        left: 20px;
-        transform: translateY(-50%);
-        color: #999;
-        pointer-events: none;
-        transition: transform 0.3s ease, font-size 0.3s ease, color 0.3s ease,
-        text-shadow 0.3s ease;
-    }
-
-    .search-input {
-        position: relative;
-        width: 230px;
-        height: 40px;
-        padding: 12px;
-        border: 2px solid #ccc;
-        border-radius: 8px;
-        background: linear-gradient(to right, #d9d9d9, #f8f8f8);
-        font-size: 16px;
-        color: #555;
-        outline: none;
-        transition: box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease,
-        border-color 0.3s ease, transform 0.3s ease;
-        transform-style: preserve-3d;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow for a realistic feel */
-    }
-
-    .search-input:focus,
-    .search-input:not(:placeholder-shown) {
-        border-color: #4caf50;
-        background: linear-gradient(to right, #c2f0c2, #f0f0f0);
-        transform: rotateX(20deg);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on focus */
-    }
-
-    .search-input:focus + .label,
-    .search-input:not(:placeholder-shown) + .label {
-        transform: translateY(-120%) scale(0.8);
-        font-size: 12px;
-        color: #4caf50;
-        text-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
-    }
-
-    .search-input:hover {
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on hover */
-        background: linear-gradient(to right, #e6e6e6, #f9f9f9);
-        border-color: #999;
-    }
-
-    .clear-button {
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-        color: #999;
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
-    }
-
-    .clear-button:hover {
-        color: #4caf50;
-        transform: scale(1.1);
-    }
-
-    .search-input:not(:focus):not(:placeholder-shown) + .clear-button {
-        opacity: 1;
-    }
-
-    .shine {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0.6),
-                transparent
-        );
-        border-radius: 8px;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .search-input:focus + .shine {
-        opacity: 1;
-    }
-
-    .search-icon {
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-        color: #999;
-        cursor: pointer;
-        transition: color 0.3s ease, transform 0.3s ease, filter 0.3s ease;
-        border-radius: 50%;
-    }
-
-    .search-input:focus + .search-icon {
-        color: #4caf50;
-        transform: translateY(-50%) scale(1.1);
-        filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.6));
-    }
-
-    @keyframes inputPulse {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-    }
-
-    .search-input:focus {
-        animation: inputPulse 0.5s ease;
-    }
-
-</style>
 
 <body>
 <!-- ===============================================-->
@@ -510,61 +382,60 @@
     <!--------------------->
     <!----  Main Start ---->
     <!--------------------->
+    <div id="myModal" class="modal" >
+        <div class="modal-content">
+            <h2 style="color: #0acf83">작업자 기입 </h2>
+            <hr>
+
+            <input type="text" class="text_input" placeholder="Type Your Name">
+            <button class="button" onclick="nextStep()">다음</button>
+        </div>
+    </div>
 
 
     <div class="content">
         <div class="container">
-            <div class="card2 cart">
-                <label class="title_form">발주처 조회
-                    <span style="margin-left: 75%">
-                <input type="text" id="search-input" class="search-input" placeholder="Search..." />
-                    </span>
+            <div class="card cart">
+                <label class="title_form">생산 계획
+                    <span style="margin-left: 76%"></span>
                 </label>
+                <div class="steps-container">
+                    <div class="steps" style="    border-right: 1px solid rgba(16, 86, 82, .75);">
+                        <div class="sengsan_container">
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">포장기</div>
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)" id="추출기">추출기</div>
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">살균기</div>
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">혼합기</div>
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">여과기</div>
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">BOX 포장기</div>
+                            <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">금속 검출기</div>
+                        </div>
 
-                <div class="steps">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>발주처</th>
-                            <th>전화번호</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1번</td>
-                            <td>김철수</td>
-                            <td>010-1234-5678</td>
+<!--                        선택된것 확인용 -->
+                        <div class="status" id="status">선택된 항목이 없습니다.</div>
+                    </div>
+                    <div class="steps steps_font">
 
-                        </tr>
-                        <tr>
-                            <td>2번</td>
-                            <td>김백수</td>
-                            <td>010-1234-5678</td>
+                        수주번호 / 안전재고 :  ${ Number }<br>
+                        공정 : ${ Process }<br>
+                        원자재 투입량 : ${ raws }<br>
+                        LOT 번호 : ${ LOT Number } <br>
+                        진행률 : ${ Progress } <br>
+                        공정완료시간 : ${ Finish Time } <br>
+                        다음 공정 준비 : ${ Next  } <br>
 
-                        </tr>
-                        <tr>
-                            <td>3번</td>
-                            <td>홍길동</td>
-                            <td>010-1234-5678</td>
-
-                        </tr>
-                        <tr>
-                            <td>4번</td>
-                            <td>아무개</td>
-                            <td>010-1234-5678</td>
-
-                        </tr>
-                        </tbody>
-                    </table>
+                    </div>
                 </div>
-
-                <div class="centered">
-                    <p> [1] [2] [3] [4] [5] </p>
+                <div class="card checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn" onclick="showModal()" id="startButton"> 공정시작</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </main>
 <!-- ===============================================-->
 <!--    End of Main Content-->
@@ -574,6 +445,65 @@
 <!-- ===============================================-->
 <!--    JavaScripts-->
 <!-- ===============================================-->
+<script>
+</script>
+
+<script>
+
+
+    function sengsan_selectChoice(element) {
+        // 모든 .choice 클래스의 요소를 선택
+        const choices = document.querySelectorAll('.sengsan_choice');
+        let isWorking = true;
+        // 모든 요소에서 .active 클래스를 제거
+        choices.forEach(choice => {
+            choice.classList.remove('active');
+        });
+        if (element.innerText == "혼합기" || element.innerText == "여과기" || element.innerText == "BOX 포장기" ){
+            isWorking = false;
+        }
+        // 클릭된 요소에 .active 클래스 추가
+        element.classList.add('active');
+        // 선택된 항목 상태를 업데이트
+        const status = document.getElementById('status');
+        status.innerText = `${element.innerText} 선택됨.`;
+
+        // Enable or disable start button based on active choice
+        const startButton = document.getElementById('startButton');
+        startButton.disabled = false; // Enable button by default
+
+        // 클릭된것이 실행되는중이면 버튼 클릭안되게
+        choices.forEach(choice => {
+            if (!isWorking) {
+                return; //
+            }
+            else{
+                // If no active choice, disable the start button
+                startButton.disabled = true;
+            }
+        });
+    }
+
+    function nextStep() {
+        alert('다음 단계로 진행합니다.');
+        closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
+    }
+    function closeModal() {
+        document.getElementById('myModal').style.display = "none";
+    }
+
+    function showModal() {
+        document.getElementById('myModal').style.display = "block";
+    }
+
+    // Close modal if clicked outside
+    window.onclick = function(event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
 <script src="/js/popper/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
 <script src="/js/anchorjs/anchor.min.js"></script>
