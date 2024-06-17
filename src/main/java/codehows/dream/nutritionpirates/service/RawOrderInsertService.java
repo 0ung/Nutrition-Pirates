@@ -2,12 +2,16 @@ package codehows.dream.nutritionpirates.service;
 
 
 import codehows.dream.nutritionpirates.constants.RawProductName;
+import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.RawOrderInsertDTO;
 import codehows.dream.nutritionpirates.dto.RawOrderPlanDTO;
+import codehows.dream.nutritionpirates.dto.RawsListDTO;
 import codehows.dream.nutritionpirates.entity.Raws;
 import codehows.dream.nutritionpirates.repository.RawOrderInsertRepository;
+import codehows.dream.nutritionpirates.repository.RawOrderPlanRepository;
+import codehows.dream.nutritionpirates.repository.RawStockRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,21 +30,75 @@ import java.util.List;
 public class RawOrderInsertService {
 
     private final RawOrderInsertRepository rawOrderInsertRepository;
+    private final RawOrderPlanRepository rawOrderPlanRepository;
+    private final RawStockRepository rawStockRepository;
+
     public void insert(RawOrderInsertDTO rawOrderInsertDTO) {
 
+        validateQuantity(rawOrderInsertDTO);
         Date date = Date.valueOf(LocalDate.now());
 
         String rawsCode = createRawsCodes(rawOrderInsertDTO);
-
         Raws raws = Raws.builder()
                 .product(rawOrderInsertDTO.getProduct())
                 .rawsCode(rawsCode)
                 .quantity(rawOrderInsertDTO.getQuantity())
                 .partner(rawOrderInsertDTO.getPartner())
                 .orderDate(date)
+                .status(Status.WAITING)
                 .build();
 
         rawOrderInsertRepository.save(raws);
+    }
+
+    public void validateQuantity(RawOrderInsertDTO rawOrderInsertDTO) {
+        int quantity = rawOrderInsertDTO.getQuantity();
+        RawProductName product = rawOrderInsertDTO.getProduct();
+
+        switch (product) {
+            case CABBAGE:
+            case BLACK_GARLIC:
+                if (quantity < 100 || quantity > 2000) {
+                    throw new IllegalArgumentException("Quantity for " + product.getValue() + "100에서 2000 주문");
+                }
+                break;
+            case POMEGRANATE:
+            case PLUM:
+            case COLLAGEN:
+                if (quantity < 20 || quantity > 200) {
+                    throw new IllegalArgumentException("Quantity for " + product.getValue() + "20에서 200 주문");
+                }
+                break;
+            case HONEY:
+                if (quantity < 1 || quantity > 200) {
+                    throw new IllegalArgumentException("Quantity for " + product.getValue() + "1에서 200 주문");
+                }
+                break;
+            case WRAPPING_PAPER:
+                if (quantity < 10000 || quantity > 100000) {
+                    throw new IllegalArgumentException("Quantity for " + product.getValue() + "10000에서 100000 주문");
+                }
+                break;
+            case BOX:
+                if (quantity < 1000 || quantity > 10000) {
+                    throw new IllegalArgumentException("Quantity for " + product.getValue() + "1000에서 10000 주문");
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("상품명 오류 " + product.getValue());
+        }
+    }
+    public void rawImport (String rawsCode) {
+
+        Raws raw = rawStockRepository.findByRawsCode(rawsCode).orElse(null);
+        raw.rawImport();
+        rawStockRepository.save(raw);
+    }
+
+    public void rawExport(String rawsCode) {
+        Raws raw = rawStockRepository.findByRawsCode(rawsCode).orElse(null);
+        raw.rawExport();
+        rawStockRepository.save(raw);
     }
 
     private RawProductName getRawProductName(String Raw) {
@@ -81,6 +138,8 @@ public class RawOrderInsertService {
         return rawsCode;
     }
 
+
+
     private String getRaws(RawProductName productName){
         String code;
         switch (productName) {
@@ -114,6 +173,44 @@ public class RawOrderInsertService {
         return code;
     }
 
+    public List<RawOrderPlanDTO> getRawOrderList(Pageable pageable) {
+
+        List<RawOrderPlanDTO> list = new ArrayList<>();
+
+        Page<Raws> pages = rawOrderPlanRepository.findAll(pageable);
+
+        pages.forEach((e) -> {
+
+            list.add(RawOrderPlanDTO.builder()
+                    .partner(e.getPartner())
+                    .product(e.getProduct().getValue())
+                    .quantity(e.getQuantity())
+                    .expectedImportDate(e.getExpectedImportDate())
+                    .build());
+        });
+
+        return list;
+    }
+
+    public List<RawsListDTO> getRawStockList(Pageable pageable) {
+
+        List<RawsListDTO> list = new ArrayList<>();
+
+        Page<Raws> pages = rawStockRepository.findAll(pageable);
+
+        pages.forEach((e) -> {
+
+            list.add(RawsListDTO.builder()
+                    .rawsCode(e.getRawsCode())
+                    .status(e.getStatus().getValue())
+                    .product(e.getProduct().getValue())
+                    .importDate(e.getImportDate())
+                    .quantity(e.getQuantity())
+                    .rawsReason(e.getRawsReason()!= null ? e.getRawsReason().getValue() : "")
+                    .build());
+        });
+        return list;
+    }
 
 
 }

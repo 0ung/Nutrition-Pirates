@@ -1,9 +1,11 @@
 package codehows.dream.nutritionpirates.entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.RawsReason;
+import codehows.dream.nutritionpirates.constants.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,11 +13,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import static codehows.dream.nutritionpirates.constants.Status.WAITING;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Raws {
 
 	@Id
@@ -53,12 +58,18 @@ public class Raws {
 	//사용기한
 	private Date deadLine;
 
-	@Builder
-	public Raws(String rawsCode,String partner, RawProductName product, int quantity, Date orderDate) {
-		this.rawsCode = rawsCode;
-		this.partner = partner;
-		this.product = product;
-		this.quantity = quantity;
-		this.orderDate = orderDate;
+	// 입고 상태 출고 상태 입고 대기 상태
+	@Enumerated(EnumType.STRING)
+	private Status status;
+
+	public void rawImport() {
+		this.importDate = Date.valueOf(LocalDate.now());
+		this.status = status.IMPORT;
+	}
+
+	public void rawExport() {
+		this.exportDate = Date.valueOf(LocalDate.now());
+		this.status = status.EXPORT;
+		this.rawsReason = rawsReason.DISPOSE;
 	}
 }

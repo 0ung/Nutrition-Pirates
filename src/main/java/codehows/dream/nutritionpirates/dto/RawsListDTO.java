@@ -1,7 +1,6 @@
 package codehows.dream.nutritionpirates.dto;
 
 
-import codehows.dream.nutritionpirates.constants.RawProductName;
 import lombok.*;
 
 import java.sql.Date;
@@ -11,12 +10,14 @@ import java.sql.Date;
 @Getter
 @Setter
 @Builder
-public class RawOrderPlanDTO {
+public class RawsListDTO {
 
-    private String partner;
+    private String rawsCode;
     private String product;
+    private String status;
+    private Date importDate;
+    private Date exportDate;
     private int quantity;
-    private Date expectedImportDate;
+    private String rawsReason;
+
 }
-
-
