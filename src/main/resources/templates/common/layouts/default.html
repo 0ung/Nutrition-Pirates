@@ -3,17 +3,33 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
-
-<!--<th:block th:replace="common/fragments/config :: ConfigFragment"/>-->
+<head>
+    <meta charset="UTF-8">
+    <title>기본 레이아웃</title>
+    <th:block th:replace="common/fragments/config :: ConfigFragment"/>
+    <style>
+        body{
+            background-color: #222831;
+           /* color: #ffffff; !* 흰색 텍스트 *!*/
+            font-family: Arial, sans-serif; /* 폰트 설정 */
+            line-height: 1.6; /* 줄 간격 조정 */
+        }
+    </style>
+</head>
 
 <body>
-<header th:replace="common/fragments/header :: HeaderFragment"></header>
-
-<div style="margin-top: 2rem;">
-    <th:block layout:fragment="Content"></th:block>
+<!-- 헤더 영역 -->
+<div class="header">
+    <th:block  th:replace="common/fragments/header :: HeaderFragment"/>
 </div>
-</body>
+
+<!-- 본문 영역 -->
+<div class="content">
+    <th:block layout:fragment="Content"/>
+</div>
+
+<!-- 푸터 영역 (필요에 따라 주석 해제) -->
 <!--<footer th:replace="common/fragments/footer :: FooterFragment"></footer>-->
+</body>
 
 </html>

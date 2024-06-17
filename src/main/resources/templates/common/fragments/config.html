@@ -1,19 +1,31 @@
 
-<head xmlns:th="http://www.thymeleaf.org"
+<div xmlns:th="http://www.thymeleaf.org"
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 th:fragment="ConfigFragment">
-    <!--Common Head-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport"
-          content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0"/>
 
-    <title></title>
+    <!--
 
+   레이아웃 설정
+
+   -->
     <link rel="stylesheet" type="text/css" href="/css/header.css">
-    <link rel="stylesheet" type="text/css" href="/css/footer.css">
-   <!-- <link rel="stylesheet" type="text/css" href="/css/body.css">-->
+    <link rel="stylesheet" type="text/css" href="/css/content.css">
+
+    <!--
+
+   몰?루
+
+   -->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
+    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+    <link href="../static/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="../static/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
 
     <!--Common JS-->
     <script th:inline="javascript" type="text/javascript" th:src="@{/js/jquery-3.7.1.min.js}"></script>
@@ -25,7 +37,13 @@ th:fragment="ConfigFragment">
     <!--Common Bootstrap-->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <th:block layout:fragment="script"></th:block>
     <th:block layout:fragment="css"></th:block>
-</head>
+
+</div>
