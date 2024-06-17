@@ -3,6 +3,11 @@ server:
 
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 100MB
+      max-file-size: 10MB
   application:
     name: MES
   datasource:
@@ -19,3 +24,4 @@ spring:
       ddl-auto: validate
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+
