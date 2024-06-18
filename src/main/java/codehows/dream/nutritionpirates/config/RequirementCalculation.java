@@ -1,6 +1,7 @@
 package codehows.dream.nutritionpirates.config;
 
 import codehows.dream.nutritionpirates.constants.ProductName;
+import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 
 public class RequirementCalculation {
@@ -19,8 +20,7 @@ public class RequirementCalculation {
         }
 
     }
-
-    private void garlicJuiceBOMCal(int quantity){
+    private RawBOMDTO garlicJuiceBOMCal(int quantity){
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 30 / 0.97)*133.33)/1000);
         double garlic = Math.ceil(quantity1);
         System.out.println(garlic);
@@ -30,12 +30,14 @@ public class RequirementCalculation {
         System.out.println(honey);
 
         double paper = Math.ceil(quantity*30/0.97);
-        double box = Math.ceil(quantity*30/0.97);
+        double box = Math.ceil(quantity/0.97);
         System.out.println(paper);
         System.out.println(box);
+
+        return new RawBOMDTO (garlic,honey, paper, box);
     }
 
-    private void cabbageJuiceBOMCal(int quantity){
+    private RawBOMDTO cabbageJuiceBOMCal(int quantity){
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 30 / 0.97)*133.33)/1000);
         double cabbage = Math.ceil(quantity1);
         System.out.println(cabbage);
@@ -45,14 +47,15 @@ public class RequirementCalculation {
         System.out.println(honey);
 
         double paper = Math.ceil(quantity*30/0.97);
-        double box = Math.ceil(quantity*30/0.97);
+        double box = Math.ceil(quantity/0.97);
         System.out.println(paper);
         System.out.println(box);
 
+        return new RawBOMDTO (cabbage,honey, paper, box);
 
     }
 
-    private void pomegranateStickBOMCal(int quantity){
+    private RawBOMDTO pomegranateStickBOMCal(int quantity){
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 25 / 0.97)*5)/1000) ;
         double pomegranate = Math.ceil(quantity1);
         System.out.println(pomegranate);
@@ -62,12 +65,14 @@ public class RequirementCalculation {
         System.out.println(collagen);
 
         double paper = Math.ceil(quantity*25/0.97);
-        double box = Math.ceil(quantity*25/0.97);
+        double box = Math.ceil(quantity/0.97);
         System.out.println(paper);
         System.out.println(box);
+
+        return new RawBOMDTO (pomegranate,collagen, paper, box);
     }
 
-    private void plumStickBOMCal(int quantity){
+    private RawBOMDTO plumStickBOMCal(int quantity){
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 25 / 0.97)*5)/1000) ;
         double plum = Math.ceil(quantity1);
         System.out.println(plum);
@@ -77,9 +82,11 @@ public class RequirementCalculation {
         System.out.println(collagen);
 
         double paper = Math.ceil(quantity*25/0.97);
-        double box = Math.ceil(quantity*25/0.97);
+        double box = Math.ceil(quantity/0.97);
         System.out.println(paper);
         System.out.println(box);
+
+        return new RawBOMDTO (plum,collagen, paper, box);
     }
 
 
