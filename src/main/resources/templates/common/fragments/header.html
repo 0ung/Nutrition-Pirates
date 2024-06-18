@@ -3,12 +3,41 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
      th:fragment="HeaderFragment">
-    <nav class="sidebarNav">
-        <div class="sidebar text-center align-center">
-            <div class="title-container">
-                <a href="/boardList">뉴트리션 해적단</a>
-            </div>
 
+    <nav class="navbar navbar-vertical navbar-expand-lg " style="height: 110%">
+        <div class="navbar-logo m-lg-2">
+            <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse"
+                    aria-controls="navbarVerticalCollapse"
+                    aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
+                    class="toggle-line"></span></span></button>
+            <a class="navbar-brand me-1 me-sm-3" href="">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center"><img src="../static/img/logo.png" alt="phoenix" width="27"/>
+                        <p class="logo-text ms-2 d-none d-sm-block">뉴트리션 해적단</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!--------------------->
+        <!----- HOME 버튼 ------>
+        <!--------------------->
+        <div class="navbar-vertical-content">
+            <ul class="navbar-nav flex-column" id="navbarVerticalNav">
+                <li class="nav-item">
+                    <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-home1"
+                                                     role="button" data-bs-toggle="collapse" aria-expanded="false"
+                                                     aria-controls="nv-home">
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown-indicator-icon"><span class="fas fa-caret-right"></span></div>
+                            <span class="nav-link-icon"><span data-feather="pie-chart"></span></span><span
+                                class="nav-link-text">Home</span>
+                        </div>
+                    </a>
+                    </div>
+                </li>
+            </ul>
+            <br>
             <!--------------------->
             <!----- 수주 관리 ------->
             <!--------------------->
@@ -26,19 +55,19 @@
                         <div class="parent-wrapper label-1">
                             <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-home2">
                                 <li class="collapsed-nav-item-title d-none">제목_수주관리</li>
-                                <li class="nav-item"><a class="nav-link" href="../index.html" data-bs-toggle=""
+                                <li class="nav-item"><a class="nav-link" href="./suzu" data-bs-toggle=""
                                                         aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-text">수주 등록</span>
                                     </div>
                                 </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="../dashboard/project-management.html"
-                                                        data-bs-toggle="" aria-expanded="false">
+                                <li class="nav-item"><a class="nav-link" href="./suzucheck" data-bs-toggle=""
+                                                        aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-text">수주 조회</span>
                                     </div>
                                 </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="../dashboard/crm.html" data-bs-toggle=""
+                                <li class="nav-item"><a class="nav-link" href="./suzucheckOrderer" data-bs-toggle=""
                                                         aria-expanded="false">
                                     <div class="d-flex align-items-center"><span
                                             class="nav-link-text">발주처 조회</span><span
@@ -70,14 +99,14 @@
                                 <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-home3">
                                     <li class="collapsed-nav-item-title d-none">제목 원자재 관리
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="../index.html" data-bs-toggle=""
+                                    <li class="nav-item"><a class="nav-link" href="./orderermng" data-bs-toggle=""
                                                             aria-expanded="false">
                                         <div class="d-flex align-items-center"><span
-                                                class="nav-link-text">원자재 발주 등록</span>
+                                                class="nav-link-text">원자재 발주 관리</span>
                                         </div>
                                     </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="../dashboard/project-management.html"
+                                    <li class="nav-item"><a class="nav-link" href="./rawmng"
                                                             data-bs-toggle="" aria-expanded="false">
                                         <div class="d-flex align-items-center"><span
                                                 class="nav-link-text">원자재 입출고 현황</span>
@@ -116,13 +145,13 @@
                                 <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-home4">
                                     <li class="collapsed-nav-item-title d-none">제목_생산관리
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="../index.html" data-bs-toggle=""
+                                    <li class="nav-item"><a class="nav-link" href="./sengsanPlan" data-bs-toggle=""
                                                             aria-expanded="false">
                                         <div class="d-flex align-items-center"><span class="nav-link-text">생산계획</span>
                                         </div>
                                     </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="../dashboard/project-management.html"
+                                    <li class="nav-item"><a class="nav-link" href="./sengsanCheck"
                                                             data-bs-toggle="" aria-expanded="false">
                                         <div class="d-flex align-items-center"><span
                                                 class="nav-link-text">작업 지시 조회</span>
@@ -232,35 +261,41 @@
                             </div>
                         </div>
                     </li>
-                    <!--------------------->
-                    <!----- 시간 관리 ------->
-                    <!--------------------->
-                    <br>
-                    <ul class="navbar-nav flex-column">
-                        <li class="nav-item">
-                            <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1"
-                                                             href="#nv-home7" role="button" data-bs-toggle="collapse"
-                                                             aria-expanded="false" aria-controls="nv-home">
-                                <div class="d-flex align-items-center">
-                                    <div class="dropdown-indicator-icon"><span class="fas fa-caret-right"></span></div>
-                                    <span class="nav-link-icon"><span data-feather="pie-chart"></span></span><span
-                                        class="nav-link-text">시간 관리</span>
-                                </div>
-                            </a>
-                                <div class="parent-wrapper label-1">
-                                    <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse"
-                                        id="nv-home8">
-                                        <li class="collapsed-nav-item-title d-none">제목_시간 관리</li>
-                                        <li class="nav-item"><a class="nav-link"
-                                                                href="../dashboard/project-management.html"
-                                                                data-bs-toggle="" aria-expanded="false">
-                                        </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                </ul>
+                <!--------------------->
+                <!----- 시간 관리 ------->
+                <!--------------------->
+                <br>
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-item">
+                        <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1"
+                                                         href="#nv-home7" role="button" data-bs-toggle="collapse"
+                                                         aria-expanded="false" aria-controls="nv-home">
+                            <div class="d-flex align-items-center">
+                                <div class="dropdown-indicator-icon"><span class="fas fa-caret-right"></span></div>
+                                <span class="nav-link-icon"><span data-feather="pie-chart"></span></span><span
+                                    class="nav-link-text">시간 관리</span>
                             </div>
-                        </li>
-                    </ul>
+                        </a>
+                            <div class="parent-wrapper label-1">
+                                <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse"
+                                    id="nv-home8">
+                                    <li class="collapsed-nav-item-title d-none">제목_시간 관리</li>
+                                    <li class="nav-item"><a class="nav-link"
+                                                            href="../dashboard/project-management.html"
+                                                            data-bs-toggle="" aria-expanded="false">
+                                    </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
+        </div>
     </nav>
+    <!--------------------->
+    <!----- NAV END ------->
+    <!--------------------->
+
 </div>

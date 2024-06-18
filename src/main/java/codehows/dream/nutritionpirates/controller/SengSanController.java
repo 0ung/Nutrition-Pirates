@@ -13,6 +13,4 @@ public class SengSanController {
     public String getSengsanPlan(){
         return "SengSan_Plan";
     }
-
-
 }

@@ -4,9 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class TestController {
-    @GetMapping(value = "/")
-    public String index() {
+public class OrderermngController {
+    @GetMapping(value = "/orderermng")
+    public String index1() {
         return "orderermng";
+    }
+
+    @GetMapping(value = "/rawmng")
+    public String index2() {
+        return "rawmng";
     }
 }

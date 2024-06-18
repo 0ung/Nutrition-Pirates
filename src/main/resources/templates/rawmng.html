@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<head>
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>원자재 입출고 현황</title>
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="../static/css/user-rtl.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
+    <link href="../static/css/suzu_check.css" type="text/css" rel="stylesheet" id="suzu_check">
+</head>
+
+<body>
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+
+<div layout:fragment="Content" class="container">
+    <main class="main" id="top">
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
+
+
+        <div class="content2">
+            <div class="container">
+                <div class="card2 cart">
+                    <label class="title_form">원자재 입출고 현황
+                        <span style="margin-left: 75%">
+                            <button>엑셀 저장</button>
+                    </span>
+                    </label>
+
+                    <div class="steps">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>제품코드</th>
+                                <th>제품명</th>
+                                <th>수량</th>
+                                <th>상태</th>
+                                <th>일자</th>
+                                <th>사유</th>
+                                <th>수정/삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button>수정|삭제</button>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>2번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button>수정|삭제</button>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>3번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button>수정|삭제</button>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>4번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button>수정|삭제</button>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="centered">
+                        <p> [1] [2] [3] [4] [5] </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+
+    <script src="../static/js/popper/popper.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/anchorjs/anchor.min.js"></script>
+    <script src="../static/js/is/is.min.js"></script>
+    <script src="../static/js/fontawesome/all.min.js"></script>
+    <script src="../static/js/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="../static/js/list.js/list.min.js"></script>
+    <script src="../static/js/feather-icons/feather.min.js"></script>
+    <script src="../static/js/dayjs/dayjs.min.js"></script>
+    <script src="../static/js/phoenix.js"></script>
+</div>
+</body>
+</html>
