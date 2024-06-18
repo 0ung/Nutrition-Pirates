@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
+import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
@@ -130,4 +132,38 @@ public class WorkPlanService {
 		}
 		return Integer.parseInt(strings[0].replaceAll("[^0-9]", ""));
 	}
+
+	private List<WorkPlan> activateFacility(Facility facility) {
+		List<WorkPlan> workPlans = workPlanRepository.findByFacility(facility);
+		if (workPlans.isEmpty()) {
+			return null;
+		}
+		return workPlans;
+	}
+
+	public ActivateFacilityDTO getActivateFacility(Facility[] facilitys) {
+
+		ActivateFacilityDTO facilityDTO = new ActivateFacilityDTO();
+
+		for (Facility facility : facilitys) {
+			List<WorkPlan> workPlans = activateFacility(facility);
+			switch (facility) {
+				case juiceMachine1 -> facilityDTO.setJuiceMachine1(workPlans);
+				case juiceMachine2 -> facilityDTO.setJuiceMachine2(workPlans);
+				case boxMachine -> facilityDTO.setBoxMachine(workPlans);
+				case metalDetector -> facilityDTO.setMetalDetector(workPlans);
+				case sterilizer1 -> facilityDTO.setSterilizer1(workPlans);
+				case extractor2 -> facilityDTO.setExtractor2(workPlans);
+				case sterilizer2 -> facilityDTO.setSterilizer2(workPlans);
+				case StickMachine1 -> facilityDTO.setStickMachine1(workPlans);
+				case StickMachine2 -> facilityDTO.setStickMachine2(workPlans);
+				case washer -> facilityDTO.setWasher(workPlans);
+				case mixer -> facilityDTO.setMixer(workPlans);
+				case extractor1 -> facilityDTO.setExtractor1(workPlans);
+			}
+		}
+
+		return facilityDTO;
+	}
+
 }

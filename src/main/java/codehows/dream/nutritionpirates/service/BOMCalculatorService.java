@@ -12,19 +12,27 @@ public class BOMCalculatorService {
 
     //첫번쨰 생성이 되면
     //분류
-    public void createRequirement(Order order){
+    public RawBOMDTO createRequirement(Order order){
         ProductName productName = order.getProduct();
         switch (productName){
-            case BLACK_GARLIC_JUICE -> garlicJuiceBOMCal(order.getQuantity());
-            case CABBAGE_JUICE -> cabbageJuiceBOMCal(order.getQuantity());
-            case POMEGRANATE_JELLY_STICK -> pomegranateStickBOMCal(order.getQuantity());
-            case PLUM_JELLY_STICK -> plumStickBOMCal(order.getQuantity());
+			case BLACK_GARLIC_JUICE -> {
+				return garlicJuiceBOMCal(order.getQuantity());
+			}
+			case CABBAGE_JUICE -> {
+                return cabbageJuiceBOMCal(order.getQuantity());
+            }
+            case POMEGRANATE_JELLY_STICK -> {
+                return pomegranateStickBOMCal(order.getQuantity());
+            }
+            case PLUM_JELLY_STICK -> {
+                return plumStickBOMCal(order.getQuantity());
+            }
             //커스텀 Exception 반드시 구현
             default ->throw new RuntimeException();
         }
 
     }
-    public RawBOMDTO garlicJuiceBOMCal(int quantity) {
+    private RawBOMDTO garlicJuiceBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 30 / 0.97) * 133.33) / 1000);
         double garlic = Math.ceil(quantity1);
 
@@ -37,7 +45,7 @@ public class BOMCalculatorService {
         return new RawBOMDTO(garlic, honey, paper, box);
     }
 
-    public RawBOMDTO cabbageJuiceBOMCal(int quantity) {
+    private RawBOMDTO cabbageJuiceBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 30 / 0.97) * 133.33) / 1000);
         double cabbage = Math.ceil(quantity1);
 
@@ -50,7 +58,7 @@ public class BOMCalculatorService {
         return new RawBOMDTO(cabbage, honey, paper, box);
     }
 
-    public RawBOMDTO pomegranateStickBOMCal(int quantity) {
+    private RawBOMDTO pomegranateStickBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 25 / 0.97) * 5) / 1000);
         double pomegranate = Math.ceil(quantity1);
 
@@ -63,7 +71,7 @@ public class BOMCalculatorService {
         return new RawBOMDTO(pomegranate, collagen, paper, box);
     }
 
-    public RawBOMDTO plumStickBOMCal(int quantity) {
+    private RawBOMDTO plumStickBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 25 / 0.97) * 5) / 1000);
         double plum = Math.ceil(quantity1);
 

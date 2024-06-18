@@ -25,13 +25,15 @@ public class TimeFilter implements Filter {
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
 		IOException,
 		ServletException {
-		ProgramTime programTime = programTimeService.getProgramTime();
-		if (programTime == null) {
+
+		try {
+			ProgramTime programTime = programTimeService.getProgramTime();
+		} catch (IndexOutOfBoundsException e) {
 			programTimeService.registerTime();
 			log.info("시간 등록");
-			filterChain.doFilter(servletRequest,servletResponse);
+			filterChain.doFilter(servletRequest, servletResponse);
 		}
 		log.info("시간 존재");
-		filterChain.doFilter(servletRequest,servletResponse);
+		filterChain.doFilter(servletRequest, servletResponse);
 	}
 }

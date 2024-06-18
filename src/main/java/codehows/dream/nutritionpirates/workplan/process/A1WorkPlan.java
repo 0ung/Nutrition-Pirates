@@ -11,18 +11,10 @@ import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.service.ProgramTimeService;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class A1WorkPlan implements WorkPlans {
 
-	private final ProgramTimeService programTimeService;
 	@Override
 	public void execute(WorkPlan workPlan) {
-		Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-		if(workPlan.getStartTime() == null){
-			workPlan.setEndTime(timestamp);
-			return;
-		}
-		workPlan.setStartTime(timestamp);
 	}
 
 	@Override
