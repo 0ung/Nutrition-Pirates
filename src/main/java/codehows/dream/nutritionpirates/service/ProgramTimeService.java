@@ -13,16 +13,25 @@ import lombok.RequiredArgsConstructor;
 public class ProgramTimeService {
 	private final ProgramTimeRepository programTimeRepository;
 
+	public void registerTime() {
+		ProgramTime programTime = new ProgramTime();
+		try {
+			programTimeRepository.save(programTime);
+		} catch(RuntimeException e){
+			throw new RuntimeException();
+		}
+	}
+
 	public ProgramTime getProgramTime() {
 		List<ProgramTime> list = programTimeRepository.findAll();
 		return list.get(0);
 	}
 
-	public void update1hourProgramTime(){
+	public String updateHourProgramTime(int hour) {
 		List<ProgramTime> list = programTimeRepository.findAll();
 		ProgramTime programTime = list.get(0);
+		programTime.increaseHour(programTime.getCurrentProgramTime(), hour);
 
-		programTime.update
-
+		return programTime.getFormattedCurrentProgramTime();
 	}
 }

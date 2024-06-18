@@ -8,7 +8,7 @@ import codehows.dream.nutritionpirates.entity.WorkPlan;
 
 public class B3WorkPlan implements WorkPlans {
 	@Override
-	public void execute() {
+	public void execute(WorkPlan workPlan) {
 
 	}
 

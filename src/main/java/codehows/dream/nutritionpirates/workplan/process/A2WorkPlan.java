@@ -5,8 +5,9 @@ import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 
 public class A2WorkPlan implements WorkPlans {
+
 	@Override
-	public void execute() {
+	public void execute(WorkPlan workPlan) {
 
 	}
 

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -36,13 +37,17 @@ public class WorkPlan {
 
 	private String processCompletionTime;
 
-	private Date startTime;
+	private Timestamp startTime;
 
-	private Date endTime;
+	private Timestamp endTime;
 
 	@Enumerated(EnumType.STRING)
 	private Facility facility;
 
 	//반제품
 	private String semiProduct;
+
+	//추가된 컬럼
+	//작동 가능 여부
+	private boolean activate;
 }
