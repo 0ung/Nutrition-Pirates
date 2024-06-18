@@ -6,6 +6,7 @@
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
+
     <style>
 
         .sengsan_container {
@@ -69,21 +70,13 @@
 
 
     </style>
+    <link href="../static/css/sengsan.css" type="text/css" rel="stylesheet" id="sengsan.css">
 </th:block>
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
 
     <script th:inline="javascript">
-
-        <!-- ===============================================-->
-        <!--    JavaScripts-->
-        <!-- ===============================================-->
-        <script>
-    </script>
-
-    <script>
-
 
         function sengsan_selectChoice(element) {
             // 모든 .choice 클래스의 요소를 선택
@@ -137,7 +130,6 @@
                 closeModal();
             }
         }
-    </script>
 
 
     </script>
@@ -213,7 +205,6 @@
         <!-- ===============================================-->
         <!--    End of Main Content-->
         <!-- ===============================================-->
-
 
 
     </div>

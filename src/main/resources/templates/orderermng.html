@@ -8,22 +8,8 @@
 <th:block layout:fragment="css">
     <style>
         h1 {
-            color: white;
+            color: black;
         }
-
-        /*div.div1 {*/
-        /*    width: 49%;*/
-        /*    float: left;*/
-        /*    padding: 20px; !* 내부 공간 추가 *!*/
-        /*    background-color: #eaeaea;*/
-        /*}*/
-
-        /*div.div2 {*/
-        /*    width: 49%;*/
-        /*    float: right;*/
-        /*    padding: 20px; !* 내부 공간 추가 *!*/
-        /*    background-color: #eaeaea;*/
-        /*}*/
 
         div.input-group {
 
@@ -44,7 +30,9 @@
             <div class="div1">
                 <div class="group">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <span style="margin-left: 75%">
+                <input type="text" id="search-input" class="search-input" placeholder="Search..."/>
+                    </span>
                         <div class="input-group-btn">
                             <button class="btn btn-default" type="submit">
                                 <i class="glyphicon glyphicon-search"></i>
@@ -61,7 +49,7 @@
                             <th scope="col">LOT</th>
                             <th scope="col">시작시간</th>
                             <th scope="col">종료시간</th>
-                            <th scope="col">작업자</th>
+                            <th scope="col">입고확인</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -100,7 +88,7 @@
                     <label>발주계획서</label>
                     <div class="card checkout">
                         <div>
-                            <button class="bal-button" onclick="showModal()" id="startButton"> 발주 등록</button>
+                            <button onclick="showModal()"> 발주 등록</button>
                         </div>
                     </div>
 
