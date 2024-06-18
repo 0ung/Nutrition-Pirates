@@ -14,4 +14,9 @@ public class OrderermngController {
     public String index2() {
         return "rawmng";
     }
+
+    @GetMapping(value = "/rawcs")
+    public String index3() {
+        return "rawcs";
+    }
 }

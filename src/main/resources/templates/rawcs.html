@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+    </style>
+</th:block>
+
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        <!-- chart.js 설치 -->
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <h1>원자재 현황 조회
+        <hr>
+    </h1>
+    <div class="container1">
+        <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+        <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <!-- include Chart.js from a CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            const ctx = document.querySelector('#myChart');
+
+            //만들위치, 설정값객체
+            new Chart(ctx, {
+                type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                data: {
+                    labels: ['양배추', '흑마늘', '석류', '매실', '벌꿀', '박스', '포장지'],
+                    datasets: [
+                        {
+                            label: '현재 보유량',
+                            data: [2000, 1500, 500, 500, 100, 10000, 1500],
+                            borderWidth: 1,
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <div class="container2">
+        <label class="title_form">보관기한 3일 이하 원자재 List</label>
+        <table>
+            <thead>
+            <tr>
+                <th>제품코드</th>
+                <th>제품명</th>
+                <th>사용기한</th>
+                <th>수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>275437395487</td>
+                <td>흑마늘</td>
+                <td>2024-06-10</td>
+                <td>700kg</td>
+            </tr>
+            <tr>
+                <td>68954802</td>
+                <td>양배추</td>
+                <td>2024-06-12</td>
+                <td>500kg</td>
+
+            </tr>
+            <tr>
+                <td>379075890</td>
+                <td>흑마늘</td>
+                <td>2024-06-11</td>
+                <td>1000kg</td>
+
+            </tr>
+            <tr>
+                <td>28345095802</td>
+                <td>석류</td>
+                <td>2024-06-09</td>
+                <td>300kg</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+</html>
