@@ -1,5 +1,7 @@
 package codehows.dream.nutritionpirates.entity;
 
+import java.sql.Date;
+
 import codehows.dream.nutritionpirates.constants.ProductName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,13 +14,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "mes_order")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
 
 	@Id
@@ -47,4 +55,11 @@ public class Order {
 
 	private boolean isShipping;
 
+	private Date orderDate;
+
+	private boolean invisible;
+
+	public void updateInvisible(boolean invisible) {
+		this.invisible = invisible;
+	}
 }
