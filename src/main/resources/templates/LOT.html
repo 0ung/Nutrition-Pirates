@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<head>
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>뉴트리션 해적선</title>
+    <!-- ===============================================-->
+    <!--        Favicons-->
+    <!-- ===============================================-->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="../static/css/user-rtl.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
+    <link href="../static/css/suzu_check.css" type="text/css" rel="stylesheet" id="suzu_check">
+
+
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+
+
+    <!-- search 스타일  -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+    <style>
+        .single-search {
+            margin-bottom: auto;
+            margin-top: auto;
+            height: 40px;
+            background-color: #fafafa;
+            border-radius: 30px;
+        }
+        .search-area {
+            display: flex;
+            justify-content: center;
+        }
+        .c-height {
+            height: 100%;
+        }
+        .custom-input {
+            border: 0;
+            outline: 0;
+            width: 500px;
+            line-height: 40px;
+            transition: width 10.4s linear;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            padding-left: 10px;
+        }
+        input::placeholder {
+            color: #262626;
+            font-size: 20px;
+        }
+        .single-search:hover>.icon-area {
+            background: lightgreen;
+            color: #262626;
+        }
+        .icon-area {
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            float: right;
+            display: flex;
+            text-decoration: none;
+            color: #262626;
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+
+<div layout:fragment="Content" class="container" style="margin-left: 0">
+    <main class="main" id="top">
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
+
+
+        <div class="content">
+            <div class="container">
+                <div class="card2 cart">
+                    <label class="title_form">
+                       LOT 관리
+                    </label>
+
+                    <div class="col m-5">
+                        <div class="row centered">
+                            <div class="wrapper c-height">
+                                <div class="search-area c-height">
+                                    <div class="single-search">
+                                        <input class="custom-input" name="" placeholder="put your 'lot' number here ..." type="text"> <a class="icon-area" href="#"><i class="fa fa-search"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+
+                            <h1> </h1>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>발주처</th>
+                                    <th>제품명</th>
+                                    <th>수량</th>
+                                    <th>수주일</th>
+                                    <th>예상납기일</th>
+                                    <th>공정상태</th>
+                                    <th>긴급여부</th>
+                                    <th>출하상태</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>ABC Corp</td>
+                                    <td>Widget A</td>
+                                    <td>100</td>
+                                    <td>2024-06-01</td>
+                                    <td>2024-06-10</td>
+                                    <td>생산중</td>
+                                    <td>아니오</td>
+                                    <td>대기중</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>XYZ Ltd</td>
+                                    <td>Gadget B</td>
+                                    <td>200</td>
+                                    <td>2024-06-05</td>
+                                    <td>2024-06-15</td>
+                                    <td>완료</td>
+                                    <td>예</td>
+                                    <td>출하완료</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>LMN Inc</td>
+                                    <td>Device C</td>
+                                    <td>150</td>
+                                    <td>2024-06-03</td>
+                                    <td>2024-06-12</td>
+                                    <td>준비중</td>
+                                    <td>아니오</td>
+                                    <td>대기중</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="centered"> [1] [2] [3] [4] [5]</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card2 checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn"> 엑셀 저장</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+
+
+
+    <script>
+        function cancelOrder(button) {
+            // Change the button text and disable it
+            button.textContent = '취소됨';
+            button.disabled = true;
+
+            // Optionally, you can update other related data or styles here
+            // For example, you could change the row background or other elements in the row
+            // Example: button.closest('tr').style.backgroundColor = '#f2dede';
+        }
+    </script>
+
+    <script src="../static/js/popper/popper.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/anchorjs/anchor.min.js"></script>
+    <script src="../static/js/is/is.min.js"></script>
+    <script src="../static/js/fontawesome/all.min.js"></script>
+    <script src="../static/js/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="../static/js/list.js/list.min.js"></script>
+    <script src="../static/js/feather-icons/feather.min.js"></script>
+    <script src="../static/js/dayjs/dayjs.min.js"></script>
+    <script src="../static/js/phoenix.js"></script>
+</div>
+</body>
+</html>

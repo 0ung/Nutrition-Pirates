@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<head>
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>뉴트리션 해적선</title>
+    <!-- ===============================================-->
+<!--        Favicons-->
+        <!-- ===============================================-->
+        <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
+        <!-- ===============================================-->
+        <!--    Stylesheets-->
+        <!-- ===============================================-->
+        <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+              rel="stylesheet">
+        <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+        <link href="../static/css/user-rtl.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+        <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+        <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
+    <link href="../static/css/suzu_check.css" type="text/css" rel="stylesheet" id="suzu_check">
+
+
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+</head>
+
+<body>
+
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+
+<div layout:fragment="Content" class="container" style="margin-left: 0">
+    <main class="main" id="top">
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
+
+
+        <div class="content">
+            <div class="container">
+                <div class="card2 cart">
+                    <label class="title_form">
+                        출하현황
+                    </label>
+
+                    <div class="row m-5">
+                    <div class="col">
+
+                        <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <!-- 차트 그릴 위치 지정 canvas webGL(그래픽엔진) 사용 -->
+                                <canvas id="myChart"></canvas>
+                        </div>
+
+                    </div>
+                    <div class="col">
+
+                        <h1> </h1>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>발주처</th>
+                                <th>제품명</th>
+                                <th>수량</th>
+                                <th>수주일</th>
+                                <th>예상납기일</th>
+                                <th>공정상태</th>
+                                <th>긴급여부</th>
+                                <th>출하상태</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>ABC Corp</td>
+                                <td>Widget A</td>
+                                <td>100</td>
+                                <td>2024-06-01</td>
+                                <td>2024-06-10</td>
+                                <td>생산중</td>
+                                <td>아니오</td>
+                                <td>대기중</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>XYZ Ltd</td>
+                                <td>Gadget B</td>
+                                <td>200</td>
+                                <td>2024-06-05</td>
+                                <td>2024-06-15</td>
+                                <td>완료</td>
+                                <td>예</td>
+                                <td>출하완료</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>LMN Inc</td>
+                                <td>Device C</td>
+                                <td>150</td>
+                                <td>2024-06-03</td>
+                                <td>2024-06-12</td>
+                                <td>준비중</td>
+                                <td>아니오</td>
+                                <td>대기중</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="centered"> [1] [2] [3] [4] [5]</div>
+                    </div>
+                    </div>
+                </div>
+                <div class="card2 checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn"> 엑셀 저장</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const labels = ['양배추즙','흑마늘즙','석류스틱','매실스틱'];
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '양',
+                        data: [500, 1000, 1500, 2000 , 3000],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderWidth: 2,
+                        borderRadius: Number.MAX_VALUE,
+                        borderSkipped: false,
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: '현재 재고 현황'
+                        }
+                    }
+                },
+            };
+
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+        });
+    </script>
+
+
+    <script>
+        function cancelOrder(button) {
+            // Change the button text and disable it
+            button.textContent = '취소됨';
+            button.disabled = true;
+
+            // Optionally, you can update other related data or styles here
+            // For example, you could change the row background or other elements in the row
+            // Example: button.closest('tr').style.backgroundColor = '#f2dede';
+        }
+    </script>
+
+    <script src="../static/js/popper/popper.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/anchorjs/anchor.min.js"></script>
+    <script src="../static/js/is/is.min.js"></script>
+    <script src="../static/js/fontawesome/all.min.js"></script>
+    <script src="../static/js/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="../static/js/list.js/list.min.js"></script>
+    <script src="../static/js/feather-icons/feather.min.js"></script>
+    <script src="../static/js/dayjs/dayjs.min.js"></script>
+    <script src="../static/js/phoenix.js"></script>
+</div>
+</body>
+</html>

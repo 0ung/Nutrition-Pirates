@@ -3,10 +3,9 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
+<head th:fragment="~{common/fragments/config :: configFragment}">
     <meta charset="UTF-8">
     <title>기본 레이아웃</title>
-    <th:block th:replace="common/fragments/config :: ConfigFragment"/>
     <style>
         body{
             background-color: #222831;
@@ -25,9 +24,8 @@
 
 <!-- 본문 영역 -->
 <div class="content">
-    <th:block layout:fragment="Content"/>
+    <th:block layout:fragment="Content" class="container"/>
 </div>
-
 <!-- 푸터 영역 (필요에 따라 주석 해제) -->
 <!--<footer th:replace="common/fragments/footer :: FooterFragment"></footer>-->
 </body>

@@ -1,22 +1,27 @@
 
-<div xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-th:fragment="ConfigFragment">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="ko-kr">
 
-    <!--
 
-   레이아웃 설정
+<head th:fragment="configFragment">
 
-   -->
-    <link rel="stylesheet" type="text/css" href="/css/header.css">
-    <link rel="stylesheet" type="text/css" href="/css/content.css">
+    <th:block layout:fragment="script"></th:block>
+    <th:block layout:fragment="css"></th:block>
 
-    <!--
-
-   몰?루
-
-   -->
-    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>뉴트리션 해적선</title>
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
     <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -26,24 +31,11 @@ th:fragment="ConfigFragment">
     <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
     <link href="../static/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
     <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="../static/css/sengsan.css" type="text/css" rel="stylesheet" id="sengsan.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
-    <!--Common JS-->
-    <script th:inline="javascript" type="text/javascript" th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script th:inline="javascript" type="text/javascript" th:src="@{/js/jquery-ui.min.js}"></script>
+</head>
 
-    <!--Common CSS -->
-    <link th:inline="css" th:href="@{/css/jquery-ui.min.css}" rel="stylesheet"/>
 
-    <!--Common Bootstrap-->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <script src="/js/bootstrap.min.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-    <th:block layout:fragment="script"></th:block>
-    <th:block layout:fragment="css"></th:block>
-
-</div>
+</html>
