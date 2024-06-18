@@ -24,7 +24,7 @@ public class A1WorkPlan implements WorkPlans {
 		}
 		workPlan.setStartTime(timestamp);
 	}
-	
+
 	@Override
 	public WorkPlan createWorkPlan(int input) {
 

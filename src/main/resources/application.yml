@@ -1,7 +1,6 @@
 server:
   port: 8080
 
-
 spring:
   servlet:
     multipart:
@@ -22,5 +21,6 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: create
+
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
