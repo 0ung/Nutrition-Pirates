@@ -25,7 +25,7 @@ public class OrderController {
 	private final OrderService orderService;
 
 	@PostMapping("")
-	public ResponseEntity<?> insertOrder(@RequestBody MesOrderInsertDTO mesOrderInsertDTO) {
+	public @ResponseBody ResponseEntity<?> insertOrder(@RequestBody MesOrderInsertDTO mesOrderInsertDTO) {
 		try {
 			orderService.insert(mesOrderInsertDTO);
 		} catch (Exception e) {

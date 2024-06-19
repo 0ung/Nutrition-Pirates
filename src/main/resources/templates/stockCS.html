@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+    </style>
+    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
+</th:block>
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        <!-- chart.js 설치 -->
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"/>
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
+
+    <h1>재고 현황</h1>
+    <hr>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <label class="timeline">2024-06-19T12:45</label>
+                <label class="title_form">현재 재고 입고 현황</label>
+                <div class="chart">
+                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                    <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
+                        <canvas id="myChart1"></canvas>
+                    </div>
+
+                    <!-- include Chart.js from a CDN -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                    <script>
+                        const ctx = document.querySelector('#myChart1');
+
+                        //만들위치, 설정값객체
+                        new Chart(ctx, {
+                            type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                            data: {
+                                labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
+                                datasets: [
+                                    {
+                                        type: 'line',
+                                        label: '안전 재고량 적정선',
+                                        data: [1000, 1000, 1000, 1000],
+                                        borderWidth: 1,
+                                    },
+                                    {
+                                        label: '재고(BOX)',
+                                        data: [2000, 500, 1500, 1000],
+                                        borderWidth: 1,
+                                    }],
+
+
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+
+            </div>
+
+            <div class="col">
+                <label class="timeline">2024-06-19T12:45</label>
+                <label class="title_form">월 재고 출고 현황</label>
+
+                <div class="chart">
+                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                    <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+
+                    <!-- include Chart.js from a CDN -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                    <script>
+                        const ctx = document.querySelector('#myChart2');
+
+                        //만들위치, 설정값객체
+                        new Chart(ctx, {
+                            type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                            data: {
+                                labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
+                                datasets: [
+                                    {
+                                        label: '월 재고 출고 현황',
+                                        data: [700, 300, 1500, 1000],
+                                        borderWidth: 1,
+                                    }],
+
+
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</html>

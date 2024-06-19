@@ -1,8 +1,9 @@
 package codehows.dream.nutritionpirates.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,12 +16,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class WorkPlan {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,20 +47,25 @@ public class WorkPlan {
 	@JoinColumn(name = "lotCode")
 	private LotCode lotCode;
 
-	@Column(nullable = false)
 	private String worker;
 
-	private String processCompletionTime;
+	private Timestamp processCompletionTime;
 
-	@Column(nullable = false)
-	private Date startTime;
+	private Timestamp startTime;
 
-	private Date endTime;
+	private Timestamp endTime;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Facility facility;
 
+	@Enumerated(EnumType.STRING)
+	private FacilityStatus facilityStatus;
+
 	//반제품
-	private String semiProduct;
+	private int semiProduct;
+
+	//추가된 컬럼
+	//작동 가능 여부
+	private boolean activate;
+
 }
