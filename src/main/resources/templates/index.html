@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <!--    <style>
+            .fieldError {
+                color: #ffc8c8;
+            }
+        </style>-->
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+    <!--
+        <script th:inline="javascript">
+            $(document).ready(function () {
+
+                var errorMessage = [[${errorMessage}]];
+                if (errorMessage != null) {
+                    alert(errorMessage);
+                }
+            });
+        </script>
+    -->
+
+</th:block>
+
+<div layout:fragment="content">
+<div class="container mt-5" ></div>
+    <p> 메인 컨텐츠 입니다.
+    ////////////////////////
+
+
+    /</p>
+
+</div>
+
+</html>
