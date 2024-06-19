@@ -31,24 +31,24 @@
     <link href="../static/css/sengsan.css" type="text/css" rel="stylesheet" id="sengsan.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<!--    <script>-->
-<!--        $.ajax({-->
-<!--            type: "GET",-->
-<!--            url: "http://localhost:8080/order/orderer",-->
-<!--            success: (response)=>{-->
-<!--                response.forEach(-->
-<!--                    (e)=>{-->
-<!--                        console.log(e.id);-->
-<!--                        console.log(e.name);-->
-<!--                        console.log(e.phoneNumber);-->
-<!--                    }-->
-<!--                )-->
-<!--            },-->
-<!--            error: (error)=>{-->
-<!--                console.log(error)-->
-<!--            }-->
-<!--        })-->
-<!--    </script>-->
+    <!--    <script>-->
+    <!--        $.ajax({-->
+    <!--            type: "GET",-->
+    <!--            url: "http://localhost:8080/order/orderer",-->
+    <!--            success: (response)=>{-->
+    <!--                response.forEach(-->
+    <!--                    (e)=>{-->
+    <!--                        console.log(e.id);-->
+    <!--                        console.log(e.name);-->
+    <!--                        console.log(e.phoneNumber);-->
+    <!--                    }-->
+    <!--                )-->
+    <!--            },-->
+    <!--            error: (error)=>{-->
+    <!--                console.log(error)-->
+    <!--            }-->
+    <!--        })-->
+    <!--    </script>-->
 
     <style>
         .centered {
@@ -267,130 +267,130 @@
 <!--    Main Content-->
 <!-- ===============================================-->
 <div layout:fragment="Content" class="container">
-<main class="main" id="top">
+    <main class="main" id="top">
 
-    <!--------------------->
-    <!----  Main Start ---->
-    <!--------------------->
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
 
 
-    <div class="content">
-        <div class="container">
-            <div class="card2 cart">
-                <label class="title_form">작업지시 조회
-                    <span style="margin-left: 75%">
+        <div class="content">
+            <div class="container">
+                <div class="card2 cart">
+                    <label class="title_form">작업지시 조회
+                        <span style="margin-left: 75%">
                 <input type="text" id="search-input" class="search-input" placeholder="Search..." />
                     </span>
-                </label>
+                    </label>
 
-                <div class="steps">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>공정</th>
-                            <th>LOT</th>
-                            <th>시작시간</th>
-                            <th>수주일</th>
-                            <th>종료시간</th>
-                            <th>작업자</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>A1</td>
-                            <td>12345678</td>
-                            <td>100</td>
-                            <td>2024-06-10</td>
-                            <td>2024-06-20</td>
-                            <td>임경용</td>
+                    <div class="steps">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>공정</th>
+                                <th>LOT</th>
+                                <th>시작시간</th>
+                                <th>수주일</th>
+                                <th>종료시간</th>
+                                <th>작업자</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>A1</td>
+                                <td>12345678</td>
+                                <td>100</td>
+                                <td>2024-06-10</td>
+                                <td>2024-06-20</td>
+                                <td>임경용</td>
 
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>A1</td>
-                            <td>12345678</td>
-                            <td>50</td>
-                            <td>2024-06-12</td>
-                            <td>2024-06-25</td>
-                            <td>임경용</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>A1</td>
+                                <td>12345678</td>
+                                <td>50</td>
+                                <td>2024-06-12</td>
+                                <td>2024-06-25</td>
+                                <td>임경용</td>
 
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>A2</td>
-                            <td>12345678</td>
-                            <td>200</td>
-                            <td>2024-06-14</td>
-                            <td>2024-06-30</td>
-                            <td>임경용</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>A2</td>
+                                <td>12345678</td>
+                                <td>200</td>
+                                <td>2024-06-14</td>
+                                <td>2024-06-30</td>
+                                <td>임경용</td>
 
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>A5</td>
-                            <td>12345678</td>
-                            <td>75</td>
-                            <td>2024-06-13</td>
-                            <td>2024-06-28</td>
-                            <td>임경용</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>A5</td>
+                                <td>12345678</td>
+                                <td>75</td>
+                                <td>2024-06-13</td>
+                                <td>2024-06-28</td>
+                                <td>임경용</td>
 
-                        </tr>
-                        </tbody>
-                    </table>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="centered">
+                        <p> [1] [2] [3] [4] [5] </p>
+                    </div>
                 </div>
-
-                <div class="centered">
-                    <p> [1] [2] [3] [4] [5] </p>
-                </div>
-            </div>
-            <div class="card2 checkout">
-                <div class="footer">
-                    <label class="price"> </label>
-                    <button class="checkout-btn"> 엑셀 저장</button>
+                <div class="card2 checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn"> 엑셀 저장</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<!-- ===============================================-->
-<!--    End of Main Content-->
-<!-- ===============================================-->
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 
 
-<!-- ===============================================-->
-<!--    JavaScripts-->
-<!-- ===============================================-->
-<script>
-    function nextStep() {
-        alert('다음 단계로 진행합니다.');
-        closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
-    }
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script>
+        function nextStep() {
+            alert('다음 단계로 진행합니다.');
+            closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
+        }
 
-    function closeModal() {
-        document.getElementById('myModal').style.display = "none";
-    }
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
 
-    // window.onload = function () {
-    //     document.getElementById('myModal').style.display = "block";
-    // }
+        // window.onload = function () {
+        //     document.getElementById('myModal').style.display = "block";
+        // }
 
-    // 페이지 로드 시 모달을 자동으로 표시
-    window.onload = function () {
-        document.getElementById('myModal').style.display = "none";
-    }
-</script>
-<script src="../static/js/popper/popper.min.js"></script>
-<script src="../static/js/bootstrap/bootstrap.min.js"></script>
-<script src="../static/js/anchorjs/anchor.min.js"></script>
-<script src="../static/js/is/is.min.js"></script>
-<script src="../static/js/fontawesome/all.min.js"></script>
-<script src="../static/js/lodash/lodash.min.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-<script src="../static/js/list.js/list.min.js"></script>
-<script src="../static/js/feather-icons/feather.min.js"></script>
-<script src="../static/js/dayjs/dayjs.min.js"></script>
+        // 페이지 로드 시 모달을 자동으로 표시
+        window.onload = function () {
+            document.getElementById('myModal').style.display = "none";
+        }
+    </script>
+    <script src="../static/js/popper/popper.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/anchorjs/anchor.min.js"></script>
+    <script src="../static/js/is/is.min.js"></script>
+    <script src="../static/js/fontawesome/all.min.js"></script>
+    <script src="../static/js/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="../static/js/list.js/list.min.js"></script>
+    <script src="../static/js/feather-icons/feather.min.js"></script>
+    <script src="../static/js/dayjs/dayjs.min.js"></script>
     <script src="../static/js/phoenix.js"></script>
 </div>
 </body>

@@ -61,87 +61,87 @@
 <body>
 
 <div layout:fragment="Content" class="container">
-<!-- ===============================================-->
-<!--    Main Content-->
-<!-- ===============================================-->
-<main class="main" id="top">
-    <!--------------------->
-    <!----  Main Start ---->
-    <!--------------------->
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
 
-    <script>
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/order/orderer",
-            success: (response)=>{
-                response.forEach(
-                    (e)=>{
-                        console.log(e.id);
-                        console.log(e.name);
-                        console.log(e.phoneNumber);
-                    }
-                )
-            },
-            error: (error)=>{
-                console.log(error)
-            }
-        })
-    </script>
+        <script>
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/order/orderer",
+                success: (response)=>{
+                    response.forEach(
+                        (e)=>{
+                            console.log(e.id);
+                            console.log(e.name);
+                            console.log(e.phoneNumber);
+                        }
+                    )
+                },
+                error: (error)=>{
+                    console.log(error)
+                }
+            })
+        </script>
 
 
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color: #0acf83">신규 발주처</h2>
-            <button class="button" onclick="closeModal()">신규 발주처 추가하기</button>
-            <hr>
-            <h2 style="color: #0acf83">기존 발주처</h2>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <h2 style="color: #0acf83">신규 발주처</h2>
+                <button class="button" onclick="closeModal()">신규 발주처 추가하기</button>
+                <hr>
+                <h2 style="color: #0acf83">기존 발주처</h2>
 
-            <select id="ordererModal" class="dropdown">
-            </select>
-            <button class="button" onclick="nextStep()">다음</button>
+                <select id="ordererModal" class="dropdown">
+                </select>
+                <button class="button" onclick="nextStep()">다음</button>
+            </div>
         </div>
-    </div>
 
 
-    <div class="content">
-        <div class="container">
-            <div class="card cart">
-                <label class="title_form">수주 등록
-                    <span style="margin-left: 76%">
+        <div class="content">
+            <div class="container">
+                <div class="card cart">
+                    <label class="title_form">수주 등록
+                        <span style="margin-left: 76%">
                 <label for="excel-upload" class="button_right">엑셀 등록</label>
                 <input type="file" id="excel-upload" style="display: none;" accept=".xls,.xlsx">
             </span>
-                </label>
-                <div class="steps">
-                    <div class="step">
-                        <div class="promo">
-                            <span>발주처 </span>
-                            <form class="form">
-                                <input type="text" placeholder="Orderer / Company name" class="input_field">
-                            </form>
-                        </div>
-                        <hr>
-                        <div class="promo">
-                            <span>전화번호 </span>
-                            <form class="form">
-                                <input type="text" placeholder=" 010-1234-5678 " class="input_field">
-                            </form>
-                        </div>
-                        <hr>
-                        <div class="promo">
-                            <span>제품명 </span>
-                            <form class="form">
-                                <input type="text" placeholder="Enter a Product Name" class="input_field">
-                            </form>
-                        </div>
-                        <hr>
-                        <div class="promo">
-                            <span>수량 </span>
-                            <form class="form">
-                                <input type="text" placeholder="Numbers " class="input_field">
-                            </form>
-                        </div>
-                        <div class="container" style="display: flex; align-items: center">
+                    </label>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="promo">
+                                <span>발주처 </span>
+                                <form class="form">
+                                    <input type="text" placeholder="Orderer / Company name" class="input_field">
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="promo">
+                                <span>전화번호 </span>
+                                <form class="form">
+                                    <input type="text" placeholder=" 010-1234-5678 " class="input_field">
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="promo">
+                                <span>제품명 </span>
+                                <form class="form">
+                                    <input type="text" placeholder="Enter a Product Name" class="input_field">
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="promo">
+                                <span>수량 </span>
+                                <form class="form">
+                                    <input type="text" placeholder="Numbers " class="input_field">
+                                </form>
+                            </div>
+                            <div class="container" style="display: flex; align-items: center">
           <span class="nice-form-group" style="margin-right:100px; margin-left: 50px">
             <input type="checkbox" id="check-1" class="switch"/>
             <label for="check-1">
@@ -149,34 +149,34 @@
               <small>긴급여부가 체크되어있을시 <br> 우선순위가 최우선으로 부여됩니다. </small>
             </label>
           </span>
-                            <span class="nice-form-group">
+                                <span class="nice-form-group">
             <input type="checkbox" id="check-2" class="switch"/>
             <label for="check-2">
               개인여부
               <small> BoX 단위로 가능합니다.<br> ※ 개수단위 구매불가 </small>
             </label>
           </span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card checkout">
-                <div class="footer">
-                    <label class="price"> </label>
-                    <button class="checkout-btn"> 등 록</button>
+                <div class="card checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn"> 등 록</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<!-- ===============================================-->
-<!--    End of Main Content-->
-<!-- ===============================================-->
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 
 
-<!-- ===============================================-->
-<!--    JavaScripts-->
-<!-- ===============================================-->
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
 </div>
 </body>
 </html>
