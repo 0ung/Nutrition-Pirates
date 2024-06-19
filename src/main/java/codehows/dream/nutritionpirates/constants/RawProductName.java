@@ -4,9 +4,9 @@ package codehows.dream.nutritionpirates.constants;
 public enum RawProductName {
 	CABBAGE("양배추"),
 	BLACK_GARLIC("흑마늘"),
-	HONEY("벌꿀"),
 	POMEGRANATE("석류(농축액)"),
 	PLUM("매실(농축액)"),
+	HONEY("벌꿀"),
 	COLLAGEN("콜라겐"),
 	WRAPPING_PAPER("포장지"),
 	BOX("박스");
