@@ -6,16 +6,10 @@ import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.RawOrderInsertDTO;
 import codehows.dream.nutritionpirates.dto.RawOrderPlanDTO;
 import codehows.dream.nutritionpirates.dto.RawsListDTO;
-import codehows.dream.nutritionpirates.entity.Order;
-import codehows.dream.nutritionpirates.entity.Orderer;
 import codehows.dream.nutritionpirates.entity.Raws;
-import codehows.dream.nutritionpirates.repository.RawOrderInsertRepository;
-import codehows.dream.nutritionpirates.repository.RawOrderPlanRepository;
-import codehows.dream.nutritionpirates.repository.RawStockRepository;
+import codehows.dream.nutritionpirates.repository.RawRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,9 +29,7 @@ import java.util.List;
 
 public class RawOrderInsertService {
 
-    private final RawOrderInsertRepository rawOrderInsertRepository;
-    private final RawOrderPlanRepository rawOrderPlanRepository;
-    private final RawStockRepository rawStockRepository;
+    private final RawRepository rawRepository;
 
     public void insert(RawOrderInsertDTO rawOrderInsertDTO) {
 
@@ -54,7 +46,53 @@ public class RawOrderInsertService {
                 .status(Status.WAITING)
                 .build();
 
-        rawOrderInsertRepository.save(raws);
+        rawRepository.save(raws);
+    }
+
+    private String getRaws(RawProductName productName){
+        String code;
+        switch (productName) {
+            case CABBAGE :
+                code = "C";
+                break;
+            case BLACK_GARLIC :
+                code = "B";
+                break;
+            case POMEGRANATE :
+                code = "S";
+                break;
+            case PLUM :
+                code = "P";
+                break;
+            case HONEY :
+                code = "H";
+                break;
+            case COLLAGEN :
+                code = "L";
+                break;
+            case WRAPPING_PAPER :
+                code = "P";
+                break;
+            case BOX :
+                code = "B";
+                break;
+            default:
+                throw new IllegalArgumentException("없는 상품원자재코드 : " + productName);
+        }
+        return code;
+    }
+    private String createRawsCodes(RawOrderInsertDTO rawOrderInsertDTO) {
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String formattedDate = now.format(formatter);
+
+        int quantity = rawOrderInsertDTO.getQuantity();
+        String rawCode = getRaws(rawOrderInsertDTO.getProduct());
+
+        String rawsCode = formattedDate + quantity + rawCode;
+
+        return rawsCode;
     }
 
     public void validateQuantity(RawOrderInsertDTO rawOrderInsertDTO) {
@@ -96,18 +134,18 @@ public class RawOrderInsertService {
     }
     public void rawImport (String rawsCode) {
 
-        Raws raw = rawStockRepository.findByRawsCode(rawsCode).orElse(null);
+        Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
         raw.rawImport();
-        rawStockRepository.save(raw);
+        rawRepository.save(raw);
     }
 
     public void rawExport(String rawsCode) {
-        Raws raw = rawStockRepository.findByRawsCode(rawsCode).orElse(null);
+        Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
         raw.rawExport();
-        rawStockRepository.save(raw);
+        rawRepository.save(raw);
     }
 
-    private RawProductName getRawProductName(String Raw) {
+    /*private RawProductName getRawProductName(String Raw) {
         switch (Raw) {
             case "양배추" :
                 return RawProductName.CABBAGE;
@@ -128,62 +166,17 @@ public class RawOrderInsertService {
             default:
                 return null;
         }
-    }
-
-    private String createRawsCodes(RawOrderInsertDTO rawOrderInsertDTO) {
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String formattedDate = now.format(formatter);
-
-        int quantity = rawOrderInsertDTO.getQuantity();
-        String rawCode = getRaws(rawOrderInsertDTO.getProduct());
-
-        String rawsCode = formattedDate + quantity + rawCode;
-
-        return rawsCode;
-    }
+    }*/
 
 
 
-    private String getRaws(RawProductName productName){
-        String code;
-        switch (productName) {
-            case CABBAGE :
-                 code = "C";
-                 break;
-            case BLACK_GARLIC :
-                code = "B";
-                break;
-            case POMEGRANATE :
-                code = "S";
-                break;
-            case PLUM :
-                code = "P";
-                break;
-            case HONEY :
-                code = "H";
-                break;
-            case COLLAGEN :
-                code = "L";
-                break;
-            case WRAPPING_PAPER :
-                code = "P";
-                break;
-            case BOX :
-                code = "B";
-                break;
-            default:
-                throw new IllegalArgumentException("없는 상품원자재코드 : " + productName);
-        }
-        return code;
-    }
+
 
     public List<RawOrderPlanDTO> getRawOrderList(Pageable pageable) {
 
         List<RawOrderPlanDTO> list = new ArrayList<>();
 
-        Page<Raws> pages = rawOrderPlanRepository.findAll(pageable);
+        Page<Raws> pages = rawRepository.findAll(pageable);
 
         pages.forEach((e) -> {
 
@@ -202,7 +195,7 @@ public class RawOrderInsertService {
 
         List<RawsListDTO> list = new ArrayList<>();
 
-        Page<Raws> pages = rawStockRepository.findAll(pageable);
+        Page<Raws> pages = rawRepository.findAll(pageable);
 
         pages.forEach((e) -> {
 
@@ -236,7 +229,7 @@ public class RawOrderInsertService {
 
     @Transactional
     public Workbook getHistory() {
-        List<Raws> list = rawOrderInsertRepository.findAll();
+        List<Raws> list = rawRepository.findAll();
         Workbook workbook = new XSSFWorkbook();
 
         // Create a sheet with a name
@@ -251,11 +244,12 @@ public class RawOrderInsertService {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
 
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // Fill data rows
         for (int i = 1; i < list.size() + 1; i++) {
             Row row = sheet.createRow(i);
             Raws data = list.get(i - 1);
-            Raws raws = rawOrderInsertRepository.findByRawsCode(data.getRawsCode()).orElse(null);
+            //Raws raws = rawOrderInsertRepository.findByRawsCode(data.getRawsCode()).orElse(null);
             row.createCell(0).setCellValue(data.getRawsCode());
             row.createCell(1).setCellValue(data.getProduct().getValue());
             row.createCell(2).setCellValue(data.getStatus().getValue());
@@ -263,10 +257,12 @@ public class RawOrderInsertService {
             row.createCell(4).setCellValue(data.getImportDate());
             row.createCell(5).setCellValue(data.getExportDate());
             row.createCell(6).setCellValue(data.getQuantity());
-            row.createCell(7).setCellValue(data.getRawsReason().getValue());
+            if(data.getRawsReason() != null) {
+                row.createCell(7).setCellValue(data.getRawsReason().getValue());
+            } else {
+                row.createCell(7).setCellValue("");
+            }
         }
         return workbook;
     }
-
-
 }

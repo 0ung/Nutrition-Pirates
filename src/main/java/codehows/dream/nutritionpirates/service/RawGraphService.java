@@ -1,12 +1,19 @@
 package codehows.dream.nutritionpirates.service;
 
 import codehows.dream.nutritionpirates.constants.RawProductName;
+import codehows.dream.nutritionpirates.constants.Status;
+import codehows.dream.nutritionpirates.dto.RawPeriodDTO;
 import codehows.dream.nutritionpirates.dto.RawShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.Raws;
-import codehows.dream.nutritionpirates.repository.RawStockRepository;
+import codehows.dream.nutritionpirates.repository.RawRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,22 +24,23 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RawGraphService {
 
-    private final RawStockRepository rawStockRepository;
-    public List<RawShowGraphDTO> getRawStockGraph() {
+    private final RawRepository rawRepository;
 
-        //List<RawsShowGraphDTO> list = new ArrayList<>();
+    // 입고된 양만 list에 담아서 보여주기
+    public List<RawShowGraphDTO> getRawStockGraph() {
 
         Map<String, Integer> productQuantityMap = new HashMap<>();
         for(RawProductName productName : RawProductName.values()) {
             productQuantityMap.put(productName.getValue(), 0); // 기본값은 0으로 설정
         }
-
-        List<Raws> rawsList = rawStockRepository.findAll();
+        List<Raws> rawsList = rawRepository.findAll();
 
         for (Raws raws : rawsList) {
-            String product = raws.getProduct().getValue();
-            int quantity = raws.getQuantity();
-            productQuantityMap.put(product, productQuantityMap.get(product) + quantity);
+            if (raws.getStatus() == Status.IMPORT) {
+                String product = raws.getProduct().getValue();
+                int quantity = raws.getQuantity();
+                productQuantityMap.put(product, productQuantityMap.get(product) + quantity);
+            }
         }
 
         List<RawShowGraphDTO> list = new ArrayList<>();
@@ -40,34 +48,14 @@ public class RawGraphService {
             list.add(new RawShowGraphDTO(product,quantity));
         });
 
-        /* ProductName 관련 Product 값을 기본 값 0이라도 설정해주기
-        for(RawProductName productName : RawProductName.values()) {
-            list.add(RawsShowGraphDTO.builder()
-                    .product(productName.getValue())
-                    .quantity(0)
-                    .build());
-        }
-
-        List<Raws> rawsList = rawGraphRepository.findAll();
-
-        Map<String, RawsShowGraphDTO> map = new HashMap<>();
-        for (RawsShowGraphDTO dto : list) {
-            map.put(dto.getProduct(), dto);
-        }
-
-        for (Raws raws : rawsList) {
-            RawsShowGraphDTO dto = map.get(raws.getProduct().getValue());
-            dto.setQuantity(raws.getQuantity());
-        }
-
-        return new ArrayList<>(map.values());*/
         return list;
     }
 
+    // 최소 원자재 보유량 알림
     public List<String> checkMinimumStock() {
         List<String> notification = new ArrayList<>();
 
-        List<Raws> rawsList = rawStockRepository.findAll();
+        List<Raws> rawsList = rawRepository.findAll();
 
         Map<RawProductName, Integer> stockMap = new HashMap<>();
         for(RawProductName productName : RawProductName.values()) {
@@ -75,9 +63,11 @@ public class RawGraphService {
         }
 
         for(Raws raws : rawsList) {
-            RawProductName product = raws.getProduct();
-            int quantity = raws.getQuantity();
-            stockMap.put(product, stockMap.get(product) + quantity);
+            if (raws.getStatus() == Status.IMPORT) {
+                RawProductName product = raws.getProduct();
+                int quantity = raws.getQuantity();
+                stockMap.put(product, stockMap.get(product) + quantity);
+            }
         }
 
         stockMap.forEach((product, quantity) -> {
@@ -106,7 +96,66 @@ public class RawGraphService {
                     break;
             }
         });
-
         return notification;
     }
+
+
+    public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = currentDate.minusDays(2);  // 3일 전부터
+        LocalDate endDate = currentDate;  // 오늘까지
+
+        Page<Raws> pages = rawRepository.findByStatusAndDeadlineBetween(
+                Status.IMPORT,
+                java.sql.Date.valueOf(startDate),
+                java.sql.Date.valueOf(endDate),
+                pageable);
+
+        List<RawPeriodDTO> list = new ArrayList<>();
+
+        pages.forEach(e -> list.add(RawPeriodDTO.builder()
+                .rawsCode(e.getRawsCode())
+                .product(e.getProduct().getValue())
+                .importDate(e.getImportDate())
+                .deadLine(e.getDeadLine())
+                .quantity(e.getQuantity())
+                .build()));
+
+        return list;
+    }
+    /*public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate minDate = currentDate.minus(ChronoUnit.DAYS.between(currentDate, currentDate.minusDays(3)), ChronoUnit.DAYS);
+        LocalDate maxDate = currentDate.plusDays(3);
+
+        Page<Raws> pages = rawRepository.findByStatusAndDeadlineBetween(
+                Status.IMPORT,
+                java.sql.Date.valueOf(minDate),
+                java.sql.Date.valueOf(maxDate),
+                pageable);
+
+        List<RawPeriodDTO> list = new ArrayList<>();
+
+        //Page<Raws> pages = rawRepository.findAll(pageable);
+
+        //LocalDate currentDate = LocalDate.now();
+
+        pages.forEach((e) -> {
+            /*if (e.getStatus() == Status.IMPORT && e.getDeadLine() != null) {
+                LocalDate deadlineDate = e.getDeadLine().toLocalDate();
+                long daysUntilDeadline = ChronoUnit.DAYS.between(deadlineDate, currentDate);
+
+                    if ( daysUntilDeadline <=3) {
+                        list.add(RawPeriodDTO.builder()
+                                .rawsCode(e.getRawsCode())
+                                .product(e.getProduct().getValue())
+                                .importDate(e.getImportDate())
+                                .deadLine(e.getDeadLine())
+                                .quantity(e.getQuantity())
+                                .build());
+        });
+        return list;
+    } */
 }

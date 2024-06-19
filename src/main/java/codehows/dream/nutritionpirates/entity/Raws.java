@@ -2,6 +2,8 @@ package codehows.dream.nutritionpirates.entity;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.RawsReason;
@@ -65,7 +67,13 @@ public class Raws {
 	public void rawImport() {
 		this.importDate = Date.valueOf(LocalDate.now());
 		this.status = status.IMPORT;
-	}
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(importDate);
+		calendar.add(Calendar.DAY_OF_YEAR, 14);
+
+		this.deadLine = new Date (calendar.getTimeInMillis());
+		}
 
 	public void rawExport() {
 		this.exportDate = Date.valueOf(LocalDate.now());

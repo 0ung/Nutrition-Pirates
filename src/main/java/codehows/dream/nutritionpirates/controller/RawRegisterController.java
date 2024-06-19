@@ -76,6 +76,18 @@ public class RawRegisterController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/rawperiod/{page}")
+    public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,10);
+
+        try {
+            return new ResponseEntity<>(rawGraphService.getPeriodList(pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/graph")
     public ResponseEntity<?> getRawStockGraph() {
@@ -118,4 +130,5 @@ public class RawRegisterController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 }
