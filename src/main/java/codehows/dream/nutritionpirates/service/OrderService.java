@@ -2,6 +2,7 @@ package codehows.dream.nutritionpirates.service;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class OrderService {
 	private final ProcessPlanService processPlanService;
 	private final BOMCalculatorService bomCalculatorService;
 	private final RawOrderInsertService rawOrderInsertService;
+	private final ProgramTimeService programTimeService;
 
 	public Orderer insertOrderer(String ordererName, String ordererNumber) {
 		Orderer orderer = ordererRepository.findByName(ordererName).orElse(null);
@@ -55,8 +57,9 @@ public class OrderService {
 
 	public void insert(MesOrderInsertDTO mesOrderInsertDTO) {
 		Orderer orderer = insertOrderer(mesOrderInsertDTO.getOrderName(), mesOrderInsertDTO.getOrderNumber());
+		Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
+		Date nowDate = Date.valueOf(timestamp.toLocalDateTime().toLocalDate());
 
-		Date nowDate = Date.valueOf(LocalDate.now());
 		Order order = orderRepository.save(Order.builder()
 			.orderer(orderer)
 			.product(mesOrderInsertDTO.getProduct())

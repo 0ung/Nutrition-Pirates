@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 
 public interface WorkPlans {
     WorkPlanDuration WORK_PLAN_DURATION = new WorkPlanDuration();
-
-    void execute(WorkPlan workPlan);
+    WorkPlan execute(WorkPlan workPlan);
     WorkPlan createWorkPlan(int input);
 }

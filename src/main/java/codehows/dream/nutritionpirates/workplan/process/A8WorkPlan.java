@@ -2,14 +2,35 @@ package codehows.dream.nutritionpirates.workplan.process;
 
 import static codehows.dream.nutritionpirates.workplan.process.CommonMethod.*;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
+import org.springframework.stereotype.Component;
+
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
+import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
+import codehows.dream.nutritionpirates.service.ProgramTimeService;
+import lombok.RequiredArgsConstructor;
 
+@Component
+@RequiredArgsConstructor
 public class A8WorkPlan implements WorkPlans {
-	@Override
-	public void execute(WorkPlan workPlan) {
 
+	private final ProgramTimeService programTimeService;
+	private final WorkPlanRepository workPlanRepository;
+
+	@Override
+	public WorkPlan execute(WorkPlan workPlan) {
+		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
+		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
+		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		workPlanRepository.save(plan);
+		return workPlan;
 	}
 
 	@Override
@@ -19,13 +40,26 @@ public class A8WorkPlan implements WorkPlans {
 			.facility(Facility.boxMachine)
 			.process(Process.A8)
 			.processCompletionTime(expectTime(data))
-			.semiProduct("BOX" + data)
+			.semiProduct(data)
 			.build();
 	}
 
-	public String expectTime(int input) {
-		return getString(WORK_PLAN_DURATION.boxPackingDuration(input) + WORK_PLAN_DURATION.boxPackingWaiting(input));
+	public Timestamp expectTime(int input) {
+		double time = WORK_PLAN_DURATION.boxPackingDuration(input);
+		int minToAdd = (int) time * 60;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime expectedTime = now.plusMinutes(minToAdd);
+		return Timestamp.valueOf(expectedTime);
 	}
+
+	public Timestamp getComplete(Timestamp timestamp, int input) {
+		double time = WORK_PLAN_DURATION.boxPackingDuration(input);
+		int minToAdd = (int) time * 60;
+		LocalDateTime localDateTime = timestamp.toLocalDateTime();
+		LocalDateTime completeTime = localDateTime.plusMinutes(minToAdd);
+		return Timestamp.valueOf(completeTime);
+	}
+
 
 	public int process(int input) {
 		return (int)Math.ceil(input / 30.0);

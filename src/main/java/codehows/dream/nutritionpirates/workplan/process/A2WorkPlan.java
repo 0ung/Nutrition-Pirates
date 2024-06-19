@@ -1,14 +1,36 @@
 package codehows.dream.nutritionpirates.workplan.process;
 
+import java.sql.Timestamp;
+
+import org.hibernate.jdbc.Work;
+import org.springframework.stereotype.Component;
+
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
+import codehows.dream.nutritionpirates.service.ProgramTimeService;
+import codehows.dream.nutritionpirates.service.WorkPlanService;
+import lombok.RequiredArgsConstructor;
 
+@Component
+@RequiredArgsConstructor
 public class A2WorkPlan implements WorkPlans {
 
-	@Override
-	public void execute(WorkPlan workPlan) {
+	private final ProgramTimeService programTimeService;
+	private final WorkPlanService workPlanService;
 
+	@Override
+	public WorkPlan execute(WorkPlan workPlan) {
+		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
+
+		workPlan.setStartTime(time);
+		workPlan.setEndTime(time);
+		workPlan.setRawsCodes("일단 더미");
+		workPlan.setActivate(false);
+
+		//@TODO 이거 변수 처리해야됨
+		workPlan.setWorker("김영웅");
+		return workPlan;
 	}
 
 	@Override
@@ -16,7 +38,7 @@ public class A2WorkPlan implements WorkPlans {
 		return WorkPlan.builder()
 			.facility(Facility.weighing)
 			.process(Process.A2)
-			.semiProduct("양배추 / 흑마늘" + input)
+			.semiProduct(input)
 			.build();
 	}
 

@@ -26,14 +26,13 @@ public class TimeFilter implements Filter {
 		IOException,
 		ServletException {
 
-		try {
-			ProgramTime programTime = programTimeService.getProgramTime();
-		} catch (IndexOutOfBoundsException e) {
+		ProgramTime programTime = programTimeService.getProgramTime();
+		if (programTime == null) {
 			programTimeService.registerTime();
 			log.info("시간 등록");
-			filterChain.doFilter(servletRequest, servletResponse);
+		} else {
+			log.info("시간 존재");
 		}
-		log.info("시간 존재");
 		filterChain.doFilter(servletRequest, servletResponse);
 	}
 }

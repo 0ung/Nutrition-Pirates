@@ -10,17 +10,17 @@ import lombok.Setter;
 @Setter
 
 public class ActivateFacilityDTO {
-	private List<WorkPlan> juiceMachine1;
-	private List<WorkPlan> juiceMachine2;
-	private List<WorkPlan> StickMachine1;
-	private List<WorkPlan> StickMachine2;
-	private List<WorkPlan> extractor1;
-	private List<WorkPlan> extractor2;
-	private List<WorkPlan> sterilizer1;
-	private List<WorkPlan> sterilizer2;
-	private List<WorkPlan> mixer;
-	private List<WorkPlan> filter;
-	private List<WorkPlan> boxMachine;
-	private List<WorkPlan> metalDetector;
-	private List<WorkPlan> washer;
+	private List<WorkPlanDTO> juiceMachine1;
+	private List<WorkPlanDTO> juiceMachine2;
+	private List<WorkPlanDTO> StickMachine1;
+	private List<WorkPlanDTO> StickMachine2;
+	private List<WorkPlanDTO> extractor1;
+	private List<WorkPlanDTO> extractor2;
+	private List<WorkPlanDTO> sterilizer1;
+	private List<WorkPlanDTO> sterilizer2;
+	private List<WorkPlanDTO> mixer;
+	private List<WorkPlanDTO> filter;
+	private List<WorkPlanDTO> boxMachine;
+	private List<WorkPlanDTO> metalDetector;
+	private List<WorkPlanDTO> washer;
 }

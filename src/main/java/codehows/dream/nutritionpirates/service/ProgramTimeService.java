@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import codehows.dream.nutritionpirates.entity.ProgramTime;
 import codehows.dream.nutritionpirates.repository.ProgramTimeRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,6 +25,9 @@ public class ProgramTimeService {
 
 	public ProgramTime getProgramTime() {
 		List<ProgramTime> list = programTimeRepository.findAll();
+		if(list.isEmpty()){
+			return null;
+		}
 		return list.get(0);
 	}
 
