@@ -7,88 +7,92 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-
     </style>
+    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
 </th:block>
 
 <div layout:fragment="content">
-    <div class="content2">
+
+    <div class="main-content">
         <div class="container">
-            <div class="card2 cart">
-                <label class="title_form">원자재 입출고 현황
-                    <span style="margin-left: 75%">
-                            <button>엑셀 저장</button>
-                    </span>
-                </label>
+            <div class="card">
+                <label class="title_form">입/출고 관리</label>
 
                 <div class="steps">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>제품코드</th>
-                            <th>제품명</th>
-                            <th>수량</th>
-                            <th>상태</th>
-                            <th>일자</th>
-                            <th>사유</th>
-                            <th>수정/삭제</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1번</td>
-                            <td>양배추</td>
-                            <td>1000kg</td>
-                            <td>출고</td>
-                            <td>2024-06-10</td>
-                            <td>공정투입</td>
-                            <td>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                    수정|삭제
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2번</td>
-                            <td>양배추</td>
-                            <td>1000kg</td>
-                            <td>출고</td>
-                            <td>2024-06-10</td>
-                            <td>공정투입</td>
-                            <td>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                    수정|삭제
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3번</td>
-                            <td>양배추</td>
-                            <td>1000kg</td>
-                            <td>출고</td>
-                            <td>2024-06-10</td>
-                            <td>공정투입</td>
-                            <td>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                    수정|삭제
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4번</td>
-                            <td>양배추</td>
-                            <td>1000kg</td>
-                            <td>출고</td>
-                            <td>2024-06-10</td>
-                            <td>공정투입</td>
-                            <td>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                    수정|삭제
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="header">
+                        <span style="margin-left: 75%">
+                            <button>엑셀 저장</button>
+                    </span>
+                    </div>
+                    <div class="step">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>제품코드</th>
+                                <th>제품명</th>
+                                <th>수량</th>
+                                <th>상태</th>
+                                <th>일자</th>
+                                <th>사유</th>
+                                <th>수정/삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+                                        수정|삭제
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+                                        수정|삭제
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+                                        수정|삭제
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4번</td>
+                                <td>양배추</td>
+                                <td>1000kg</td>
+                                <td>출고</td>
+                                <td>2024-06-10</td>
+                                <td>공정투입</td>
+                                <td>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+                                        수정|삭제
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="centered">
