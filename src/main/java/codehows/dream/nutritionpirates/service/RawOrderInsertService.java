@@ -56,7 +56,7 @@ public class RawOrderInsertService {
                 code = "C";
                 break;
             case BLACK_GARLIC :
-                code = "B";
+                code = "G";
                 break;
             case POMEGRANATE :
                 code = "S";
@@ -71,7 +71,7 @@ public class RawOrderInsertService {
                 code = "L";
                 break;
             case WRAPPING_PAPER :
-                code = "P";
+                code = "W";
                 break;
             case BOX :
                 code = "B";
