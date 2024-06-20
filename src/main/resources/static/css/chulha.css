@@ -2,7 +2,7 @@
 /*    font-family: Arial, sans-serif;*/
 /*}*/
 
-.gy-modal {
+.ch-modal {
     display: block; /* 처음에 모달을 보이도록 설정 */
     position: fixed;
     z-index: 1;
@@ -16,7 +16,7 @@
     align-items: center;
 }
 
-.gy-modal-content {
+.ch-modal-content {
     background-color: #000; /* 배경색 변경 */
     width: 300px; /* 모달 창 너비 설정 */
     color: #fff; /* 텍스트 색상 변경 */
@@ -36,7 +36,7 @@
     }
 }
 
-.gy-button {
+.ch-button {
     background-color: #444;
     color: white;
     padding: 10px 20px;
@@ -45,11 +45,11 @@
     margin: 10px 0;
 }
 
-.gy-button:hover {
+.ch-button:hover {
     background-color: #555;
 }
 
-.gy-dropdown {
+.ch-dropdown {
     background-color: #444;
     color: white;
     padding: 10px;
@@ -59,27 +59,26 @@
     width: 100%;
 }
 
-.gy-dropdown:hover {
+.ch-dropdown:hover {
     background-color: #555;
 }
 
-.gy-navbar-vertical {
+.ch-navbar-vertical {
     top: 0;
 }
 
 
-.gy-content {
+.ch-content {
     display: flex;
-    margin-top: 10%; /* Adjust top margin as needed */
 }
 
 @media (max-width: 1320px) {
-    .gy-content {
+    .ch-content {
         margin-left: 50px; /* Adjust left margin for smaller screens */
     }
 }
 
-.gy-container {
+.ch-container {
     /* Adjust top margin as needed */
     width: 100%; /* Ensure full width */
     max-width: 1200px; /* Adjust max-width as needed */
@@ -90,7 +89,7 @@
     justify-content: center;
 }
 
-.gy-container2 {
+.ch-container2 {
     margin-top: 10%; /* Adjust top margin as needed */
     width: 100%; /* Ensure full width */
     max-width: 1200px; /* Adjust max-width as needed */
@@ -107,7 +106,7 @@
     }
 }
 
-.gy-hr {
+.ch-hr {
     height: 1px;
     background-color: rgba(16, 86, 82, .75);
 ;
@@ -115,21 +114,21 @@
 }
 
 
-.gy-card {
+.ch-card {
     width: 800px;
     background: rgb(255, 250, 235);
     box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
 
 }
 
-.gy-card2 {
+.ch-card2 {
     width: 1500px;
     background: rgb(255, 250, 235);
     box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
 
 }
 
-.gy-title_form {
+.ch-title_form {
     width: 100%;
     height: 70px;
     position: relative;
@@ -144,22 +143,22 @@
 }
 
 /* Cart */
-.gy-cart {
+.ch-cart {
     border-radius: 19px 19px 0px 0px;
 }
 
-.gy-cart .gy-steps {
+.ch-cart .ch-steps {
     display: flex;
     flex-direction: column;
     padding: 20px;
 }
 
-.gy-cart .gy-steps .gy-step {
+.ch-cart .ch-steps .ch-step {
     display: grid;
     gap: 10px;
 }
 
-.gy-cart .gy-steps .gy-step span {
+.ch-cart .ch-steps .ch-step span {
     font-size: 13px;
     font-weight: 600;
     color: #000000;
@@ -167,21 +166,21 @@
     display: block;
 }
 
-.gy-cart .gy-steps .gy-step p {
+.ch-cart .ch-steps .ch-step p {
     font-size: 11px;
     font-weight: 600;
     color: #000000;
 }
 
 /* Promo */
-.gy-promo gy-form {
+.ch-promo ch-form {
     display: grid;
     grid-template-columns: 1fr ;
     gap: 10px;
     padding: 0px;
 }
 
-.gy-input_field {
+.ch-input_field {
     width: 100%;
     height: 36px;
     padding: 0 0 0 12px;
@@ -192,13 +191,13 @@
     transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
 }
 
-.gy-input_field:focus {
+.ch-input_field:focus {
     border: 1px solid transparent;
     box-shadow: 0px 0px 0px 2px rgb(251, 243, 228);
     background-color: rgb(201, 193, 178);
 }
 
-.gy-promo gy-form gy-button {
+.ch-promo ch-form ch-button {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -217,7 +216,7 @@
     line-height: 15px;
     color: #000000;
 }
-.gy-button_right {
+.ch-button_right {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -238,28 +237,28 @@
 }
 
 /* Checkout */
-.gy-payments .gy-details {
+.ch-payments .ch-details {
     display: grid;
     grid-template-columns: 10fr 1fr;
     padding: 0px;
     gap: 5px;
 }
 
-.gy-payments .gy-details span:nth-child(odd) {
+.ch-payments .ch-details span:nth-child(odd) {
     font-size: 12px;
     font-weight: 600;
     color: #000000;
     margin: auto auto auto 0;
 }
 
-.gy-payments .gy-details span:nth-child(even) {
+.ch-payments .ch-details span:nth-child(even) {
     font-size: 13px;
     font-weight: 600;
     color: #000000;
     margin: auto 0 auto auto;
 }
 
-.gy-checkout .gy-footer {
+.ch-checkout .ch-footer {
     display: flex;
     align-items: center;
     justify-content: flex-end; /* Changed from space-between to flex-end */
@@ -267,7 +266,7 @@
     background-color: rgba(16, 86, 82, .5);
 }
 
-.gy-price {
+.ch-price {
     position: relative;
     font-size: 22px;
     color: #2B2B2F;
@@ -275,7 +274,7 @@
 }
 
 
-.gy-checkout .gy-checkout-btn {
+.ch-checkout .ch-checkout-btn {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -303,79 +302,79 @@
 /*suzu check */
 
 
-.gy-centered {
+.ch-centered {
     display: flex; /* Flexbox 컨테이너로 설정 */
     justify-content: center; /* 가로 방향 가운데 정렬 */
     align-items: center; /* 세로 방향 가운데 정렬 */
 }
 
-.gy-table {
+.ch-table {
     border-collapse: collapse;
     width: 100%;
     margin: 1rem auto;
     background-color: white;
 }
 
-.gy-th, .gy-td {
+.ch-th, .ch-td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
-.gy-th {
+.ch-th {
     background-color: #1b1b1b;
     color: #ddd;
 }
 
-.gy-tbody .gy-tr:hover {
+.ch-tbody .ch-tr:hover {
     background-color: #d3d3d3;
     cursor: pointer;
 }
 
 /* Adjust column widths */
-.gy-th:nth-child(1),
-.gy-td:nth-child(1) {
+.ch-th:nth-child(1),
+.ch-td:nth-child(1) {
     width: 5%; /* Adjusted for 번호 */
 }
 
-.gy-th:nth-child(2),
-.gy-td:nth-child(2) {
+.ch-th:nth-child(2),
+.ch-td:nth-child(2) {
     width: 15%; /* Adjusted for 발주처 */
 }
 
-.gy-th:nth-child(3),
-.gy-td:nth-child(3) {
+.ch-th:nth-child(3),
+.ch-td:nth-child(3) {
     width: 15%; /* Adjusted for 제품명 */
 }
 
-.gy-th:nth-child(4),
-.gy-td:nth-child(4) {
+.ch-th:nth-child(4),
+.ch-td:nth-child(4) {
     width: 10%; /* Adjusted for 수량(BOX) */
 }
 
-.gy-th:nth-child(5),
-.gy-td:nth-child(5) {
+.ch-th:nth-child(5),
+.ch-td:nth-child(5) {
     width: 10%; /* Adjusted for 수주일 */
 }
 
-.gy-th:nth-child(6),
-.gy-td:nth-child(6) {
+.ch-th:nth-child(6),
+.ch-td:nth-child(6) {
     width: 10%; /* Adjusted for 예상 납기일 */
 }
 
-.gy-th:nth-child(7),
-.gy-td:nth-child(7) {
+.ch-th:nth-child(7),
+.ch-td:nth-child(7) {
     width: 10%; /* Adjusted for 공정 상태 */
 }
 
-.gy-th:nth-child(8),
-.gy-td:nth-child(8),
-.gy-th:nth-child(9),
-.gy-td:nth-child(9) {
+.ch-th:nth-child(8),
+.ch-td:nth-child(8),
+.ch-th:nth-child(9),
+.ch-td:nth-child(9) {
     width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
 }
 
-.gy-search-container {
+.ch-search-container {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -387,7 +386,7 @@
     perspective: 1000px;
 }
 
-.gy-label {
+.ch-label {
     position: absolute;
     top: 50%;
     left: 20px;
@@ -398,7 +397,7 @@
     text-shadow 0.3s ease;
 }
 
-.gy-search-input {
+.ch-search-input {
     position: relative;
     width: 230px;
     height: 40px;
@@ -415,29 +414,29 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow for a realistic feel */
 }
 
-.gy-search-input:focus,
-.gy-search-input:not(:placeholder-shown) {
+.ch-search-input:focus,
+.ch-search-input:not(:placeholder-shown) {
     border-color: #4caf50;
     background: linear-gradient(to right, #c2f0c2, #f0f0f0);
     transform: rotateX(20deg);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on focus */
 }
 
-.gy-search-input:focus + .label,
-.gy-search-input:not(:placeholder-shown) + .label {
+.ch-search-input:focus + .label,
+.ch-search-input:not(:placeholder-shown) + .label {
     transform: translateY(-120%) scale(0.8);
     font-size: 12px;
     color: #4caf50;
     text-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
 }
 
-.gy-search-input:hover {
+.ch-search-input:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on hover */
     background: linear-gradient(to right, #e6e6e6, #f9f9f9);
     border-color: #999;
 }
 
-.gy-clear-button {
+.ch-clear-button {
     position: absolute;
     top: 50%;
     right: 20px;
@@ -448,16 +447,16 @@
     transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
 }
 
-.gy-clear-button:hover {
+.ch-clear-button:hover {
     color: #4caf50;
     transform: scale(1.1);
 }
 
-.gy-search-input:not(:focus):not(:placeholder-shown) + .gy-clear-button {
+.ch-search-input:not(:focus):not(:placeholder-shown) + .ch-clear-button {
     opacity: 1;
 }
 
-.gy-shine {
+.ch-shine {
     position: absolute;
     top: 0;
     left: 0;
@@ -474,11 +473,11 @@
     transition: opacity 0.3s ease;
 }
 
-.gy-search-input:focus + .gy-shine {
+.ch-search-input:focus + .ch-shine {
     opacity: 1;
 }
 
-.gy-search-icon {
+.ch-search-icon {
     position: absolute;
     top: 50%;
     right: 20px;
@@ -489,7 +488,7 @@
     border-radius: 50%;
 }
 
-.gy-search-input:focus + .gy-search-icon {
+.ch-search-input:focus + .ch-search-icon {
     color: #4caf50;
     transform: translateY(-50%) scale(1.1);
     filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.6));
@@ -505,7 +504,7 @@
     }
 }
 
-.gy-search-input:focus {
+.ch-search-input:focus {
     animation: inputPulse 0.5s ease;
 }
 
