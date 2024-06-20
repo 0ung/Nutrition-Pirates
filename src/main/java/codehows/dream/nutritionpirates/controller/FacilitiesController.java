@@ -9,4 +9,9 @@ public class FacilitiesController {
     public String index1() {
         return "productionamount";
     }
+
+    @GetMapping(value = "/productionvolume")
+    public String index2() {
+        return "productionVolume";
+    }
 }
