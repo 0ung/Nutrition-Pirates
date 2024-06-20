@@ -1,8 +1,11 @@
 package codehows.dream.nutritionpirates.controller;
 
 
-import codehows.dream.nutritionpirates.dto.RawOrderInsertDTO;
-import codehows.dream.nutritionpirates.service.RawGraphService;
+import codehows.dream.nutritionpirates.dto.*;
+import codehows.dream.nutritionpirates.entity.Order;
+import codehows.dream.nutritionpirates.repository.OrderRepository;
+import codehows.dream.nutritionpirates.service.BOMCalculatorService;
+import codehows.dream.nutritionpirates.service.OrderService;
 import codehows.dream.nutritionpirates.service.RawOrderInsertService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +29,9 @@ import java.util.Optional;
 public class RawRegisterController {
 
     private final RawOrderInsertService rawOrderInsertService;
-    private final RawGraphService rawGraphService;
+    private final OrderService orderService;
+    private final BOMCalculatorService bomCalculatorService;
+    private final OrderRepository orderRepository;
 
     @PostMapping("/register")
     public ResponseEntity<?> insertRawOrder(@RequestBody RawOrderInsertDTO rawOrderInsertDTO) {
@@ -50,7 +56,7 @@ public class RawRegisterController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{page}")
+    /*@GetMapping("/{page}")
     public ResponseEntity<?> getList(@PathVariable(name = "page") Optional<Integer> page) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
 
@@ -62,7 +68,7 @@ public class RawRegisterController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
+*/
     @GetMapping("/rawstock/{page}")
     public ResponseEntity<?> getRawStockList(@PathVariable(name = "page") Optional<Integer> page) {
 
@@ -76,7 +82,26 @@ public class RawRegisterController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/rawperiod/{page}")
+    @GetMapping("/rawplan")
+    public ResponseEntity<?> getRawsPlan() {
+
+
+        return new ResponseEntity<>(rawOrderInsertService.getRawsPlanDTO(), HttpStatus.OK);
+    }
+    @GetMapping("/bom")
+    public ResponseEntity<?> calculateBOMs() {
+
+
+        return new ResponseEntity<>(bomCalculatorService.calculateBOMs(), HttpStatus.OK);
+    }
+    /*@GetMapping("/bomsum")
+    @ResponseBody
+    public ResponseEntity<List<RawBOMDTO>> sumBOMs() {
+        List<RawBOMDTO> aggregatedList = bomCalculatorService.aggregateQuantities();
+        return ResponseEntity.ok().body(aggregatedList);
+    }*/
+
+    /*@GetMapping("/rawperiod/{page}")
     public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,10);
@@ -87,13 +112,13 @@ public class RawRegisterController {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
     @GetMapping("/graph")
     public ResponseEntity<?> getRawStockGraph() {
 
         try {
-            return new ResponseEntity<>(rawGraphService.getRawStockGraph(), HttpStatus.OK);
+            return new ResponseEntity<>(rawOrderInsertService.getRawStockGraph(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -103,7 +128,7 @@ public class RawRegisterController {
     public ResponseEntity<?> getMinimumStockNotifications() {
 
         try {
-            return new ResponseEntity<>(rawGraphService.checkMinimumStock(), HttpStatus.OK);
+            return new ResponseEntity<>(rawOrderInsertService.checkMinimumStock(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
