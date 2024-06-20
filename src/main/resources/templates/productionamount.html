@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        #product-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .col-md-3, .col-md-4 {
+            background-color: skyblue;
+            border: 1px solid black;
+            padding: 10px; /* 모든 방향에 20픽셀의 마진을 추가 */
+            height: 100px;
+        }
+
+
+    </style>
+</th:block>
+s
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
+    <h1>각 설비 실시간 상태 현황</h1>
+    <hr>
+
+    <div class="container" id="product-container">
+        <div class="row">
+            <div class="col-md-3">포장기</div>
+            <div class="col-md-3">추출기</div>
+            <div class="col-md-3">살균기</div>
+            <div class="col-md-3">혼합기</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">여과기</div>
+            <div class="col-md-4">box포장기</div>
+            <div class="col-md-4">금속 검출기</div>
+        </div>
+    </div>
+</div>
+
+
+</html>

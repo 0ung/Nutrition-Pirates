@@ -4,9 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class TestController {
-    @GetMapping(value = "/")
+public class SystemTimeController {
+    @GetMapping(value = "/systemtime")
     public String index() {
-        return "index";
+        return "systemtime";
     }
+
+
 }
