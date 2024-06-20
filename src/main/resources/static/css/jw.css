@@ -1,0 +1,161 @@
+.empty-container {
+    padding: 5px;
+}
+
+#main-content {
+    display: flex;
+    margin-top: 10%; /* Adjust top margin as needed */
+}
+
+@media (max-width: 1320px) {
+    #main-content {
+        margin-left: 50px; /* Adjust left margin for smaller screens */
+
+    }
+}
+
+/* Adjust the grid container */
+.main-container {
+    width: 100%; /* 전체 너비 설정 */
+    max-width: 1200px; /* 필요에 따라 최대 너비 조정 */
+    margin: 0 auto; /* 부모 요소 내에서 수평 중앙 정렬 */
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0px;
+    justify-content: center;
+    background-color: white;
+    border-radius: 30px; /* 모서리를 둥글게 함 */
+    padding: 20px; /* 콘텐츠 패딩 추가 */
+}
+
+#pagination {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+}
+
+#main-label {
+    width: 100%;
+    height: 70px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    border-bottom: 1px solid rgba(16, 86, 82, .75);
+    font-weight: 700;
+    font-size: 20px;
+    color: rgba(6, 59, 56, 0.75);
+}
+
+#css-hr {
+
+    height: 1px;
+    background-color: rgba(16, 86, 82, .75);
+    border: none;
+}
+
+/* 엑셀 다운로드 버튼을 오른쪽으로 이동시키기 위한 CSS */
+#button-container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    padding: 5px;
+}
+
+.jw-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 36px;
+    background: rgba(16, 86, 82, .75);
+    box-shadow: 0px 0.5px 0.5px #F3D2C9, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+    border-radius: 5px;
+    border: 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: white;
+}
+
+/* 수정 및 삭제 버튼 컨테이너 스타일 */
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 수정 및 삭제 버튼 컨테이너 스타일 */
+.button2-container {
+    width: 50%;
+}
+
+.jw-button2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 36px;
+    background: white;
+    box-shadow: 0px 0.5px 0.5px #F3D2C9, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+    border-radius: 5px;
+    border: 1px solid rgba(6, 59, 56, 0.75);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: rgba(6, 59, 56, 0.75);
+    margin: 0;
+}
+
+.jw-button2:hover, jw-button2:active {
+    background-color: rgb(195, 223, 210);
+    color: rgba(6, 59, 56, 0.75);
+    border-color: rgba(16, 86, 82, .75);
+    font-weight: bold;
+}
+
+.jw-table {
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    background: whitesmoke;
+
+}
+
+.jw-table th {
+    background: #c3dfd2;
+    color: rgba(6, 59, 56, 0.75);
+}
+
+/* 테이블 내용을 가운데 정렬하기 위한 CSS */
+.jw-table th,
+.jw-table td {
+    border: 1px solid rgba(16, 86, 82, .75);
+    text-align: center; /* 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+}
+
+#card1 {
+    width: 1500px;
+    background: rgb(255, 250, 235);
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+}
+
+#card2 {
+    width: 1500px;
+    background: rgb(255, 250, 235);
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+}
+
+#cart {
+    border-radius: 19px 19px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 8px;
+}

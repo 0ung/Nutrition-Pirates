@@ -7,34 +7,56 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
+        .page-link {
+            color: rgba(6, 59, 56, 0.75);
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .page-item.active .page-link {
+            z-index: 1;
+            color: rgba(6, 59, 56, 0.75);
+            font-weight: bold;
+            background-color: #f1f1f1;
+            border-color: #ccc;
+
+        }
+
+        .page-link:focus, .page-link:hover {
+            color: rgba(6, 59, 56, 0.75);
+            font-weight: bold;
+            background-color: #c3dfd2;
+            border-color: #ccc;
+        }
     </style>
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
+    <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
+    <link href="../static/css/niceForm.css" type="text/css" rel="stylesheet" id="niceForm.css"/>
 </th:block>
 
 <div layout:fragment="content">
 
-    <div class="main-content">
-        <div class="container">
-            <div class="card">
-                <label class="title_form">입/출고 관리</label>
-
-                <div class="steps">
-                    <div class="header">
-                        <span style="margin-left: 75%">
-                            <button>엑셀 저장</button>
-                    </span>
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <div id="card1">
+                <div>
+                    <label id="main-label">입/출고 관리</label>
+                    <div id="button-container">
+                        <form>
+                            <button class="jw-button" onclick="">엑셀 다운</button>
+                        </form>
                     </div>
-                    <div class="step">
-                        <table>
+
+                    <div class="empty-container">
+                        <table class="jw-table">
                             <thead>
                             <tr>
-                                <th>제품코드</th>
-                                <th>제품명</th>
-                                <th>수량</th>
-                                <th>상태</th>
-                                <th>일자</th>
-                                <th>사유</th>
-                                <th>수정/삭제</th>
+                                <th scope="col">제품코드</th>
+                                <th scope="col">제품명</th>
+                                <th scope="col">수량</th>
+                                <th scope="col">상태</th>
+                                <th scope="col">일자</th>
+                                <th scope="col">사유</th>
+                                <th scope="col">수정/삭제</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -46,9 +68,20 @@
                                 <td>2024-06-10</td>
                                 <td>공정투입</td>
                                 <td>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                        수정|삭제
-                                    </button>
+                                    <div class="flex-container">
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                수정
+                                            </button>
+                                        </div>
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                삭제
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -59,9 +92,20 @@
                                 <td>2024-06-10</td>
                                 <td>공정투입</td>
                                 <td>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                        수정|삭제
-                                    </button>
+                                    <div class="flex-container">
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                수정
+                                            </button>
+                                        </div>
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                삭제
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -72,9 +116,20 @@
                                 <td>2024-06-10</td>
                                 <td>공정투입</td>
                                 <td>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                        수정|삭제
-                                    </button>
+                                    <div class="flex-container">
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                수정
+                                            </button>
+                                        </div>
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                삭제
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -85,9 +140,20 @@
                                 <td>2024-06-10</td>
                                 <td>공정투입</td>
                                 <td>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
-                                        수정|삭제
-                                    </button>
+                                    <div class="flex-container">
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                수정
+                                            </button>
+                                        </div>
+                                        <div class="button2-container">
+                                            <button class="jw-button2" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                삭제
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -95,8 +161,30 @@
                     </div>
                 </div>
 
-                <div class="centered">
-                    <p> [1] [2] [3] [4] [5] </p>
+
+                <!-------------
+                ---------------
+                ---------------
+                페이지네이션
+                ---------------
+                ---------------
+                -------------->
+
+
+                <div id="pagination">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">&raquo;</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{common/layouts/default}">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
     </style>
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css" />
+    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
 </th:block>
 
 <th:block layout:fragment="script">
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"
-        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
-        </script>
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
+    </script>
 
 
     <script>
@@ -29,11 +31,22 @@
             closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
         }
 
-        @@ -45, 113 + 39, 247 @@
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+
+        // 페이지 로드 시 모달을 자동으로 표시
         window.onload = function () {
             document.getElementById('myModal').style.display = "block";
         }
 
+        // 모달 외부 클릭 시 모달 닫기
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
         function addOptionToSelect(selectElement, text, value) {
             const option = document.createElement('option');
             option.text = text;  // name
@@ -88,7 +101,7 @@
             })
                 .then(response => {
                     if (response.status === 201) {
-                        alert('Order successfully created!');
+                        alert('주문이 성공적으로 되었습니다 !');
                         document.getElementById("form-orderer").value = "";
                         document.getElementById("form-orderer-num").value = "";
                         document.getElementById("form-count").value = "";
@@ -144,60 +157,11 @@
     </script>
 </th:block>
 
-<!--<head>-->
-<!-- ===============================================-->
-<!--    Document Title-->
-<!-- ===============================================-->
-<!--    <meta charset="utf-8">-->
-<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
-<!--    <title>뉴트리션 해적선</title>-->
-<!--    &lt;!&ndash; ===============================================&ndash;&gt;-->
-<!--    &lt;!&ndash;    Favicons&ndash;&gt;-->
-<!--    &lt;!&ndash; ===============================================&ndash;&gt;-->
-<!--    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">-->
-<!--    &lt;!&ndash; ===============================================&ndash;&gt;-->
-<!--    &lt;!&ndash;    Stylesheets&ndash;&gt;-->
-<!--    &lt;!&ndash; ===============================================&ndash;&gt;-->
-<!--    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">-->
-<!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
-<!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">-->
-<!--    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"-->
-<!--          rel="stylesheet">-->
-<!--    <link href="../static/css/user-rtl.css" type="text/css" rel="stylesheet" id="style-rtl">-->
-<!--    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">-->
-<!--    <link href="../static/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">-->
-<!--    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">-->
-<!--    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">-->
-<!--    <script src="https://code.jquery.com/jquery-3.7.1.js"-->
-<!--            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>-->
-
-<!--    <script src="../static/js/popper/popper.min.js"></script>-->
-<!--    <script src="../static/js/bootstrap/bootstrap.min.js"></script>-->
-<!--    <script src="../static/js/anchorjs/anchor.min.js "></script>-->
-<!--    <script src="../static/js/is/is.min.js"></script>-->
-<!--    <script src="../static/js/fontawesome/all.min.js"></script>-->
-<!--    <script src="../static/js/lodash/lodash.min.js"></script>-->
-<!--    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>-->
-<!--    <script src="../static/js/list.js/list.min.js"></script>-->
-<!--    <script src="../static/js/feather-icons/feather.min.js"></script>-->
-<!--    <script src="../static/js/dayjs/dayjs.min.js"></script>-->
-<!--    <script src="../static/js/phoenix.js"></script>-->
-<!--</head>-->
-<!--<body>-->
-
-<!--<div layout:fragment="Content" class="container">-->
 
 <div layout:fragment="content">
-    <!-- ===============================================-->
-    <!--    Main Content-->
-    <!-- ===============================================-->
-    <!--<main class="main" id="top">-->
     <!--------------------->
     <!----  Main Start ---->
     <!--------------------->
-
-
     <div id="myModal" class="gy-modal">
         <div class="gy-modal-content">
             <h2 style="color: #0acf83">신규 발주처</h2>
@@ -218,12 +182,11 @@
                 <label class="gy-title_form">수주 등록
                     <span style="margin-left: 76%">
                         <form id="excel-form" action="/order/excel" method="post" enctype="multipart/form-data">
-                            <input type="file" id="excel-upload" name="excel" style="display: none;"
-                                accept=".xls,.xlsx">
+                            <input type="file" id="excel-upload" name="excel" style="display: none;" accept=".xls,.xlsx">
                             <button type="button" class="gy-button_right" onclick="selectExcel()">엑셀 등록</button>
                         </form>
 
-                    </span>
+            </span>
                 </label>
                 <div class="gy-steps">
                     <div class="gy-step">
@@ -231,7 +194,7 @@
                             <span>발주처 </span>
                             <form class="gy-form">
                                 <input type="text" placeholder="Orderer / Company name" class="gy-input_field"
-                                    id="form-orderer">
+                                       id="form-orderer">
                             </form>
                         </div>
                         <hr>
@@ -239,7 +202,7 @@
                             <span>전화번호 </span>
                             <form class="gy-form">
                                 <input type="text" placeholder=" 010-1234-5678 " class="gy-input_field"
-                                    id="form-orderer-num">
+                                       id="form-orderer-num">
                             </form>
                         </div>
                         <hr>
@@ -265,41 +228,34 @@
                             </form>
                         </div>
                         <div class="gy-container" style="display: flex; align-items: center">
-                            <span class="nice-form-group" style="margin-right:100px;">
-                                <input type="checkbox" class="switch" id="form_isUrgent" />
-                                <label for="form_isUrgent">
-                                    긴급여부
-                                    <small>긴급여부가 체크되어있을시 <br> 우선순위가 최우선으로 부여됩니다. </small>
-                                </label>
-                            </span>
+          <span class="nice-form-group" style="margin-right:100px;">
+            <input type="checkbox" class="switch" id="form_isUrgent"/>
+            <label for="form_isUrgent">
+              긴급여부
+              <small>긴급여부가 체크되어있을시 <br> 우선순위가 최우선으로 부여됩니다. </small>
+            </label>
+          </span>
                             <span class="nice-form-group">
-                                <input type="checkbox" class="switch" id="form_isPrivate" />
-                                <label for="form_isPrivate">
-                                    개인여부
-                                    <small> BoX 단위로 가능합니다.<br> ※ 개수단위 구매불가 </small>
-                                </label>
-                                @@ -160,23 +288,23 @@ <h2 style="color: #0acf83">기존 발주처</h2>
+            <input type="checkbox" class="switch" id="form_isPrivate"/>
+            <label for="form_isPrivate">
+              개인여부
+              <small> BoX 단위로 가능합니다.<br> ※ 개수단위 구매불가 </small>
+            </label>
+          </span>
                         </div>
                     </div>
                 </div>
-                <div class="gy-card gy-checkout">
-                    <div class="gy-footer">
-                        <label class="gy-price"> </label>
-                        <button class="gy-checkout-btn" id="form_submit"> 등 록</button>
-                    </div>
+            </div>
+            <div class="gy-card gy-checkout">
+                <div class="gy-footer">
+                    <label class="gy-price"> </label>
+                    <button class="gy-checkout-btn" id="form_submit"> 등 록</button>
                 </div>
             </div>
         </div>
-        <!--</main>-->
-        <!-- ===============================================-->
-        <!--    End of Main Content-->
-        <!-- ===============================================-->
-
-
-        <!-- ===============================================-->
-        <!--    JavaScripts-->
-        <!-- ===============================================-->
     </div>
-    <!--</body>-->
-
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+</div>
 </html>
