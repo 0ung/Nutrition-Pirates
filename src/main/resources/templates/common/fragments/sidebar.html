@@ -1,4 +1,4 @@
-<!--사이드바-->
+<!--사이드바--> 
 <nav xmlns:th="http://www.thymeleaf.org"
      th:fragment="sidebarFragment" class="col-auto bg-success bg-opacity-25">
 
@@ -6,234 +6,141 @@
         <div class="d-flex justify-content-center">
             <a href="/" class=" link-dark text-decoration-none mt-1  mb-2 mb-3">
                 <div class="d-flex justify-content-center">
-                    <img src="../static/img/logo.png" alt="phoenix" width="130"/></div>
-                <br>
-                <span style="font-size: 30px; font-weight: bold">뉴트리션 해적단</span>
-            </a>
+                    <img src="../static/img/logo.png" alt="phoenix" width="130"/></div><br>
+            <span style="font-size: 30px; font-weight: bold">뉴트리션 해적단</span>
+        </a>
         </div>
         <hr>
         <ul class="list-unstyled ps-0">
             <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav1" aria-expanded="false">
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav1" aria-expanded="false">
                     <span style="font-size: 25px; font-weight: bold">수주관리</span>
                 </button>
                 <div class="collapse" id="ShittyNav1" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./suzu" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp
-                                수주 등록</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./suzucheck" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 수주 조회</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./suzucheckOrderer" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 발주처 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./suzu" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 수주 등록</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./suzucheck" class="link-dark rounded mt-1  mb-2  h5"  style="text-decoration: none;">&nbsp 수주 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./suzucheckOrderer" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 발주처 조회</a></li>
                     </ul>
                 </div>
             </li>
-            <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+            <li class="mb-1"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav2" aria-expanded="false">
-                    <span style="font-size: 25px; font-weight: bold">원자재 관리</span>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav2" aria-expanded="false">
+                <span style="font-size: 25px; font-weight: bold">원자재 관리</span>
                 </button>
                 <div class="collapse" id="ShittyNav2" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./orderermng" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp
-                                원자재 발주 등록</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./rawmng" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp
-                                원자재 입출고 현황</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./rawcs" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp
-                                원자재 현황 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 원자재 발주 등록</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 원자재 입출고 현황</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 원자재 현황 조회</a></li>
                     </ul>
                 </div>
             </li>
-            <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+            <li class="mb-1"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav3" aria-expanded="false">
-                    <span style="font-size: 25px; font-weight: bold">생산 관리</span>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav3" aria-expanded="false">
+                <span style="font-size: 25px; font-weight: bold">생산 관리</span>
                 </button>
                 <div class="collapse" id="ShittyNav3" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./sengsanPlan" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 생산계획</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./sengsancheck" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 작업 지시 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./sengsanPlan" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 생산계획</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./sengsancheck" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 작업 지시 조회</a></li>
                     </ul>
                 </div>
             </li>
             <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav4" aria-expanded="false">
-                    <span style="font-size: 25px; font-weight: bold">재고 관리</span>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav4" aria-expanded="false">
+                <span style="font-size: 25px; font-weight: bold">재고 관리</span>
                 </button>
                 <div class="collapse" id="ShittyNav4" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./stockcheck" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 재고
-                                조회</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./stockcs" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp
-                                재고
-                                현황</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 재고 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 재고 현황</a></li>
                     </ul>
                 </div>
             </li>
             <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav5" aria-expanded="false">
-                    <span style="font-size: 25px; font-weight: bold">출하 관리</span>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav5" aria-expanded="false">
+                <span style="font-size: 25px; font-weight: bold">출하 관리</span>
                 </button>
                 <div class="collapse" id="ShittyNav5" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./chulha" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp
-                                출하 현황</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./chulha" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 출하 현황</a></li>
                     </ul>
                 </div>
             </li>
             <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav6" aria-expanded="false">
-                    <span style="font-size: 25px; font-weight: bold">설비 현황</span>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav6" aria-expanded="false">
+                <span style="font-size: 25px; font-weight: bold">설비 현황</span>
                 </button>
                 <div class="collapse" id="ShittyNav6" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./productionamount" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 설비
-                                현황</a></li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./productionvolume" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp
-                                설비별 일일생산량</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 설비 현황</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 설비별 일일생산량</a></li>
                     </ul>
                 </div>
             </li>
             <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav7" aria-expanded="false">
-                    <span style="font-size: 25px; font-weight: bold">LOT 관리</span>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav7" aria-expanded="false">
+                <span style="font-size: 25px; font-weight: bold">LOT 관리</span>
                 </button>
                 <div class="collapse" id="ShittyNav7" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./lot" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp
-                                완제품 수주별 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./lot" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 완제품 수주별 조회</a></li>
                     </ul>
                 </div>
             </li>
             <li class="border-top my-3"></li>
             <li class="mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-caret-down" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                     <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
-                </svg>
-                <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse"
-                        data-bs-target="#ShittyNav8" aria-expanded="true">
+                </svg><button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#ShittyNav8" aria-expanded="true">
                     시간 관리
                 </button>
                 <div class="collapse show" id="ShittyNav8" style="">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-circle-fill " viewBox="0 0 16 16">
-                                <circle cx="8" cy="8" r="8"/>
-                            </svg>
-                            <a href="./systemtime" class="link-dark rounded mt-1  mb-2  h5"
-                               style="text-decoration: none;">&nbsp 시간
-                                관리</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="#" class="link-dark rounded mt-1  mb-2  h5" style="text-decoration: none;">&nbsp 시간 관리</a></li>
                     </ul>
                 </div>
             </li>
