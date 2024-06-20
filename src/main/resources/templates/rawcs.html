@@ -7,8 +7,29 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
+        .page-link {
+            color: rgba(6, 59, 56, 0.75);
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .page-item.active .page-link {
+            z-index: 1;
+            color: rgba(6, 59, 56, 0.75);
+            font-weight: bold;
+            background-color: #f1f1f1;
+            border-color: #ccc;
+
+        }
+
+        .page-link:focus, .page-link:hover {
+            color: rgba(6, 59, 56, 0.75);
+            font-weight: bold;
+            background-color: #c3dfd2;
+            border-color: #ccc;
+        }
     </style>
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
+    <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
 </th:block>
 
 
@@ -24,89 +45,127 @@
 
 <div layout:fragment="content">
 
-    <div class="content2">
-        <div class="container">
-            <label class="title_form">원자재 현황 조회 </label>
-            <div class="container1">
-                <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
-                <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
-                    <canvas id="myChart"></canvas>
-                </div>
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <div id="card1">
+                <label class="main-label">원자재 현황 조회 </label>
+                <div class="container">
+                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                    <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                        <canvas id="myChart"></canvas>
+                    </div>
 
-                <!-- include Chart.js from a CDN -->
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <!-- include Chart.js from a CDN -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                <script>
-                    const ctx = document.querySelector('#myChart');
+                    <script>
+                        const ctx = document.querySelector('#myChart');
 
-                    //만들위치, 설정값객체
-                    new Chart(ctx, {
-                        type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                        data: {
-                            labels: ['양배추', '흑마늘', '석류', '매실', '벌꿀', '박스', '포장지'],
-                            datasets: [
-                                {
-                                    label: '현재 보유량',
-                                    data: [2000, 1500, 500, 500, 100, 10000, 1500],
-                                    borderWidth: 1,
-                                }
-                            ]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
+                        //만들위치, 설정값객체
+                        new Chart(ctx, {
+                            type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                            data: {
+                                labels: ['양배추', '흑마늘', '석류', '매실', '벌꿀', '박스', '포장지'],
+                                datasets: [
+                                    {
+                                        label: '현재 보유량',
+                                        data: [2000, 1500, 500, 500, 100, 10000, 1500],
+                                        borderWidth: 1,
+                                    }
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
                                 }
                             }
-                        }
-                    });
-                </script>
+                        });
+                    </script>
+                </div>
+                <div class="empty-container2"></div>
+                <label class="main-label">보관기한 3일 이하 원자재 List</label>
+                <div class="container" style="margin: auto; align-content: center;">
+                    <div class="empty-container"></div>
+                    <div class="empty-container"></div>
+
+                    <table class="jw-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">제품코드</th>
+                            <th scope="col">제품명</th>
+                            <th scope="col">사용기한</th>
+                            <th scope="col">수량</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>275437395487</td>
+                            <td>흑마늘</td>
+                            <td>2024-06-10</td>
+                            <td>700kg</td>
+                        </tr>
+                        <tr>
+                            <td>68954802</td>
+                            <td>양배추</td>
+                            <td>2024-06-12</td>
+                            <td>500kg</td>
+
+                        </tr>
+                        <tr>
+                            <td>379075890</td>
+                            <td>흑마늘</td>
+                            <td>2024-06-11</td>
+                            <td>1000kg</td>
+
+                        </tr>
+                        <tr>
+                            <td>28345095802</td>
+                            <td>석류</td>
+                            <td>2024-06-09</td>
+                            <td>300kg</td>
+
+                        </tr>
+                        <tr>
+                            <td>28345095802</td>
+                            <td>석류</td>
+                            <td>2024-06-09</td>
+                            <td>300kg</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="empty-container2"></div>
+
+                    <!-------------
+               ---------------
+               ---------------
+               페이지네이션
+               ---------------
+               ---------------
+               -------------->
+
+
+                    <div id="pagination">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">&raquo;</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
-
-
-            <label class="title_form">보관기한 3일 이하 원자재 List</label>
-            <table>
-                <thead>
-                <tr>
-                    <th>제품코드</th>
-                    <th>제품명</th>
-                    <th>사용기한</th>
-                    <th>수량</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>275437395487</td>
-                    <td>흑마늘</td>
-                    <td>2024-06-10</td>
-                    <td>700kg</td>
-                </tr>
-                <tr>
-                    <td>68954802</td>
-                    <td>양배추</td>
-                    <td>2024-06-12</td>
-                    <td>500kg</td>
-
-                </tr>
-                <tr>
-                    <td>379075890</td>
-                    <td>흑마늘</td>
-                    <td>2024-06-11</td>
-                    <td>1000kg</td>
-
-                </tr>
-                <tr>
-                    <td>28345095802</td>
-                    <td>석류</td>
-                    <td>2024-06-09</td>
-                    <td>300kg</td>
-
-                </tr>
-                </tbody>
-            </table>
         </div>
     </div>
-</div>
 </div>
 
 

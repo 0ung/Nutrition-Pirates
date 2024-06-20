@@ -9,12 +9,16 @@
 #main-content {
     display: flex;
     margin-top: 10%; /* Adjust top margin as needed */
+    padding: 10px;
+
+    @media (max-width: 1320px) {
+        margin-left: 50px; /* Adjust left margin for smaller screens */
+    }
 }
 
 @media (max-width: 1320px) {
     #main-content {
         margin-left: 50px; /* Adjust left margin for smaller screens */
-
     }
 }
 
@@ -29,6 +33,13 @@
     justify-content: center;
     background-color: white;
     padding: 20px; /* 콘텐츠 패딩 추가 */
+
+    @media (max-width: 1260px) {
+        margin-left: 300px;
+    }
+    @media (min-width: 1321px) {
+        margin-left: 450px ;
+    }
 }
 
 #pagination {
@@ -149,7 +160,7 @@
     padding: 5px;
     width: 100%;
     height: 100%;
-    background: whitesmoke;
+    background: #ffffff;
 
 }
 
