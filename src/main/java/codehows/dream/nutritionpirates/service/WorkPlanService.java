@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
+import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
@@ -79,7 +80,17 @@ public class WorkPlanService {
 		)
 	);
 
+	public RawBOMDTO calInputRaws(Order order) {
+		return bomCalculatorService.createRequirement(order);
+	}
+
 	public void createJuiceProcessPlan(ProcessPlan processPlan) {
+
+		Order order = orderRepository.findById(processPlan.getOrder().getId()).orElse(null);
+		if (order == null) {
+			throw new NotFoundOrderException();
+		}
+		RawBOMDTO raws = calInputRaws(order);
 
 		juiceProcess.forEach(
 			(e) -> {
@@ -87,7 +98,7 @@ public class WorkPlanService {
 				WorkPlan workPlan = null;
 
 				if (e.equals(Process.A1)) {
-					workPlan = workPlans.createWorkPlan(5000);
+					workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getIngredient1()));
 					semiProduct = workPlan.getSemiProduct();
 				} else if (e.equals(Process.A3)) {
 					workPlan = workPlans.createWorkPlan(semiProduct);
@@ -105,22 +116,24 @@ public class WorkPlanService {
 				workPlanRepository.save(workPlan);
 			}
 		);
-		Order order = orderRepository.findById(processPlan.getOrder().getId()).orElse(null);
 
-		if (order == null) {
-			throw new NotFoundOrderException("수주 정보가 없습니다.");
-		}
 		order.updateExpectedDeliveryDate(expectDeliveryDate(processPlan));
 	}
 
 	public void createStickProcessPlan(ProcessPlan processPlan) {
+		Order order = orderRepository.findById(processPlan.getOrder().getId()).orElse(null);
+		if (order == null) {
+			throw new NotFoundOrderException();
+		}
+		RawBOMDTO raws = calInputRaws(order);
+
 		stickProcess.forEach(
 			(e) -> {
 				WorkPlans workPlans = WorkPlanFactoryProvider.createWorkOrder(e);
 				WorkPlan workPlan = null;
 
 				if (e.equals(Process.B1)) {
-					workPlan = workPlans.createWorkPlan(60);
+					workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getIngredient1()));
 					semiProduct = workPlan.getSemiProduct();
 				} else if (e.equals(Process.B4)) {
 					workPlan = workPlans.createWorkPlan(semiProduct);
@@ -197,7 +210,12 @@ public class WorkPlanService {
 		WorkPlans work = getWorkPlanByProcess(workPlan.getProcess());
 		if (work == null)
 			throw new NotFoundWorkPlanException();
-		WorkPlan executedWork = work.execute(workPlan);
+		WorkPlan executedWork;
+		if (workPlan.getProcess() == Process.A1) {
+			executedWork = work.execute(workPlan);
+		} else {
+			executedWork = work.execute(workPlan);
+		}
 
 		return WorkPlanDTO.builder()
 			.id(executedWork.getId())
@@ -235,4 +253,5 @@ public class WorkPlanService {
 		}
 		return workPlans;
 	}
+
 }

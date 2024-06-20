@@ -32,7 +32,7 @@ public class BOMCalculatorService {
         }
 
     }
-    private RawBOMDTO garlicJuiceBOMCal(int quantity) {
+    public RawBOMDTO garlicJuiceBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 30 / 0.97) * 133.33) / 1000);
         double garlic = Math.ceil(quantity1);
 
@@ -45,7 +45,7 @@ public class BOMCalculatorService {
         return new RawBOMDTO(garlic, honey, paper, box);
     }
 
-    private RawBOMDTO cabbageJuiceBOMCal(int quantity) {
+    public RawBOMDTO cabbageJuiceBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 30 / 0.97) * 133.33) / 1000);
         double cabbage = Math.ceil(quantity1);
 
@@ -58,7 +58,7 @@ public class BOMCalculatorService {
         return new RawBOMDTO(cabbage, honey, paper, box);
     }
 
-    private RawBOMDTO pomegranateStickBOMCal(int quantity) {
+    public RawBOMDTO pomegranateStickBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 25 / 0.97) * 5) / 1000);
         double pomegranate = Math.ceil(quantity1);
 
@@ -71,7 +71,7 @@ public class BOMCalculatorService {
         return new RawBOMDTO(pomegranate, collagen, paper, box);
     }
 
-    private RawBOMDTO plumStickBOMCal(int quantity) {
+    public RawBOMDTO plumStickBOMCal(int quantity) {
         double quantity1 = Math.ceil(Math.ceil(Math.ceil(quantity * 25 / 0.97) * 5) / 1000);
         double plum = Math.ceil(quantity1);
 

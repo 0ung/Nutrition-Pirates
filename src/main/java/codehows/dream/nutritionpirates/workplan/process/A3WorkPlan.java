@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
@@ -24,6 +25,9 @@ public class A3WorkPlan implements WorkPlans {
 		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
 		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		if (plan.getEndTime() != null) {
+			plan.setFacilityStatus(FacilityStatus.AFTER_TREATMENT);
+		}
 		workPlanRepository.save(plan);
 		return workPlan;
 	}

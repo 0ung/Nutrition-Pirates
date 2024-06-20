@@ -13,4 +13,6 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 	List<WorkPlan> findByFacility(Facility facility);
 
 	List<WorkPlan> findByFacilityAndActivateTrue(Facility facility);
+
+	WorkPlan findByProcessPlanIdAndFacility(Long processPlanId, Facility facility);
 }
