@@ -19,38 +19,41 @@
             background-color: #fafafa;
             border-radius: 30px;
         }
-
         .lot-search-area {
             display: flex;
             justify-content: center;
         }
-
         .lot-c-height {
             height: 100%;
         }
-
         .lot-custom-input {
             border: 0;
             outline: 0;
             width: 500px;
+            line-height: 40px;
+            transition: width 10.4s linear;
+            border-top-left-radius: 30px;
             border-bottom-left-radius: 30px;
             padding-left: 10px;
         }
-
         .lot-input::placeholder {
             color: #262626;
             font-size: 20px;
         }
-
-        .lot-single-search:hover > .lot-icon-area {
+        .lot-single-search:hover>.lot-icon-area {
             background: lightgreen;
             color: #262626;
         }
-
         .lot-icon-area {
             justify-content: center;
             align-items: center;
             border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            float: right;
+            display: flex;
+            text-decoration: none;
+            color: #262626;
         }
 
     </style>
@@ -86,16 +89,14 @@
                         <div class="wrapper lot-c-height">
                             <div class="lot-search-area lot-c-height">
                                 <div class="lot-single-search">
-                                    <input class="lot-custom-input" name="" placeholder="put your 'lot' number here ..."
-                                           type="text"> <a class="lot-icon-area" href="#"><i
-                                        class="fa fa-search"></i></a>
+                                    <input class="lot-custom-input" name="" placeholder="put your 'lot' number here ..." type="text"> <a class="lot-icon-area" href="#"><i class="fa fa-search"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col">
 
-                        <h1></h1>
+                        <h1> </h1>
                         <table class="lot-table">
                             <thead>
                             <tr class="lot-tr">

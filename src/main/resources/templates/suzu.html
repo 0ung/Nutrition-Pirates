@@ -30,8 +30,12 @@
             closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
         }
 
-        @@ -45,113 +38,205 @@
-            window.onload = function () {
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+
+        // 페이지 로드 시 모달을 자동으로 표시
+        window.onload = function () {
             document.getElementById('myModal').style.display = "block";
         }
 
@@ -236,20 +240,21 @@
               개인여부
               <small> BoX 단위로 가능합니다.<br> ※ 개수단위 구매불가 </small>
             </label>
-	@@ -160,23 +245,16 @@ <h2 style="color: #0acf83">기존 발주처</h2>
+          </span>
                         </div>
                     </div>
                 </div>
-                <div class="gy-card gy-checkout">
-                    <div class="gy-footer">
-                        <label class="gy-price"> </label>
-                        <button class="gy-checkout-btn" id="form_submit"> 등 록</button>
-                    </div>
+            </div>
+            <div class="gy-card gy-checkout">
+                <div class="gy-footer">
+                    <label class="gy-price"> </label>
+                    <button class="gy-checkout-btn" id="form_submit"> 등 록</button>
                 </div>
             </div>
         </div>
-        <!-- ===============================================-->
-        <!--    End of Main Content-->
-        <!-- ===============================================-->
     </div>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+</div>
 </html>
