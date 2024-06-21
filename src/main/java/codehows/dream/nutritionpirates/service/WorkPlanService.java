@@ -230,9 +230,17 @@ public class WorkPlanService {
 			next = checkNextBProcess(executedWork.getProcess()).orElse(null);
 		}
 		List<WorkPlan> list = getFacilities(next);
-		if (list == null) {
-
+		WorkPlan nextWorkplan = workPlanRepository.findByProcessPlanIdAndProcess(
+			executedWork.getProcessPlan().getId(), next);
+		if (list == null || list.isEmpty()) {
+			nextWorkplan.setActivate(true);
+		} else {
+			if (list.get(1) != null) {
+				nextWorkplan.setFacility(list.get(1).getFacility());
+				nextWorkplan.setActivate(true);
+			}
 		}
+		workPlanRepository.save(nextWorkplan);
 		// 설비 상태 조회
 
 		return WorkPlanDTO.builder()
@@ -320,8 +328,7 @@ public class WorkPlanService {
 			return getFacilityStatus(Facility.freeze);
 		}
 		if (process == Process.A3) {
-			getFacilityAfterTreatmentStatus(Facility.extractor1, Facility.extractor2);
-			return getFacilityStatus(Facility.extractor1, Facility.extractor2);
+			return getFacilityAfterTreatmentStatus();
 		}
 		if (process == Process.A5 || process == Process.B3) {
 			return getFacilityStatus(Facility.sterilizer1, Facility.sterilizer2);
@@ -340,7 +347,11 @@ public class WorkPlanService {
 	}
 
 	private WorkPlan getFacilityAfterTreatment(Facility facility) {
-		return workPlanRepository.findByFacilityStatusAndFacility(FacilityStatus.AFTER_TREATMENT, facility);
+		WorkPlan plan = workPlanRepository.findByFacilityStatusAndFacility(FacilityStatus.AFTER_TREATMENT, facility);
+		if (plan == null) {
+			return workPlanRepository.findByFacilityStatusAndFacility(FacilityStatus.WORKING, facility);
+		}
+		return plan;
 	}
 
 	private List<WorkPlan> getFacilityStatus(Facility facility1, Facility facility2) {
@@ -351,16 +362,20 @@ public class WorkPlanService {
 			list.add(0, plan);
 			list.add(1, plans);
 		}
-		if (plan == null) {
+		if (plans != null) {
 			list.add(0, plans);
 		}
 		return list;
 	}
 
-	private void getFacilityAfterTreatmentStatus(Facility facility1, Facility facility2) {
+	private List<WorkPlan> getFacilityAfterTreatmentStatus() {
 		ArrayList<WorkPlan> list = new ArrayList<>();
-		WorkPlan plan = getFacilityAfterTreatment(facility1);
-		WorkPlan plans = getFacilityAfterTreatment(facility2);
+		WorkPlan plan = getFacilityAfterTreatment(Facility.extractor1);
+		WorkPlan plan1 = getFacilityAfterTreatment(Facility.extractor2);
+
+		WorkPlan plans = getFacilityWorking(Facility.extractor1);
+		WorkPlan plans1 = getFacilityWorking(Facility.extractor2);
+
 		if (calTime(plan)) {
 			plan.setFacilityStatus(FacilityStatus.STANDBY);
 			workPlanRepository.save(plan);
@@ -368,6 +383,15 @@ public class WorkPlanService {
 			plans.setFacilityStatus(FacilityStatus.STANDBY);
 			workPlanRepository.save(plans);
 		}
+
+		if (plan1 != null && plans1 != null) {
+			list.add(0, plan);
+			list.add(1, plans);
+		}
+		if (plans1 != null) {
+			list.add(0, plans1);
+		}
+		return list;
 	}
 
 	private List<WorkPlan> getFacilityStatus(Facility facility) {
@@ -380,6 +404,9 @@ public class WorkPlanService {
 	}
 
 	private boolean calTime(WorkPlan workPlan) {
+		if(workPlan ==null){
+			return false;
+		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(workPlan.getEndTime());
 		calendar.add(Calendar.DAY_OF_YEAR, 1);

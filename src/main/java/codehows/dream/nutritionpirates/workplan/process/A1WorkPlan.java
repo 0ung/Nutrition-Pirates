@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.constants.RawProductName;
@@ -48,6 +49,10 @@ public class A1WorkPlan implements WorkPlans {
 		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
 		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		if (workPlan.getEndTime() != null) {
+			workPlanRepository.save(plan);
+			return workPlan;
+		}
 		LotCode lotCode = getLotCode(workPlan, time);
 		lotCodeRepository.saveAndFlush(lotCode);
 		ProcessPlan processPlan = processPlanRepository.findById(workPlan.getProcessPlan().getId()).orElse(null);
@@ -75,6 +80,7 @@ public class A1WorkPlan implements WorkPlans {
 			.process(Process.A1)
 			.processCompletionTime(expectTime(input))
 			.semiProduct(process(input))
+			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
 	}
 
@@ -126,30 +132,59 @@ public class A1WorkPlan implements WorkPlans {
 
 		List<Raws> raws = rawRepository.findByProduct(
 			productName == ProductName.CABBAGE_JUICE ? RawProductName.CABBAGE : RawProductName.BLACK_GARLIC);
-		// List<Raws> availableRaws = raws.stream().filter(e -> {
-		// 	if(parseAmount(e.getRawsCode())){
-		//
-		// 	};
-		//
-		// 	return null;
-		// 	}).toList();
+
+		List<Raws> availableRaws = raws.stream().filter(e -> {
+			int data = 0;
+			if (e.getRawsCode().contains("T")) {
+				data = parseAmount(e.getRawsCode());
+			}
+			int total = parseTotal(e.getRawsCode());
+			return (total - data) > 0;
+		}).toList();
 
 		List<String> updatedCodes = new ArrayList<>();
+		int remainingInput = input;
 
-		throw new NotEnoughRawsException(); // If input amount cannot be fulfilled by available raws
-	}
-	//raws 데이터가 넘어오면
-	//20240621C2000T
-	//1. T가 있는지 확인
-	//1-1 T가 있으면 사용량 확인 후 공정에 투입가능하게 처리
-	//1-2 T가 없으면 뒤에 T를 붙이고 공정 투입 가능하게 처리
+		for (Raws raw : availableRaws) {
+			if (remainingInput <= 0) {
+				break;
+			}
 
-	public boolean parseAmount(String codes) {
-		if (codes.contains("T")) {
-			int amount = Integer.parseInt(codes.substring(13));
-			return amount > 0;
+			int data = 0;
+			if (raw.getRawsCode().contains("T")) {
+				data = parseAmount(raw.getRawsCode());
+			}
+			int total = parseTotal(raw.getRawsCode());
+			int availableAmount = total - data;
+
+			if (availableAmount > 0) {
+				int usedAmount = Math.min(remainingInput, availableAmount);
+				remainingInput -= usedAmount;
+				int newData = data + usedAmount;
+
+				// 원자재 코드 업데이트
+				String newCode = raw.getRawsCode().substring(0, 13) + "T" + newData;
+				updatedCodes.add(newCode);
+
+				// 원자재 코드 업데이트 후 저장
+				raw.setRawsCode(newCode);
+				rawRepository.save(raw);
+			}
 		}
-		return false;
+
+		if (remainingInput > 0) {
+			throw new NotEnoughRawsException();
+		}
+		return updatedCodes.toArray(new String[0]);
+	}
+
+	//20240621C2000T
+	public int parseAmount(String codes) {
+		return Integer.parseInt(codes.substring(13));
+	}
+
+	public int parseTotal(String codes) {
+		return Integer.parseInt(codes.substring(9, 13));
 	}
 
 	public int stockData(ProductName productName) {

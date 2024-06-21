@@ -9,6 +9,7 @@ import java.util.Calendar;
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.constants.Routing;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
@@ -40,6 +41,7 @@ public class A5WorkPlan implements WorkPlans {
 			.process(Process.A5)
 			.processCompletionTime(expectTime(input))
 			.semiProduct(input)
+			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
 	}
 

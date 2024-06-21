@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.FacilityStatus;
+import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 
 public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
@@ -20,4 +21,6 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 	List<WorkPlan> findByFacilityStatus(FacilityStatus facilityStatus);
 
 	WorkPlan findByFacilityStatusAndFacility(FacilityStatus facilityStatus, Facility facility);
+
+	WorkPlan findByProcessPlanIdAndProcess(Long processPlanId, Process process);
 }

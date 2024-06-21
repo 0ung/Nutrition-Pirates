@@ -2,10 +2,6 @@ package codehows.dream.nutritionpirates.entity;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Calendar;
 
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.RawsReason;
@@ -14,10 +10,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.*;
-
-import static codehows.dream.nutritionpirates.constants.Status.WAITING;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -29,6 +29,10 @@ public class Raws {
 
 	@Id
 	@Column(name = "raws_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false)
 	private String rawsCode;
 
 	@Column(nullable = false)
@@ -40,7 +44,6 @@ public class Raws {
 
 	@Column(nullable = false)
 	private int quantity;
-
 
 	//주문날짜
 	@Column(nullable = false)
@@ -70,13 +73,12 @@ public class Raws {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-
-	public void rawImport(Date importDate, Status status,Timestamp deadLine) {
+	public void rawImport(Date importDate, Status status, Timestamp deadLine) {
 
 		this.importDate = importDate;
 		this.status = status;
 		this.deadLine = deadLine;
-		}
+	}
 
 	public void rawExport(Date exportDate, Status status, RawsReason rawsReason) {
 		/*this.exportDate = Date.valueOf(LocalDate.now());

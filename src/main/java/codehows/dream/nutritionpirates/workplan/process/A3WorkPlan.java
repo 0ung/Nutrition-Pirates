@@ -41,6 +41,7 @@ public class A3WorkPlan implements WorkPlans {
 			.process(Process.A3)
 			.processCompletionTime(expectTime(input))
 			.semiProduct(process(input))
+			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
 	}
 

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
@@ -34,6 +35,7 @@ public class B5WorkPlan implements WorkPlans {
 			.facility(Facility.freeze)
 			.process(Process.B5)
 			.semiProduct(input)
+			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
 	}
 
