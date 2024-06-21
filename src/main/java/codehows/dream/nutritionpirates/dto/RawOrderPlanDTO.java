@@ -1,10 +1,12 @@
 package codehows.dream.nutritionpirates.dto;
 
 
+import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import lombok.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,9 +16,9 @@ import java.sql.Date;
 public class RawOrderPlanDTO {
 
     private String partner;
-    private String product;
-    private int quantity;
-    private Date expectedImportDate;
+    private RawProductName product;
+    private double quantity;
+    private Timestamp expectedImportDate;
 }
 
 

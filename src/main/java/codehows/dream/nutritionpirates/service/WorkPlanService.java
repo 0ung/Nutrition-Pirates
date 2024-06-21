@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
+import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
 import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
@@ -55,7 +56,6 @@ public class WorkPlanService {
 	private final OrderRepository orderRepository;
 	private final ApplicationContext context;
 	private final RawOrderInsertService rawOrderInsertService;
-	private final BOMCalculatorService bomCalculatorService;
 	private final ProgramTimeService programTimeService;
 	private int semiProduct = 0;
 	//즙 공정
@@ -84,7 +84,7 @@ public class WorkPlanService {
 	);
 
 	public RawBOMDTO calInputRaws(Order order) {
-		return bomCalculatorService.createRequirement(order);
+		return rawOrderInsertService.createRequirement(order);
 	}
 
 	public void createJuiceProcessPlan(ProcessPlan processPlan) {
@@ -100,7 +100,11 @@ public class WorkPlanService {
 				WorkPlan workPlan = null;
 
 				if (e.equals(Process.A1)) {
-					workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getIngredient1()));
+					if (order.getProduct() == ProductName.CABBAGE_JUICE) {
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getCabbage()));
+					} else if (order.getProduct() == ProductName.BLACK_GARLIC_JUICE) {
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getGarlic()));
+					}
 					semiProduct = workPlan.getSemiProduct();
 				} else if (e.equals(Process.A3)) {
 					workPlan = workPlans.createWorkPlan(semiProduct);
@@ -135,7 +139,11 @@ public class WorkPlanService {
 				WorkPlan workPlan = null;
 
 				if (e.equals(Process.B1)) {
-					workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getIngredient1()));
+					if (order.getProduct() == ProductName.POMEGRANATE_JELLY_STICK) {
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPomegranate()));
+					} else if (order.getProduct() == ProductName.PLUM_JELLY_STICK) {
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPlum()));
+					}
 					semiProduct = workPlan.getSemiProduct();
 				} else if (e.equals(Process.B4)) {
 					workPlan = workPlans.createWorkPlan(semiProduct);

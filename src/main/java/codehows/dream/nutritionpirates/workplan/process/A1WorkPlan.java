@@ -27,9 +27,8 @@ import codehows.dream.nutritionpirates.repository.OrderRepository;
 import codehows.dream.nutritionpirates.repository.ProcessPlanRepository;
 import codehows.dream.nutritionpirates.repository.RawRepository;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
-import codehows.dream.nutritionpirates.service.BOMCalculatorService;
 import codehows.dream.nutritionpirates.service.ProgramTimeService;
-import codehows.dream.nutritionpirates.service.RawGraphService;
+import codehows.dream.nutritionpirates.service.RawOrderInsertService;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -39,11 +38,10 @@ public class A1WorkPlan implements WorkPlans {
 	private final ProgramTimeService programTimeService;
 	private final WorkPlanRepository workPlanRepository;
 	private final LotCodeRepository lotCodeRepository;
-	private final BOMCalculatorService bomCalculatorService;
-	private final RawGraphService rawGraphService;
 	private final RawRepository rawRepository;
 	private final OrderRepository orderRepository;
 	private final ProcessPlanRepository processPlanRepository;
+	private final RawOrderInsertService rawOrderInsertService;
 
 	@Override
 	public WorkPlan execute(WorkPlan workPlan) {
@@ -136,8 +134,6 @@ public class A1WorkPlan implements WorkPlans {
 		// 	return null;
 		// 	}).toList();
 
-
-
 		List<String> updatedCodes = new ArrayList<>();
 
 		throw new NotEnoughRawsException(); // If input amount cannot be fulfilled by available raws
@@ -157,7 +153,7 @@ public class A1WorkPlan implements WorkPlans {
 	}
 
 	public int stockData(ProductName productName) {
-		List<RawShowGraphDTO> list = rawGraphService.getRawStockGraph();
+		List<RawShowGraphDTO> list = rawOrderInsertService.getRawStockGraph();
 		int quantity = 0;
 		if (productName == ProductName.CABBAGE_JUICE) {
 			quantity = list.stream().mapToInt(e -> {
@@ -180,9 +176,12 @@ public class A1WorkPlan implements WorkPlans {
 		if (order == null) {
 			throw new NotFoundOrderException();
 		}
-		RawBOMDTO rawBOMDTO = bomCalculatorService.createRequirement(order);
-
-		return (int)rawBOMDTO.getIngredient1();
+		RawBOMDTO rawBOMDTO = rawOrderInsertService.createRequirement(order);
+		if (order.getProduct() == ProductName.CABBAGE_JUICE) {
+			return (int)rawBOMDTO.getCabbage();
+		} else {
+			return (int)rawBOMDTO.getGarlic();
+		}
 	}
 
 }
