@@ -56,56 +56,101 @@ public class RawOrderInsertService {
 
         return rawOrderPlanDTOS;
     }
-    // expectedImportDate = 에상납기일 구하기
-    // 일단 공휴일부터 관리
-    private static Set<LocalDate> holidays = new HashSet<>();
 
-    static {
-        // 공휴일 리스트 추가
-        holidays.add(LocalDate.of(2024, 1, 1)); // 신정
-        holidays.add(LocalDate.of(2024, 2, 10)); // 설날
-        holidays.add(LocalDate.of(2024, 3, 1)); // 삼일절
-        holidays.add(LocalDate.of(2024, 5, 5)); // 어린이날
-        holidays.add(LocalDate.of(2024, 5, 15)); //부처님오시는날
-        holidays.add(LocalDate.of(2024, 6, 6)); // 현출일
-        holidays.add(LocalDate.of(2024, 8, 15));// 광복절
-        holidays.add(LocalDate.of(2024, 9, 16));// 추석연휴
-        holidays.add(LocalDate.of(2024, 9, 17));// 추석연휴
-        holidays.add(LocalDate.of(2024, 9, 18));// 추석연휴
-        holidays.add(LocalDate.of(2024, 10, 3));// 개천절
-        holidays.add(LocalDate.of(2024, 10, 9));// 한글날
-        holidays.add(LocalDate.of(2024, 12, 25));// 크리스마스
-    }
-
+    // 영업일 확인 메서드 (토요일, 일요일, 공휴일을 제외)
     private boolean isBusinessDay(LocalDate date) {
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        return (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY && !holidays.contains(date));
+        // 주말 제외
+        if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            return false;
+        }
+        // 공휴일 제외 (여기서는 예시로 몇 개의 날짜를 공휴일로 지정)
+        List<LocalDate> holidays = Arrays.asList(
+                LocalDate.of(date.getYear(), 1, 1),  // 새해
+                LocalDate.of(date.getYear(),2,10), // 설날
+                LocalDate.of(date.getYear(),3,1), // 삼일절
+                LocalDate.of(date.getYear(),5,5), // 어린이날
+                LocalDate.of(date.getYear(),5,15), // 부처님오시는날
+                LocalDate.of(date.getYear(),6,6), // 현출일
+                LocalDate.of(date.getYear(),8,15), // 광복절
+                LocalDate.of(date.getYear(),9,16), // 추석연휴
+                LocalDate.of(date.getYear(),9,17), // 추석연휴
+                LocalDate.of(date.getYear(),9,18), // 추석연휴
+                LocalDate.of(date.getYear(),10,3), // 개천절
+                LocalDate.of(date.getYear(),10,9), // 한글날
+                LocalDate.of(date.getYear(), 12, 25) // 크리스마스
+                // 추가 공휴일을 여기에 추가
+        );
+
+        if (holidays.contains(date)) {
+            return false;
+        }
+        return true;
     }
     // 영업일 및 공휴일을 고려하여 예상 입고일 계산
-    private LocalDate calculateExpectedImportDate(LocalDateTime orderDateTime) {
-        LocalDate date = orderDateTime.toLocalDate();
-        LocalTime time = orderDateTime.toLocalTime();
-        int days = time.isBefore(LocalTime.NOON) ? 2 : 3;
-
-        while (days > 0) {
-            date = date.plusDays(1);
-            if(isBusinessDay(date)) {
-                days--;
-            }
+    private LocalDate addBusinessDaysSwitch(LocalDate startDate, int businessDays) {
+        LocalDate date = startDate;
+        int daysAdded = 0;
+        // switch 구문을 사용하여 각 날짜에 대해 영업일 계산
+        switch (businessDays) {
+            case 2:
+                while (daysAdded < 2) {
+                    date = date.plusDays(1);
+                    if (isBusinessDay(date)) {
+                        daysAdded++;
+                    }
+                }
+                break;
+            case 3:
+                while (daysAdded < 3) {
+                    date = date.plusDays(1);
+                    if (isBusinessDay(date)) {
+                        daysAdded++;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + businessDays);
         }
         return date;
     }
+
+    private Timestamp calculateExpectedImportDate(Timestamp orderDateTime) {
+        LocalDateTime orderDateTimeLocal = orderDateTime.toLocalDateTime();
+        LocalTime time = orderDateTimeLocal.toLocalTime();
+        int daysToAdd;
+        // 12:00 이전, 이후에 따른 daysToAdd 설정
+        if (time.isBefore(LocalTime.NOON)) {
+            daysToAdd = 2;
+        } else {
+            daysToAdd = 3;
+        }
+
+        LocalDate date = orderDateTimeLocal.toLocalDate();
+        // 날짜 계산을 위한 switch 구문
+        switch (daysToAdd) {
+            case 2:
+                date = addBusinessDaysSwitch(date, 2);
+                break;
+            case 3:
+                date = addBusinessDaysSwitch(date, 3);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + daysToAdd);
+        }
+        // 최종 계산된 LocalDate와 원래의 LocalTime을 결합하여 LocalDateTime을 만듦
+        LocalDateTime expectedDateTime = date.atTime(time);
+        // LocalDate를 Timestamp로 변환
+        return Timestamp.valueOf(expectedDateTime);
+    }
+
     public void insert(RawOrderInsertDTO rawOrderInsertDTO) {
         validateQuantity(rawOrderInsertDTO);
-        //Date date = Date.valueOf(LocalDate.now());
+
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
 
+        // calculateExpectedImportDate 메서드 호출
+        Timestamp expectedImportDateTimestamp = calculateExpectedImportDate(timestamp);
 
-        LocalDateTime orderDatetime = timestamp.toLocalDateTime();
-        Date nowDate = Date.valueOf(timestamp.toLocalDateTime().toLocalDate());
-        //Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-        //LocalDateTime orderDateTime = LocalDateTime.now();
-        LocalDate expectedImportDate = calculateExpectedImportDate(orderDatetime);
 
         String rawsCode = createRawsCodes(rawOrderInsertDTO);
         Raws raws = Raws.builder()
@@ -114,7 +159,7 @@ public class RawOrderInsertService {
                 .quantity(rawOrderInsertDTO.getQuantity())
                 .partner(rawOrderInsertDTO.getPartner())
                 .orderDate(timestamp)
-                .expectedImportDate(Timestamp.valueOf(expectedImportDate.atStartOfDay()))
+                .expectedImportDate(expectedImportDateTimestamp)
                 .status(Status.WAITING)
                 .build();
 
@@ -214,9 +259,9 @@ public class RawOrderInsertService {
         }
     }
 
-    public void rawImport(String rawsCode) {
+    public void rawImport(Long id) {
 
-        Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
+        Raws raw = rawRepository.findById(id).orElse(null);
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
@@ -228,13 +273,10 @@ public class RawOrderInsertService {
 
         raw.rawImport(importDate, Status.IMPORT, deadLineTimestamp);
         rawRepository.save(raw);
-
-
-
     }
 
-    public void rawExport(String rawsCode) {
-        Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
+    public void rawExport(Long id) {
+        Raws raw = rawRepository.findById(id).orElse(null);
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();

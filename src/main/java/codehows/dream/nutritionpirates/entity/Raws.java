@@ -10,11 +10,7 @@ import java.util.Calendar;
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.RawsReason;
 import codehows.dream.nutritionpirates.constants.Status;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import static codehows.dream.nutritionpirates.constants.Status.WAITING;
@@ -29,6 +25,10 @@ public class Raws {
 
 	@Id
 	@Column(name = "raws_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false)
 	private String rawsCode;
 
 	@Column(nullable = false)

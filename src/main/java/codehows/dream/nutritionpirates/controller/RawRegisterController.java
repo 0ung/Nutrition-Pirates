@@ -39,15 +39,15 @@ public class RawRegisterController {
         }
     }
 
-    @PutMapping("/{rawsCode}")
-    public ResponseEntity<?> importRaw(@PathVariable(name = "rawsCode") String rawsCode) {
-        rawOrderInsertService.rawImport(rawsCode);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> importRaw(@PathVariable(name = "id") Long id) {
+        rawOrderInsertService.rawImport(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/{rawsCode}")
-    public ResponseEntity<?> exportRaw(@PathVariable(name = "rawsCode") String rawsCode) {
-        rawOrderInsertService.rawExport(rawsCode);
+    public ResponseEntity<?> exportRaw(@PathVariable(name = "rawsCode") Long id) {
+        rawOrderInsertService.rawExport(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
