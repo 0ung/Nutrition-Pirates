@@ -71,30 +71,19 @@ public class Raws {
 	private Status status;
 
 
-	public void rawImport() {
-		//현재 날짜 Date 변환
-		//this.importDate = Date.valueOf(LocalDate.now());
+	public void rawImport(Date importDate, Status status,Timestamp deadLine) {
 
-		Timestamp currentTimestamp = Timestamp.valueOf(LocalDateTime.now());
-		this.importDate = new Date(currentTimestamp.getTime());
-		this.status = status.IMPORT;
-
-		// Date를 LocalDateTime으로 변환
-		//LocalDateTime importDateTime = importDate.toLocalDate().atStartOfDay();
-		//Calendar calendar = Calendar.getInstance();
-		//calendar.setTime(importDate);
-		//calendar.add(Calendar.DAY_OF_YEAR, 14);
-
-		// 14일 더하기 (deadline 설정)
-		LocalDateTime deadlineDateTime = currentTimestamp.toLocalDateTime().plusDays(14);
-
-		// 다시 Timestamp 형태 받기
-		this.deadLine = Timestamp.valueOf (deadlineDateTime);
+		this.importDate = importDate;
+		this.status = status;
+		this.deadLine = deadLine;
 		}
 
-	public void rawExport() {
-		this.exportDate = Date.valueOf(LocalDate.now());
+	public void rawExport(Date exportDate, Status status, RawsReason rawsReason) {
+		/*this.exportDate = Date.valueOf(LocalDate.now());
 		this.status = status.EXPORT;
-		this.rawsReason = rawsReason.DISPOSE;
+		this.rawsReason = rawsReason.DISPOSE;*/
+		this.exportDate = exportDate;
+		this.status = status;
+		this.rawsReason = rawsReason;
 	}
 }

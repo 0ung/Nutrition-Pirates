@@ -16,10 +16,8 @@ import java.sql.Timestamp;
 public class RawOrderPlanDTO {
 
     private String partner;
-    private ProductName product;
-    private int quantity;
-    //private Date expectedImportDate;
-    private RawBOMDTO rawBOM;
+    private RawProductName product;
+    private double quantity;
     private Timestamp expectedImportDate;
 }
 

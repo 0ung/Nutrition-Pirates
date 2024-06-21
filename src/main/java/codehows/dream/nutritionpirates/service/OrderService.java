@@ -72,7 +72,7 @@ public class OrderService {
 			.build());
 
 		//검토가 먼저 일어나야겟지?
-		RawBOMDTO rawBOMDTO = bomCalculatorService.createRequirement(order);
+		RawBOMDTO rawBOMDTO = rawOrderInsertService.createRequirement(order);
 		log.info(rawBOMDTO.toString());
 		//재고 내역 확인(박스 수량)
 

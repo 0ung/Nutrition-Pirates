@@ -82,24 +82,20 @@ public class RawRegisterController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    // 이건 뭐지 ??????
     @GetMapping("/rawplan")
     public ResponseEntity<?> getRawsPlan() {
-
-
         return new ResponseEntity<>(rawOrderInsertService.getRawsPlanDTO(), HttpStatus.OK);
     }
     @GetMapping("/bom")
     public ResponseEntity<?> calculateBOMs() {
-
-
-        return new ResponseEntity<>(bomCalculatorService.calculateBOMs(), HttpStatus.OK);
+        return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
     }
-    /*@GetMapping("/bomsum")
-    @ResponseBody
-    public ResponseEntity<List<RawBOMDTO>> sumBOMs() {
-        List<RawBOMDTO> aggregatedList = bomCalculatorService.aggregateQuantities();
-        return ResponseEntity.ok().body(aggregatedList);
-    }*/
+    @GetMapping("/calculate")
+    public ResponseEntity<?> getMinus() {
+        return new ResponseEntity<>(rawOrderInsertService.getMinus(), HttpStatus.OK);
+    }
 
     /*@GetMapping("/rawperiod/{page}")
     public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
