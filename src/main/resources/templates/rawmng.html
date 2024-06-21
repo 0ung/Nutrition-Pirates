@@ -28,6 +28,10 @@
             background-color: #c3dfd2;
             border-color: #ccc;
         }
+        .modal-label{
+            background-color: #7ab2b2;
+            color: white;
+        }
     </style>
     <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
 </th:block>
@@ -141,14 +145,14 @@
                                 <td>
                                     <div class="flex-container">
                                         <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal">
+                                            <button class="jw-button2" data-bs-toggle="modal1"
+                                                    data-bs-target="#editModal1">
                                                 수정
                                             </button>
                                         </div>
                                         <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal">
+                                            <button class="jw-button2" data-bs-toggle="modal2"
+                                                    data-bs-target="#editModal2">
                                                 삭제
                                             </button>
                                         </div>
@@ -195,20 +199,39 @@
     <!-- ===============================================-->
 
     <!-- Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal fade" id="#editModal1" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">수정/삭제</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="editModalLabel1">입/출고 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal1" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    수정 및 삭제할 내용을 입력하세요.
-                    <!-- 필요한 폼 입력 요소들 추가 -->
+                   <label class="modal-label">
+
+                   </label>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                     <button type="button" class="btn btn-primary">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="#editModal2" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel2">입/출고 삭제</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal1" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">확인</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                 </div>
             </div>
         </div>

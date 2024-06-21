@@ -7,20 +7,30 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        #product-container {
-            width: 100%;
-            height: 100%;
+        .card {
+            margin: 20px;
+            background: rgb(255, 250, 235);
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
         }
 
-        .col-md-3, .col-md-4 {
-            background-color: skyblue;
-            border: 1px solid black;
-            padding: 10px; /* 모든 방향에 20픽셀의 마진을 추가 */
-            height: 100px;
-        }
+        /* 추가: 이미지, 카드 본문, 카드 바닥글 모서리도 둥글게 */
+        /*.card-img-top {*/
+        /*    border-top-left-radius: 30px;*/
+        /*    border-top-right-radius: 30px;*/
+        /*}*/
 
+        /*.card-body {*/
+        /*    border-bottom-left-radius: 30px;*/
+        /*    border-bottom-right-radius: 30px;*/
+        /*}*/
+
+        /*.card-footer {*/
+        /*    border-bottom-left-radius: 30px;*/
+        /*    border-bottom-right-radius: 30px;*/
+        /*}*/
 
     </style>
+    <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
 </th:block>
 s
 <!-- 사용자 스크립트 추가 -->
@@ -31,23 +41,192 @@ s
 
 
 <div layout:fragment="content">
-    <h1>각 설비 실시간 상태 현황</h1>
-    <hr>
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <label class="main-label">각 설비 실시간 상태 현황</label>
+            <div class="container" style="padding: 20px;  text-align: center; /* 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="main-label">포장기</label>
+                        <div class="row">
+                            <div class="card-group" id="pojang">
+                                <div class="col-md-6">
+                                    <div class="card rounded-3">
+                                        <div class="card-img-top">
+                                            <p class="card-text">가동중</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">즙 포장기1</h5>
+                                        </div>
+                                        <div class="card-footer">
+                                            <small class="text-muted">진행도 50%</small>
+                                        </div>
+                                    </div>
+                                    <div class="card rounded-3">
+                                        <div class="card-img-top">
+                                            <p class="card-text">가동중</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">즙 포장기2</h5>
+                                        </div>
+                                        <div class="card-footer">
+                                            <small class="text-muted">진행도 80%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card rounded-3">
+                                        <div class="card-img-top">
+                                            <p class="card-text">비가동중</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">스틱 포장기1</h5>
+                                        </div>
 
-    <div class="container" id="product-container">
-        <div class="row">
-            <div class="col-md-3">포장기</div>
-            <div class="col-md-3">추출기</div>
-            <div class="col-md-3">살균기</div>
-            <div class="col-md-3">혼합기</div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">여과기</div>
-            <div class="col-md-4">box포장기</div>
-            <div class="col-md-4">금속 검출기</div>
+                                        <div class="card-footer">
+                                            <small class="text-muted">-</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="card rounded-3">
+                                        <div class="card-img-top">
+                                            <p class="card-text">가동중</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">스틱 포장기2</h5>
+                                        </div>
+                                        <div class="card-footer">
+                                            <small class="text-muted">진행도 99%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="main-label">추출기</label>
+                        <div class="card-group" id="chuchul">
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">추출기1</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 70%</small>
+                                </div>
+                            </div>
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">추출기2</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 70%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="main-label">살균기</label>
+                        <div class="card-group" id="salgyun">
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">살균기1</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 58%</small>
+                                </div>
+                            </div>
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">살균기2</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 80%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="main-label">혼합기</label>
+                        <div class="card-group" id="honhab">
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">혼합기</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 90%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="main-label">여과기</label>
+                        <div class="card-group" id="yeogyoa">
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">비가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">여과기</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 0%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="main-label">BOX포장기</label>
+                        <div class="card-group" id="boxPojang">
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">BOX포장기</h5>
+
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"> 진행도 75%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="main-label">금속검출기</label>
+                        <div class="card-group" id="gumsa">
+                            <div class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p class="card-text">가동중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">금속검출기</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">진행도 63%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 
 </html>

@@ -225,3 +225,22 @@
     transform: rotateX(20deg);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on focus */
 }
+
+.jw-timeline {
+    color: #7d7d7d;
+    font-size: 10px;
+    padding: 5px;
+    float: right;
+}
+
+.jw-titleLabel {
+    width: 100%;
+    height: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-weight: 700;
+    font-size: 20px;
+    color: rgba(6, 59, 56, 0.75);
+}

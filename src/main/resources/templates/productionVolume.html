@@ -8,6 +8,7 @@
 <th:block layout:fragment="css">
     <style>
     </style>
+    <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
 </th:block>
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
@@ -19,59 +20,68 @@
 
 <div layout:fragment="content">
 
-    <div class="content2">
-        <div class="container">
-            <label class="title_form">일/월간 생산량 </label>
-            <hr>
-            <!-- Example single danger button -->
-            <div class="btn-group">
-                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton2"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    생산량
-                </button>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                    <li><a class="dropdown-item" href="#">일일 생산량</a></li>
-                    <li><a class="dropdown-item" href="#">월간 생산량</a></li>
-                </ul>
-            </div>
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <div id="card1">
+                <div>
+                    <label id="main-label">일/월간 생산량</label>
+                    <div class="container">
+                        <div class="empty-container">
+                            <div class="btn-group" style="margin-left: 95%; width: 160px;">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton2"
+                                        data-bs-toggle="dropdown" aria-expanded="false" style="font-size:15px; padding: 10px; border-radius: 90px;" >
+                                    생산량
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                    <li><a class="dropdown-item" href="#">일일 생산량</a></li>
+                                    <li><a class="dropdown-item" href="#">월간 생산량</a></li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="container1">
-                <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
-                <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
-                    <canvas id="myChart"></canvas>
+                        <div class="container1" style="padding:20px;">
+                            <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                            <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                                <canvas id="myChart"></canvas>
+                            </div>
+
+                            <!-- include Chart.js from a CDN -->
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                            <script>
+                                const ctx = document.querySelector('#myChart');
+
+                                //만들위치, 설정값객체
+                                new Chart(ctx, {
+                                    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                    data: {
+                                        labels: ['즙포장기1', '즙포장기2', '스틱포장기1', '스틱포장기2', '추출기1', '추출기2', '살균기1', '살균기2', '혼합기', '여과기', 'BOX포장기', '금속검출기'],
+                                        datasets: [
+                                            {
+                                                label: '일일 생산량',
+                                                data: [2000, 1500, 500, 500, 100, 10000, 1500, 1500, 1500, 1500, 1500, 1500],
+                                                borderWidth: 1,
+                                            }
+                                        ]
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                            <div class="empty-container2"></div>
+                        </div>
+
+                    </div>
                 </div>
-
-                <!-- include Chart.js from a CDN -->
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                <script>
-                    const ctx = document.querySelector('#myChart');
-
-                    //만들위치, 설정값객체
-                    new Chart(ctx, {
-                        type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                        data: {
-                            labels: ['즙포장기1', '즙포장기2', '스틱포장기1', '스틱포장기2', '추출기1', '추출기2', '살균기1', '살균기2', '혼합기', '여과기', 'BOX포장기', '금속검출기'],
-                            datasets: [
-                                {
-                                    label: '일일 생산량',
-                                    data: [2000, 1500, 500, 500, 100, 10000, 1500, 1500, 1500, 1500, 1500, 1500],
-                                    borderWidth: 1,
-                                }
-                            ]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                </script>
             </div>
-
         </div>
+    </div>
+</div>
 
 
 </html>
