@@ -32,10 +32,9 @@ public class ProgramTimeService {
 	}
 
 	public String updateHourProgramTime(int hour) {
-		List<ProgramTime> list = programTimeRepository.findAll();
-		ProgramTime programTime = list.get(0);
-		programTime.increaseHour(programTime.getCurrentProgramTime(), hour);
-
-		return programTime.getFormattedCurrentProgramTime();
+		ProgramTime time = programTimeRepository.findById(1L).orElse(null);
+		time.increaseHour(hour);
+		programTimeRepository.save(time);
+		return time.getFormattedCurrentProgramTime();
 	}
 }

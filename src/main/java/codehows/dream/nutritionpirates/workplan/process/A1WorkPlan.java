@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -21,6 +20,7 @@ import codehows.dream.nutritionpirates.entity.ProcessPlan;
 import codehows.dream.nutritionpirates.entity.Raws;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.exception.NotEnoughRawsException;
+import codehows.dream.nutritionpirates.exception.NotFoundOrderException;
 import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
 import codehows.dream.nutritionpirates.repository.LotCodeRepository;
 import codehows.dream.nutritionpirates.repository.OrderRepository;
@@ -128,49 +128,32 @@ public class A1WorkPlan implements WorkPlans {
 
 		List<Raws> raws = rawRepository.findByProduct(
 			productName == ProductName.CABBAGE_JUICE ? RawProductName.CABBAGE : RawProductName.BLACK_GARLIC);
-		List<Raws> availableRaws = raws.stream().filter(e -> parseAmount(e.getRawsCode())).collect(Collectors.toList());
+		// List<Raws> availableRaws = raws.stream().filter(e -> {
+		// 	if(parseAmount(e.getRawsCode())){
+		//
+		// 	};
+		//
+		// 	return null;
+		// 	}).toList();
+
+
 
 		List<String> updatedCodes = new ArrayList<>();
-		for (Raws raw : availableRaws) {
-			int availableAmount = parseAvailable(raw.getRawsCode());
-
-			if (availableAmount >= input) {
-				String updatedCode = updateRawsCode(raw.getRawsCode(), input);
-				updatedCodes.add(updatedCode);
-				return updatedCodes.toArray(new String[0]);
-			} else {
-				String updatedCode = updateRawsCode(raw.getRawsCode(), availableAmount);
-				updatedCodes.add(updatedCode);
-				input -= availableAmount;
-			}
-		}
 
 		throw new NotEnoughRawsException(); // If input amount cannot be fulfilled by available raws
 	}
+	//raws 데이터가 넘어오면
+	//20240621C2000T
+	//1. T가 있는지 확인
+	//1-1 T가 있으면 사용량 확인 후 공정에 투입가능하게 처리
+	//1-2 T가 없으면 뒤에 T를 붙이고 공정 투입 가능하게 처리
 
-	// Method to parse product code
-	public int parseProductCode(String codes) {
-		return Integer.parseInt(codes.substring(8, 12));
-	}
-
-	// Method to check if there is enough amount available
 	public boolean parseAmount(String codes) {
 		if (codes.contains("T")) {
 			int amount = Integer.parseInt(codes.substring(13));
 			return amount > 0;
 		}
 		return false;
-	}
-
-	// Method to parse available amount from raw codes
-	public int parseAvailable(String codes) {
-		return Integer.parseInt(codes.substring(13));
-	}
-
-	// Method to update raw code with the new amount
-	public String updateRawsCode(String codes, int input) {
-		String base = codes.substring(0, 13); // Assuming 'T' is at position 12
-		return base + input;
 	}
 
 	public int stockData(ProductName productName) {
@@ -194,6 +177,9 @@ public class A1WorkPlan implements WorkPlans {
 
 	public int getBom(ProcessPlan processPlan) {
 		Order order = orderRepository.findById(processPlan.getOrder().getId()).orElse(null);
+		if (order == null) {
+			throw new NotFoundOrderException();
+		}
 		RawBOMDTO rawBOMDTO = bomCalculatorService.createRequirement(order);
 
 		return (int)rawBOMDTO.getIngredient1();

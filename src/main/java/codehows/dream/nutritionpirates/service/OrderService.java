@@ -78,6 +78,9 @@ public class OrderService {
 
 		//발주 계획 생성
 
+		//기존 생산계획 검토 후 추가가능하면 원자재 추가;
+		//즉 CAPA가 100%가 될때까지 투입
+
 		//생산계획 생성
 		processPlanService.createProcessPlan(order);
 	}

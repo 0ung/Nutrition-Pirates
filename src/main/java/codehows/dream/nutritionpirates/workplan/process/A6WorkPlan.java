@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
+import codehows.dream.nutritionpirates.constants.Routing;
 import codehows.dream.nutritionpirates.entity.LotCode;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
@@ -48,7 +49,7 @@ public class A6WorkPlan implements WorkPlans {
 	}
 
 	public Timestamp expectTime(int input) {
-		double time = WORK_PLAN_DURATION.juicePackingDuration(input);
+		double time = WORK_PLAN_DURATION.juicePackingDuration(input) + WORK_PLAN_DURATION.juicePackingWaiting(input);
 		int minToAdd = (int)time * 60;
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime expectedTime = now.plusMinutes(minToAdd);
@@ -56,7 +57,7 @@ public class A6WorkPlan implements WorkPlans {
 	}
 
 	public Timestamp getComplete(Timestamp timestamp, int input) {
-		double time = WORK_PLAN_DURATION.juicePackingDuration(input);
+		double time = WORK_PLAN_DURATION.juicePackingDuration(input) + Routing.JUICE_WAITING_TIME;
 		int minToAdd = (int)time * 60;
 		LocalDateTime localDateTime = timestamp.toLocalDateTime();
 		LocalDateTime completeTime = localDateTime.plusMinutes(minToAdd);

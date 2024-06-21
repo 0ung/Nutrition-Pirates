@@ -1,11 +1,10 @@
 package codehows.dream.nutritionpirates.workplan.process;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+
+import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.FacilityStatus;
@@ -13,6 +12,7 @@ import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.workplan.WorkPlanDuration;
 
+@Component
 public class CommonMethod {
 
 	private final WorkPlanDuration workPlanDuration = new WorkPlanDuration();
@@ -38,7 +38,7 @@ public class CommonMethod {
 			plan.setProcessCompletionTime(processComplete);
 		} else {
 			plan.setEndTime(time);
-			plan.setFacilityStatus(FacilityStatus.WAITING);
+			plan.setFacilityStatus(FacilityStatus.STANDBY);
 		}
 		return plan;
 	}
@@ -50,5 +50,4 @@ public class CommonMethod {
 		String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		return formattedDate + process + facility.getValue();
 	}
-
 }

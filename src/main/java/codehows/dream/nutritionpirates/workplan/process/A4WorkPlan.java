@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
+import codehows.dream.nutritionpirates.constants.Routing;
 import codehows.dream.nutritionpirates.entity.LotCode;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
@@ -50,30 +51,18 @@ public class A4WorkPlan implements WorkPlans {
 	}
 
 	public Timestamp expectTime(int input) {
-		double time = WORK_PLAN_DURATION.filterDuration(input);
+		double time = WORK_PLAN_DURATION.filterDuration(input) + WORK_PLAN_DURATION.filterDuration(input);
 		int minToAdd = (int)time * 60;
-
-		// 현재 시간을 LocalDateTime으로 가져오기
 		LocalDateTime now = LocalDateTime.now();
-
-		// 분 추가
 		LocalDateTime expectedTime = now.plusMinutes(minToAdd);
-
-		// LocalDateTime을 Timestamp으로 변환하여 반환
 		return Timestamp.valueOf(expectedTime);
 	}
 
 	public Timestamp getComplete(Timestamp timestamp, int input) {
-		double time = WORK_PLAN_DURATION.filterDuration(input);
+		double time = WORK_PLAN_DURATION.filterDuration(input) + Routing.FILTER_WAITING_TIME;
 		int minToAdd = (int)time * 60;
-
-		// 입력된 Timestamp를 LocalDateTime으로 변환
 		LocalDateTime localDateTime = timestamp.toLocalDateTime();
-
-		// 분 추가
 		LocalDateTime completeTime = localDateTime.plusMinutes(minToAdd);
-
-		// LocalDateTime을 Timestamp으로 변환하여 반환
 		return Timestamp.valueOf(completeTime);
 	}
 

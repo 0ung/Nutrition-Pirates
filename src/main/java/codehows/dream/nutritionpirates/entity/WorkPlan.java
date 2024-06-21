@@ -34,7 +34,7 @@ public class WorkPlan {
 	@Column(name = "work_plan_id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "process_plan_id")
 	private ProcessPlan processPlan;
 
