@@ -35,6 +35,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
+
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -44,9 +46,7 @@ public class RawOrderInsertService {
     private final OrderRepository orderRepository;
     private final ProgramTimeService programTimeService;
 
-
-
-    public List<RawOrderPlanDTO> getRawsPlanDTO() {
+    /*public List<RawOrderPlanDTO> getRawsPlanDTO() {
         List<Order> orders = orderRepository.findAll();
         List<RawOrderPlanDTO> rawOrderPlanDTOS = orders.stream().map(order -> RawOrderPlanDTO.builder()
                         //.product(order.getProduct())
@@ -55,6 +55,20 @@ public class RawOrderInsertService {
                 .collect(Collectors.toList());
 
         return rawOrderPlanDTOS;
+    }*/
+
+    // 영업일 및 공휴일을 고려하여 예상 입고일 계산
+    private LocalDate addBusinessDaysSwitch(LocalDate startDate, int businessDays) {
+        LocalDate date = startDate;
+        int daysAdded = 0;
+
+        while (daysAdded < businessDays) {
+            date = date.plusDays(1);
+            if (isBusinessDay(date)){
+                daysAdded++;
+            }
+        }
+        return date;
     }
 
     // 영업일 확인 메서드 (토요일, 일요일, 공휴일을 제외)
@@ -86,57 +100,42 @@ public class RawOrderInsertService {
         }
         return true;
     }
-    // 영업일 및 공휴일을 고려하여 예상 입고일 계산
-    private LocalDate addBusinessDaysSwitch(LocalDate startDate, int businessDays) {
-        LocalDate date = startDate;
-        int daysAdded = 0;
-        // switch 구문을 사용하여 각 날짜에 대해 영업일 계산
-        switch (businessDays) {
-            case 2:
-                while (daysAdded < 2) {
-                    date = date.plusDays(1);
-                    if (isBusinessDay(date)) {
-                        daysAdded++;
-                    }
-                }
-                break;
-            case 3:
-                while (daysAdded < 3) {
-                    date = date.plusDays(1);
-                    if (isBusinessDay(date)) {
-                        daysAdded++;
-                    }
-                }
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + businessDays);
-        }
-        return date;
-    }
 
-    private Timestamp calculateExpectedImportDate(Timestamp orderDateTime) {
+
+    private Timestamp calculateExpectedImportDate(Timestamp orderDateTime, RawProductName product) {
         LocalDateTime orderDateTimeLocal = orderDateTime.toLocalDateTime();
         LocalTime time = orderDateTimeLocal.toLocalTime();
+        DayOfWeek dayOfWeek = orderDateTimeLocal.getDayOfWeek();
         int daysToAdd;
-        // 12:00 이전, 이후에 따른 daysToAdd 설정
-        if (time.isBefore(LocalTime.NOON)) {
-            daysToAdd = 2;
-        } else {
-            daysToAdd = 3;
+
+        switch (product) {
+            case CABBAGE, BLACK_GARLIC, HONEY :
+                if (time.isBefore(LocalTime.NOON)) {
+                    daysToAdd = (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) ? 3 : 2;
+                } else {
+                    daysToAdd = 3;
+                }
+                break;
+            case PLUM, POMEGRANATE, COLLAGEN :
+                if (time.isBefore(LocalTime.of(15, 0))) {
+                    daysToAdd = (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) ? 4 : 3;
+                } else {
+                    daysToAdd = 4;
+                }
+                break;
+            case WRAPPING_PAPER :
+                daysToAdd = 7;
+                break;
+            case BOX:
+                daysToAdd = 3;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown product: " + product);
         }
 
         LocalDate date = orderDateTimeLocal.toLocalDate();
-        // 날짜 계산을 위한 switch 구문
-        switch (daysToAdd) {
-            case 2:
-                date = addBusinessDaysSwitch(date, 2);
-                break;
-            case 3:
-                date = addBusinessDaysSwitch(date, 3);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + daysToAdd);
-        }
+        // 날짜 계산을 위한 daysToAdd 더하기
+        date = addBusinessDaysSwitch(date, daysToAdd);
         // 최종 계산된 LocalDate와 원래의 LocalTime을 결합하여 LocalDateTime을 만듦
         LocalDateTime expectedDateTime = date.atTime(time);
         // LocalDate를 Timestamp로 변환
@@ -149,7 +148,7 @@ public class RawOrderInsertService {
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
 
         // calculateExpectedImportDate 메서드 호출
-        Timestamp expectedImportDateTimestamp = calculateExpectedImportDate(timestamp);
+        Timestamp expectedImportDateTimestamp = calculateExpectedImportDate(timestamp, rawOrderInsertDTO.getProduct());
 
 
         String rawsCode = createRawsCodes(rawOrderInsertDTO);
@@ -165,8 +164,6 @@ public class RawOrderInsertService {
 
         rawRepository.save(raws);
     }
-
-
 
 
     // 원자재 제품 코드 약자로 구분
@@ -520,7 +517,7 @@ public class RawOrderInsertService {
         return notification;
     }
 
-    /*public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
+    public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
 
         LocalDate currentDate = LocalDate.now();
         LocalDate minDate = currentDate.minus(ChronoUnit.DAYS.between(currentDate, currentDate.minusDays(3)), ChronoUnit.DAYS);
@@ -539,7 +536,7 @@ public class RawOrderInsertService {
         //LocalDate currentDate = LocalDate.now();
 
         pages.forEach((e) -> {
-            /*if (e.getStatus() == Status.IMPORT && e.getDeadLine() != null) {
+            if (e.getStatus() == Status.IMPORT && e.getDeadLine() != null) {
                 LocalDate deadlineDate = e.getDeadLine().toLocalDate();
                 long daysUntilDeadline = ChronoUnit.DAYS.between(deadlineDate, currentDate);
 
@@ -553,7 +550,10 @@ public class RawOrderInsertService {
                                 .build());
         });
         return list;
-    } */
+    }
+                }
+    }
+
 
 
     //첫번쨰 생성이 되면
@@ -659,50 +659,78 @@ public class RawOrderInsertService {
     public List<RawOrderPlanDTO> getMinus() {
         List<RawShowGraphDTO> list = getRawStockGraph();
         RawBOMDTO bomTotal = calculateBOMs();
+
+        Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         List<RawOrderPlanDTO> result = new ArrayList<>();
 
         for (RawShowGraphDTO rawShowGraphDTO : list) {
             String product = rawShowGraphDTO.getProduct();
             int stockQuantity = rawShowGraphDTO.getQuantity();
+            String partnerName = "";
+            RawProductName rawProductName;
+            double remainQuantity;
 
-            switch (product) {
-                case "양배추":
-                    bomTotal.setCabbage(bomTotal.getCabbage() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.CABBAGE, bomTotal.getCabbage(), Timestamp.valueOf(LocalDateTime.now())));
+            switch(product) {
+                case "양배추" :
+                    partnerName = "에이농장";
+                    rawProductName = RawProductName.CABBAGE;
+                    remainQuantity = bomTotal.getCabbage() - stockQuantity;
+                    bomTotal.setCabbage(remainQuantity);
                     break;
                 case "흑마늘":
-                    bomTotal.setGarlic(bomTotal.getGarlic() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.BLACK_GARLIC, bomTotal.getGarlic(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "에이농장";
+                    rawProductName = RawProductName.BLACK_GARLIC;
+                    remainQuantity = bomTotal.getGarlic() - stockQuantity;
+                    bomTotal.setGarlic(remainQuantity);
                     break;
                 case "석류(농축액)":
-                    bomTotal.setPomegranate(bomTotal.getPomegranate() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.POMEGRANATE, bomTotal.getPomegranate(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "OO농협";
+                    rawProductName = RawProductName.POMEGRANATE;
+                    remainQuantity = bomTotal.getPomegranate() - stockQuantity;
+                    bomTotal.setPomegranate(remainQuantity);
                     break;
                 case "매실(농축액)":
-                    bomTotal.setPlum(bomTotal.getPlum() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.PLUM, bomTotal.getPlum(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "OO농협";
+                    rawProductName = RawProductName.PLUM;
+                    remainQuantity = bomTotal.getPlum() - stockQuantity;
+                    bomTotal.setPlum(remainQuantity);
                     break;
                 case "벌꿀":
-                    bomTotal.setHoney(bomTotal.getHoney() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.HONEY, bomTotal.getHoney(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "에이농장";
+                    rawProductName = RawProductName.HONEY;
+                    remainQuantity = bomTotal.getHoney() - stockQuantity;
+                    bomTotal.setHoney(remainQuantity);
                     break;
                 case "콜라겐":
-                    bomTotal.setCollagen(bomTotal.getCollagen() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.COLLAGEN, bomTotal.getCollagen(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "OO농협";
+                    rawProductName = RawProductName.COLLAGEN;
+                    remainQuantity = bomTotal.getCollagen() - stockQuantity;
+                    bomTotal.setCollagen(remainQuantity);
                     break;
                 case "포장지":
-                    bomTotal.setPaper(bomTotal.getPaper() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.WRAPPING_PAPER, bomTotal.getPaper(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "OO포장";
+                    rawProductName = RawProductName.WRAPPING_PAPER;
+                    remainQuantity = bomTotal.getPaper() - stockQuantity;
+                    bomTotal.setPaper(remainQuantity);
                     break;
                 case "박스":
-                    bomTotal.setBox(bomTotal.getBox() - stockQuantity);
-                    result.add(new RawOrderPlanDTO("PartnerName", RawProductName.BOX, bomTotal.getBox(), Timestamp.valueOf(LocalDateTime.now())));
+                    partnerName = "OO포장";
+                    rawProductName = RawProductName.BOX;
+                    remainQuantity = bomTotal.getBox() - stockQuantity;
+                    bomTotal.setBox(remainQuantity);
                     break;
                 default:
                     throw new IllegalArgumentException("상품이 없음 : " + product);
             }
+
+            if (remainQuantity > 0) {
+                Timestamp expectedImportDate = calculateExpectedImportDate(timestamp, rawProductName);
+                String formattedExpectedImportDate = expectedImportDate.toLocalDateTime().format(formatter);
+                result.add(new RawOrderPlanDTO(partnerName, rawProductName.getValue(), remainQuantity, formattedExpectedImportDate));
+            }
         }
         return result;
     }
-
 }

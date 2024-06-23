@@ -79,10 +79,10 @@ public class RawRegisterController {
     }
 
     // 이건 뭐지 ??????
-    @GetMapping("/rawplan")
+   /* @GetMapping("/rawplan")
     public ResponseEntity<?> getRawsPlan() {
         return new ResponseEntity<>(rawOrderInsertService.getRawsPlanDTO(), HttpStatus.OK);
-    }
+    }*/
     @GetMapping("/bom")
     public ResponseEntity<?> calculateBOMs() {
         return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
