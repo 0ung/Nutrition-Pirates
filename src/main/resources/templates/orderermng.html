@@ -69,8 +69,6 @@
 
 
 <div layout:fragment="content">
-
-
     <div id="main-content">
         <div class="main-container" id="main-container">
             <div class="jw-row">
@@ -78,8 +76,8 @@
                     <div class="group">
                         <label class="main-label">원자재 발주 관리
                             <span style="margin-left: 45%; width: 100px">
-                                       <input type="text" id="search" placeholder="Search..."/>
-                                </span>
+                                <input type="text" id="search" placeholder="Search..."/>
+                            </span>
                         </label>
                         <div class="empty-container">
                             <table class="jw-table">
@@ -101,7 +99,7 @@
                                     <td>2024.06.7 13:00:05</td>
                                     <td>2024.06.7 13:00:05</td>
                                     <td>
-                                        <button class="jw-button2">입고버튼</button>
+                                        <button class="jw-button2" onclick="markAsReceived(this)">입고버튼</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -111,7 +109,7 @@
                                     <td>2024.06.7 13:00:05</td>
                                     <td>2024.06.7 13:00:05</td>
                                     <td>
-                                        <button class="jw-button2">입고버튼</button>
+                                        <button class="jw-button2" onclick="markAsReceived(this)">입고버튼</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -134,8 +132,7 @@
                         <nav aria-label="...">
                             <ul class="pagination">
                                 <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1"
-                                       aria-disabled="true">&laquo;</a>
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
                                 </li>
                                 <li class="page-item"><a class="page-link" href="#">1</a></li>
                                 <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -148,13 +145,12 @@
                     </div>
                 </div>
 
-
                 <div class="jw-div2">
                     <div class="group">
                         <label class="main-label">발주계획서
                             <span style="margin-left: 75%; width: 10%">
-                                        <button class="jw-button" onclick="showModal()"> 발주 등록</button>
-                                </span>
+                                <button class="jw-button" onclick="showModal()"> 발주 등록</button>
+                            </span>
                         </label>
                         <div class="empty-container">
                             <table class="jw-table">
@@ -199,4 +195,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function markAsReceived(button) {
+        button.textContent = "입고됨";
+        button.disabled = true;
+    }
+</script>
 </html>
