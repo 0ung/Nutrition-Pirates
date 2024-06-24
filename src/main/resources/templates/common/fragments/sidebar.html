@@ -1,0 +1,123 @@
+<!--사이드바-->
+
+<nav xmlns:th="http://www.thymeleaf.org"
+     th:fragment="sidebarFragment" class="col-auto">
+
+
+    <div class="flex-shrink-0 p-3 bg-gray" style="width: 280px;">
+        <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+            <svg class="bi me-1" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+            <img src="../static/img/logo.png" alt="phoenix" width="27"/>&nbsp <span class="fs-5 fw-semibold">뉴트리션 해적단</span>
+        </a>
+        <ul class="list-unstyled ps-0">
+            <li class="mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav1" aria-expanded="false">
+                수주관리
+            </button>
+                <div class="collapse" id="ShittyNav1" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./suzu" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 수주 등록</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./suzucheck" class="link-dark rounded mt-1"  style="text-decoration: none;">&nbsp 수주 조회</a></li>
+                        <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill " viewBox="0 0 16 16">
+                            <circle cx="8" cy="8" r="8"/>
+                        </svg><a href="./suzucheckOrderer" class="link-dark rounded" style="text-decoration: none;">&nbsp 발주처 조회</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+            </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav2" aria-expanded="false">
+                원자재 관리
+            </button>
+                <div class="collapse" id="ShittyNav2" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 원자재 발주 등록</a></li>
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 원자재 입출고 현황</a></li>
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 원자재 현황 조회</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+            </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav3" aria-expanded="false">
+                생산 관리
+            </button>
+                <div class="collapse" id="ShittyNav3" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 생산계획</a></li>
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 작업 지시 조회</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav4" aria-expanded="false">
+                재고 관리
+            </button>
+                <div class="collapse" id="ShittyNav4" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 재고 조회</a></li>
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 재고 현황</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav5" aria-expanded="false">
+                출하 관리
+            </button>
+                <div class="collapse" id="ShittyNav5" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">&nbsp 출하 현황</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav6" aria-expanded="false">
+                설비 현황
+            </button>
+                <div class="collapse" id="ShittyNav6" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">설비 현황</a></li>
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">설비별 일일생산량</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+                </svg><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ShittyNav7" aria-expanded="false">
+                LOT 관리
+            </button>
+                <div class="collapse" id="ShittyNav7" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">완제품 수주별 조회</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="border-top my-3"></li>
+            <li class="mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+                </svg><button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#ShittyNav8" aria-expanded="true">
+                시간 관리
+            </button>
+                <div class="collapse show" id="ShittyNav8" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
+                        <li><a href="#" class="link-dark rounded mt-1" style="text-decoration: none;">시간 관리</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

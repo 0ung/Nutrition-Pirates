@@ -37,133 +37,133 @@
 <!-- ===============================================-->
 
 <div layout:fragment="Content" class="container">
-<main class="main" id="top">
-    <!--------------------->
-    <!----  Main Start ---->
-    <!--------------------->
+    <main class="main" id="top">
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
 
 
-    <div class="content2">
-        <div class="container">
-            <div class="card2 cart">
-                <label class="title_form">수주 조회
-                    <span style="margin-left: 75%">
+        <div class="content2">
+            <div class="container">
+                <div class="card2 cart">
+                    <label class="title_form">수주 조회
+                        <span style="margin-left: 75%">
                 <input type="text" id="search-input" class="search-input" placeholder="Search..." />
                     </span>
-                </label>
+                    </label>
 
-                <div class="steps">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>발주처</th>
-                            <th>제품명</th>
-                            <th>수량(BOX)</th>
-                            <th>수주일</th>
-                            <th>예상 납기일</th>
-                            <th>공정 상태</th>
-                            <th>긴급 여부</th>
-                            <th>취소 여부</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1번</td>
-                            <td>김철수</td>
-                            <td>제품 A</td>
-                            <td>100</td>
-                            <td>2024-06-10</td>
-                            <td>2024-06-20</td>
-                            <td>진행중</td>
-                            <td>아니오</td>
-                            <td><button onclick="cancelOrder(this)">취소</button></td>
+                    <div class="steps">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>발주처</th>
+                                <th>제품명</th>
+                                <th>수량(BOX)</th>
+                                <th>수주일</th>
+                                <th>예상 납기일</th>
+                                <th>공정 상태</th>
+                                <th>긴급 여부</th>
+                                <th>취소 여부</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1번</td>
+                                <td>김철수</td>
+                                <td>제품 A</td>
+                                <td>100</td>
+                                <td>2024-06-10</td>
+                                <td>2024-06-20</td>
+                                <td>진행중</td>
+                                <td>아니오</td>
+                                <td><button onclick="cancelOrder(this)">취소</button></td>
 
-                        </tr>
-                        <tr>
-                            <td>2번</td>
-                            <td>김백수</td>
-                            <td>제품 B</td>
-                            <td>50</td>
-                            <td>2024-06-12</td>
-                            <td>2024-06-25</td>
-                            <td>대기중</td>
-                            <td>네</td>
-                            <td><button onclick="cancelOrder(this)">취소</button></td>
+                            </tr>
+                            <tr>
+                                <td>2번</td>
+                                <td>김백수</td>
+                                <td>제품 B</td>
+                                <td>50</td>
+                                <td>2024-06-12</td>
+                                <td>2024-06-25</td>
+                                <td>대기중</td>
+                                <td>네</td>
+                                <td><button onclick="cancelOrder(this)">취소</button></td>
 
-                        </tr>
-                        <tr>
-                            <td>3번</td>
-                            <td>홍길동</td>
-                            <td>제품 C</td>
-                            <td>200</td>
-                            <td>2024-06-14</td>
-                            <td>2024-06-30</td>
-                            <td>완료</td>
-                            <td>아니오</td>
-                            <td><button onclick="cancelOrder(this)">취소</button></td>
+                            </tr>
+                            <tr>
+                                <td>3번</td>
+                                <td>홍길동</td>
+                                <td>제품 C</td>
+                                <td>200</td>
+                                <td>2024-06-14</td>
+                                <td>2024-06-30</td>
+                                <td>완료</td>
+                                <td>아니오</td>
+                                <td><button onclick="cancelOrder(this)">취소</button></td>
 
-                        </tr>
-                        <tr>
-                            <td>4번</td>
-                            <td>아무개</td>
-                            <td>제품 D</td>
-                            <td>75</td>
-                            <td>2024-06-13</td>
-                            <td>2024-06-28</td>
-                            <td>진행중</td>
-                            <td>아니오</td>
-                            <td><button onclick="cancelOrder(this)">취소</button></td>
+                            </tr>
+                            <tr>
+                                <td>4번</td>
+                                <td>아무개</td>
+                                <td>제품 D</td>
+                                <td>75</td>
+                                <td>2024-06-13</td>
+                                <td>2024-06-28</td>
+                                <td>진행중</td>
+                                <td>아니오</td>
+                                <td><button onclick="cancelOrder(this)">취소</button></td>
 
-                        </tr>
-                        </tbody>
-                    </table>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="centered">
+                        <p> [1] [2] [3] [4] [5] </p>
+                    </div>
                 </div>
-
-                <div class="centered">
-                    <p> [1] [2] [3] [4] [5] </p>
-                </div>
-            </div>
-            <div class="card2 checkout">
-                <div class="footer">
-                    <label class="price"> </label>
-                    <button class="checkout-btn"> 엑셀 저장</button>
+                <div class="card2 checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn"> 엑셀 저장</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<!-- ===============================================-->
-<!--    End of Main Content-->
-<!-- ===============================================-->
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 
 
-<!-- ===============================================-->
-<!--    JavaScripts-->
-<!-- ===============================================-->
-<script>
-    function cancelOrder(button) {
-        // Change the button text and disable it
-        button.textContent = '취소됨';
-        button.disabled = true;
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script>
+        function cancelOrder(button) {
+            // Change the button text and disable it
+            button.textContent = '취소됨';
+            button.disabled = true;
 
-        // Optionally, you can update other related data or styles here
-        // For example, you could change the row background or other elements in the row
-        // Example: button.closest('tr').style.backgroundColor = '#f2dede';
-    }
-</script>
+            // Optionally, you can update other related data or styles here
+            // For example, you could change the row background or other elements in the row
+            // Example: button.closest('tr').style.backgroundColor = '#f2dede';
+        }
+    </script>
 
-<script src="../static/js/popper/popper.min.js"></script>
-<script src="../static/js/bootstrap/bootstrap.min.js"></script>
-<script src="../static/js/anchorjs/anchor.min.js"></script>
-<script src="../static/js/is/is.min.js"></script>
-<script src="../static/js/fontawesome/all.min.js"></script>
-<script src="../static/js/lodash/lodash.min.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-<script src="../static/js/list.js/list.min.js"></script>
-<script src="../static/js/feather-icons/feather.min.js"></script>
-<script src="../static/js/dayjs/dayjs.min.js"></script>
-<script src="../static/js/phoenix.js"></script>
+    <script src="../static/js/popper/popper.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/anchorjs/anchor.min.js"></script>
+    <script src="../static/js/is/is.min.js"></script>
+    <script src="../static/js/fontawesome/all.min.js"></script>
+    <script src="../static/js/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="../static/js/list.js/list.min.js"></script>
+    <script src="../static/js/feather-icons/feather.min.js"></script>
+    <script src="../static/js/dayjs/dayjs.min.js"></script>
+    <script src="../static/js/phoenix.js"></script>
 </div>
 </body>
 </html>

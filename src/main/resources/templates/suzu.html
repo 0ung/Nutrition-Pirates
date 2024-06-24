@@ -5,20 +5,20 @@
       layout:decorate="~{common/layouts/default}">
 
 <head>
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
+<!--    &lt;!&ndash; ===============================================&ndash;&gt;
+    &lt;!&ndash;    Document Title&ndash;&gt;
+    &lt;!&ndash; ===============================================&ndash;&gt;
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>뉴트리션 해적선</title>
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
+    &lt;!&ndash; ===============================================&ndash;&gt;
+    &lt;!&ndash;    Favicons&ndash;&gt;
+    &lt;!&ndash; ===============================================&ndash;&gt;
     <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
+    &lt;!&ndash; ===============================================&ndash;&gt;
+    &lt;!&ndash;    Stylesheets&ndash;&gt;
+    &lt;!&ndash; ===============================================&ndash;&gt;
     <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -28,7 +28,7 @@
     <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
     <link href="../static/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
     <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
+    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">-->
     <script src="https://code.jquery.com/jquery-3.7.1.js"
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
@@ -46,7 +46,7 @@
             document.getElementById('myModal').style.display = "block";
         }
     </script>
-    <script src="../static/js/popper/popper.min.js"></script>
+<!--    <script src="../static/js/popper/popper.min.js"></script>
     <script src="../static/js/bootstrap/bootstrap.min.js"></script>
     <script src="../static/js/anchorjs/anchor.min.js "></script>
     <script src="../static/js/is/is.min.js"></script>
@@ -56,92 +56,92 @@
     <script src="../static/js/list.js/list.min.js"></script>
     <script src="../static/js/feather-icons/feather.min.js"></script>
     <script src="../static/js/dayjs/dayjs.min.js"></script>
-    <script src="../static/js/phoenix.js"></script>
+    <script src="../static/js/phoenix.js"></script>-->
 </head>
 <body>
 
 <div layout:fragment="Content" class="container">
-<!-- ===============================================-->
-<!--    Main Content-->
-<!-- ===============================================-->
-<main class="main" id="top">
-    <!--------------------->
-    <!----  Main Start ---->
-    <!--------------------->
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
 
-    <script>
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/order/orderer",
-            success: (response)=>{
-                response.forEach(
-                    (e)=>{
-                        console.log(e.id);
-                        console.log(e.name);
-                        console.log(e.phoneNumber);
-                    }
-                )
-            },
-            error: (error)=>{
-                console.log(error)
-            }
-        })
-    </script>
+        <script>
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/order/orderer",
+                success: (response)=>{
+                    response.forEach(
+                        (e)=>{
+                            console.log(e.id);
+                            console.log(e.name);
+                            console.log(e.phoneNumber);
+                        }
+                    )
+                },
+                error: (error)=>{
+                    console.log(error)
+                }
+            })
+        </script>
 
 
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color: #0acf83">신규 발주처</h2>
-            <button class="button" onclick="closeModal()">신규 발주처 추가하기</button>
-            <hr>
-            <h2 style="color: #0acf83">기존 발주처</h2>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <h2 style="color: #0acf83">신규 발주처</h2>
+                <button class="button" onclick="closeModal()">신규 발주처 추가하기</button>
+                <hr>
+                <h2 style="color: #0acf83">기존 발주처</h2>
 
-            <select id="ordererModal" class="dropdown">
-            </select>
-            <button class="button" onclick="nextStep()">다음</button>
+                <select id="ordererModal" class="dropdown">
+                </select>
+                <button class="button" onclick="nextStep()">다음</button>
+            </div>
         </div>
-    </div>
 
 
-    <div class="content">
-        <div class="container">
-            <div class="card cart">
-                <label class="title_form">수주 등록
-                    <span style="margin-left: 76%">
+        <div class="content">
+            <div class="container">
+                <div class="card cart">
+                    <label class="title_form">수주 등록
+                        <span style="margin-left: 76%">
                 <label for="excel-upload" class="button_right">엑셀 등록</label>
                 <input type="file" id="excel-upload" style="display: none;" accept=".xls,.xlsx">
             </span>
-                </label>
-                <div class="steps">
-                    <div class="step">
-                        <div class="promo">
-                            <span>발주처 </span>
-                            <form class="form">
-                                <input type="text" placeholder="Orderer / Company name" class="input_field">
-                            </form>
-                        </div>
-                        <hr>
-                        <div class="promo">
-                            <span>전화번호 </span>
-                            <form class="form">
-                                <input type="text" placeholder=" 010-1234-5678 " class="input_field">
-                            </form>
-                        </div>
-                        <hr>
-                        <div class="promo">
-                            <span>제품명 </span>
-                            <form class="form">
-                                <input type="text" placeholder="Enter a Product Name" class="input_field">
-                            </form>
-                        </div>
-                        <hr>
-                        <div class="promo">
-                            <span>수량 </span>
-                            <form class="form">
-                                <input type="text" placeholder="Numbers " class="input_field">
-                            </form>
-                        </div>
-                        <div class="container" style="display: flex; align-items: center">
+                    </label>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="promo">
+                                <span>발주처 </span>
+                                <form class="form">
+                                    <input type="text" placeholder="Orderer / Company name" class="input_field">
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="promo">
+                                <span>전화번호 </span>
+                                <form class="form">
+                                    <input type="text" placeholder=" 010-1234-5678 " class="input_field">
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="promo">
+                                <span>제품명 </span>
+                                <form class="form">
+                                    <input type="text" placeholder="Enter a Product Name" class="input_field">
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="promo">
+                                <span>수량 </span>
+                                <form class="form">
+                                    <input type="text" placeholder="Numbers " class="input_field">
+                                </form>
+                            </div>
+                            <div class="container" style="display: flex; align-items: center">
           <span class="nice-form-group" style="margin-right:100px; margin-left: 50px">
             <input type="checkbox" id="check-1" class="switch"/>
             <label for="check-1">
@@ -149,34 +149,34 @@
               <small>긴급여부가 체크되어있을시 <br> 우선순위가 최우선으로 부여됩니다. </small>
             </label>
           </span>
-                            <span class="nice-form-group">
+                                <span class="nice-form-group">
             <input type="checkbox" id="check-2" class="switch"/>
             <label for="check-2">
               개인여부
               <small> BoX 단위로 가능합니다.<br> ※ 개수단위 구매불가 </small>
             </label>
           </span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card checkout">
-                <div class="footer">
-                    <label class="price"> </label>
-                    <button class="checkout-btn"> 등 록</button>
+                <div class="card checkout">
+                    <div class="footer">
+                        <label class="price"> </label>
+                        <button class="checkout-btn"> 등 록</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<!-- ===============================================-->
-<!--    End of Main Content-->
-<!-- ===============================================-->
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 
 
-<!-- ===============================================-->
-<!--    JavaScripts-->
-<!-- ===============================================-->
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
 </div>
 </body>
 </html>
