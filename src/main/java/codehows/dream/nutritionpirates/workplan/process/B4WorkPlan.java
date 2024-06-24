@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
+import codehows.dream.nutritionpirates.constants.Routing;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
 import codehows.dream.nutritionpirates.service.ProgramTimeService;
@@ -24,6 +26,7 @@ public class B4WorkPlan implements WorkPlans {
 		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
 		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -36,11 +39,12 @@ public class B4WorkPlan implements WorkPlans {
 			.process(Process.B4)
 			.processCompletionTime(expectTime(data))
 			.semiProduct(data)
+			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
 	}
 
 	public Timestamp expectTime(int input) {
-		double time = WORK_PLAN_DURATION.stickPackingDuration(input);
+		double time = WORK_PLAN_DURATION.stickPackingDuration(input)+WORK_PLAN_DURATION.sterilizationWaiting(input);
 		int minToAdd = (int)time * 60;
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime expectedTime = now.plusMinutes(minToAdd);
@@ -48,7 +52,7 @@ public class B4WorkPlan implements WorkPlans {
 	}
 
 	public Timestamp getComplete(Timestamp timestamp, int input) {
-		double time = WORK_PLAN_DURATION.stickPackingDuration(input);
+		double time = WORK_PLAN_DURATION.stickPackingDuration(input) + Routing.STICK_WAITING_TIME;
 		int minToAdd = (int)time * 60;
 		LocalDateTime localDateTime = timestamp.toLocalDateTime();
 		LocalDateTime completeTime = localDateTime.plusMinutes(minToAdd);
@@ -57,5 +61,9 @@ public class B4WorkPlan implements WorkPlans {
 
 	public int process(int input) {
 		return (int)Math.floor(input * 1000.0 / 5.0);
+	}
+
+	public int calCapacity(int input){
+		return input/Routing.STICK_PACKING_ROUTING *100;
 	}
 }

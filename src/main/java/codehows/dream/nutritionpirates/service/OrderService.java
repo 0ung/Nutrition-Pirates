@@ -37,7 +37,6 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrdererRepository ordererRepository;
 	private final ProcessPlanService processPlanService;
-	private final BOMCalculatorService bomCalculatorService;
 	private final RawOrderInsertService rawOrderInsertService;
 	private final ProgramTimeService programTimeService;
 
@@ -72,11 +71,14 @@ public class OrderService {
 			.build());
 
 		//검토가 먼저 일어나야겟지?
-		RawBOMDTO rawBOMDTO = bomCalculatorService.createRequirement(order);
+		RawBOMDTO rawBOMDTO = rawOrderInsertService.createRequirement(order);
 		log.info(rawBOMDTO.toString());
 		//재고 내역 확인(박스 수량)
 
 		//발주 계획 생성
+
+		//기존 생산계획 검토 후 추가가능하면 원자재 추가;
+		//즉 CAPA가 100%가 될때까지 투입
 
 		//생산계획 생성
 		processPlanService.createProcessPlan(order);

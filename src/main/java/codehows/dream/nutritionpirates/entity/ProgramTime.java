@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -18,11 +20,14 @@ import lombok.Setter;
 @Table(name = "program_time")
 public class ProgramTime {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	private Timestamp currentProgramTime;
 
-	public void increaseHour(Timestamp time, int hour) {
+	public void increaseHour(int hour) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(time);
+		calendar.setTime(this.currentProgramTime);
 		calendar.add(Calendar.HOUR, hour);
 
 		this.currentProgramTime = new Timestamp(calendar.getTime().getTime());
@@ -37,8 +42,7 @@ public class ProgramTime {
 		return dateFormat.format(currentProgramTime);
 	}
 
-
-	public ProgramTime(){
+	public ProgramTime() {
 		this.currentProgramTime = Timestamp.valueOf(LocalDateTime.now());
 	}
 
