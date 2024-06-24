@@ -38,6 +38,22 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        async function updateTime() {
+            try {
+                const response = await fetch(url + "systemtime");
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 정상적이지 않습니다');
+                }
+                const data = await response.json();
+                console.log('시스템 시간:', data); // 데이터 처리나 활용
+                // 여기서 시스템 시간을 사용하거나 처리합니다
+            } catch (error) {
+                console.error('시스템 시간을 가져오는 중 오류 발생:', error);
+                // 오류 처리나 필요 시 예외를 다시 던지기
+                throw error;
+            }
+        }
+        console.log(updateTime());
     </script>
 </th:block>
 
@@ -54,7 +70,7 @@
 
                     <div class="row" style="padding: 20px; margin-top: 30px">
                 <span style="width: 100%;">
-                    <button class="col">1시간</button>
+                    <button onclick="updateTime()" class="col">1시간</button>
                     <button class="col">3시간</button>
                     <button class="col">6시간</button>
                 </span>
