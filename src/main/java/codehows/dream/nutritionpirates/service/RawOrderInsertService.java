@@ -7,17 +7,15 @@ import codehows.dream.nutritionpirates.constants.RawsReason;
 import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.*;
 import codehows.dream.nutritionpirates.entity.Order;
-import codehows.dream.nutritionpirates.entity.Orderer;
 import codehows.dream.nutritionpirates.entity.Raws;
 import codehows.dream.nutritionpirates.repository.OrderRepository;
 import codehows.dream.nutritionpirates.repository.RawRepository;
-import groovy.lang.Lazy;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,16 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
-
-
 
 
 @Service
@@ -46,16 +37,6 @@ public class RawOrderInsertService {
     private final OrderRepository orderRepository;
     private final ProgramTimeService programTimeService;
 
-    /*public List<RawOrderPlanDTO> getRawsPlanDTO() {
-        List<Order> orders = orderRepository.findAll();
-        List<RawOrderPlanDTO> rawOrderPlanDTOS = orders.stream().map(order -> RawOrderPlanDTO.builder()
-                        //.product(order.getProduct())
-                        .quantity(order.getQuantity())
-                        .build())
-                .collect(Collectors.toList());
-
-        return rawOrderPlanDTOS;
-    }*/
 
     // 영업일 및 공휴일을 고려하여 예상 입고일 계산
     private LocalDate addBusinessDaysSwitch(LocalDate startDate, int businessDays) {
@@ -64,7 +45,7 @@ public class RawOrderInsertService {
 
         while (daysAdded < businessDays) {
             date = date.plusDays(1);
-            if (isBusinessDay(date)){
+            if (isBusinessDay(date)) {
                 daysAdded++;
             }
         }
@@ -80,17 +61,17 @@ public class RawOrderInsertService {
         // 공휴일 제외 (여기서는 예시로 몇 개의 날짜를 공휴일로 지정)
         List<LocalDate> holidays = Arrays.asList(
                 LocalDate.of(date.getYear(), 1, 1),  // 새해
-                LocalDate.of(date.getYear(),2,10), // 설날
-                LocalDate.of(date.getYear(),3,1), // 삼일절
-                LocalDate.of(date.getYear(),5,5), // 어린이날
-                LocalDate.of(date.getYear(),5,15), // 부처님오시는날
-                LocalDate.of(date.getYear(),6,6), // 현출일
-                LocalDate.of(date.getYear(),8,15), // 광복절
-                LocalDate.of(date.getYear(),9,16), // 추석연휴
-                LocalDate.of(date.getYear(),9,17), // 추석연휴
-                LocalDate.of(date.getYear(),9,18), // 추석연휴
-                LocalDate.of(date.getYear(),10,3), // 개천절
-                LocalDate.of(date.getYear(),10,9), // 한글날
+                LocalDate.of(date.getYear(), 2, 10), // 설날
+                LocalDate.of(date.getYear(), 3, 1), // 삼일절
+                LocalDate.of(date.getYear(), 5, 5), // 어린이날
+                LocalDate.of(date.getYear(), 5, 15), // 부처님오시는날
+                LocalDate.of(date.getYear(), 6, 6), // 현출일
+                LocalDate.of(date.getYear(), 8, 15), // 광복절
+                LocalDate.of(date.getYear(), 9, 16), // 추석연휴
+                LocalDate.of(date.getYear(), 9, 17), // 추석연휴
+                LocalDate.of(date.getYear(), 9, 18), // 추석연휴
+                LocalDate.of(date.getYear(), 10, 3), // 개천절
+                LocalDate.of(date.getYear(), 10, 9), // 한글날
                 LocalDate.of(date.getYear(), 12, 25) // 크리스마스
                 // 추가 공휴일을 여기에 추가
         );
@@ -109,21 +90,21 @@ public class RawOrderInsertService {
         int daysToAdd;
 
         switch (product) {
-            case CABBAGE, BLACK_GARLIC, HONEY :
+            case CABBAGE, BLACK_GARLIC, HONEY:
                 if (time.isBefore(LocalTime.NOON)) {
                     daysToAdd = (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) ? 3 : 2;
                 } else {
                     daysToAdd = 3;
                 }
                 break;
-            case PLUM, POMEGRANATE, COLLAGEN :
+            case PLUM, POMEGRANATE, COLLAGEN:
                 if (time.isBefore(LocalTime.of(15, 0))) {
                     daysToAdd = (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) ? 4 : 3;
                 } else {
                     daysToAdd = 4;
                 }
                 break;
-            case WRAPPING_PAPER :
+            case WRAPPING_PAPER:
                 daysToAdd = 7;
                 break;
             case BOX:
@@ -256,9 +237,9 @@ public class RawOrderInsertService {
         }
     }
 
-    public void rawImport(Long id) {
+    public void rawImport(String rawsCode) {
 
-        Raws raw = rawRepository.findById(id).orElse(null);
+        Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
@@ -272,8 +253,8 @@ public class RawOrderInsertService {
         rawRepository.save(raw);
     }
 
-    public void rawExport(Long id) {
-        Raws raw = rawRepository.findById(id).orElse(null);
+    public void rawExport(String rawsCode) {
+        Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
@@ -283,88 +264,6 @@ public class RawOrderInsertService {
         rawRepository.save(raw);
     }
 
-    /*private RawProductName getRawProductName(String Raw) {
-        switch (Raw) {
-            case "양배추" :
-                return RawProductName.CABBAGE;
-            case "흑마늘" :
-                return RawProductName.BLACK_GARLIC;
-            case "석류(농축액)" :
-                return RawProductName.POMEGRANATE;
-            case "매실(농축액)" :
-                return RawProductName.PLUM;
-            case "벌꿀" :
-                return RawProductName.HONEY;
-            case "콜라겐" :
-                return RawProductName.COLLAGEN;
-            case "포장지" :
-                return RawProductName.WRAPPING_PAPER;
-            case "박스" :
-                return RawProductName.BOX;
-            default:
-                return null;
-        }
-    }*/
-
-    // 이건뭐야 보고 지워야함
-    private int calculateRequiredQuantity(double requiredQuantity, Map<String, Integer> stockMap, String product) {
-        int currentStock = stockMap.getOrDefault(product, 0);
-        return (int) Math.ceil(requiredQuantity - currentStock);
-    }
-
-
-    /* public List<RawOrderPlanDTO> getRawOrderList(Pageable pageable) {
-
-         List<RawOrderPlanDTO> list = new ArrayList<>();
-         List<RawShowGraphDTO> rawStockGraph = getRawStockGraph();
-
-         // Initialize stock maps
-         Map<String, Integer> ingredient1StockMap = new HashMap<>();
-         Map<String, Integer> ingredient2StockMap = new HashMap<>();
-         Map<String, Integer> paperStockMap = new HashMap<>();
-         Map<String, Integer> boxStockMap = new HashMap<>();
-
-         for (RawShowGraphDTO graphDTO : rawStockGraph) {
-             String product = graphDTO.getProduct();
-             int quantity = graphDTO.getQuantity();
-             if (product.equals("CABBAGE") || product.equals("BLACK_GARLIC") || product.equals("POMEGRANATE") || product.equals("PLUM")) {
-                 ingredient1StockMap.put(product, quantity);
-             } else if (product.equals("HONEY") || product.equals("COLLAGEN")) {
-                 ingredient2StockMap.put(product, quantity);
-             } else if (product.equals("WRAPPING_PAPER")) {
-                 paperStockMap.put(product, quantity);
-             } else if (product.equals("BOX")) {
-                 boxStockMap.put(product, quantity);
-             }
-         }
-
-         Page<Raws> pages = rawRepository.findAll(pageable);
-
-
-         pages.forEach((e) -> {
-
-             // Create Order to get RawBOMDTO
-
-             RawBOMDTO rawBOMDTO = bomCalculatorService.createRequirement(        Order.builder()
-                    // .product(e.getProduct()).quantity(e.getQuantity()).build();
-
-             // Calculate required quantities based on BOM and current stock
-             int requiredIngredient1 = calculateRequiredQuantity(rawBOMDTO.getIngredient1(), ingredient1StockMap, e.getProduct().getValue());
-             int requiredIngredient2 = calculateRequiredQuantity(rawBOMDTO.getIngredient2(), ingredient2StockMap, e.getProduct().getValue());
-             int requiredPaper = calculateRequiredQuantity(rawBOMDTO.getPaper(), paperStockMap, "WRAPPING_PAPER");
-             int requiredBox = calculateRequiredQuantity(rawBOMDTO.getBox(), boxStockMap, "BOX");
-
-             list.add(RawOrderPlanDTO.builder()
-                     .partner(e.getPartner())
-                     .product(e.getProduct().getValue())
-                     //.quantity(orederQuantity)
-                     .expectedImportDate(e.getExpectedImportDate())
-                     .build());
-         });
-
-         return list;
-     }
- */
     // 재고현황 테이블
     public List<RawsListDTO> getRawStockList(Pageable pageable) {
 
@@ -388,7 +287,6 @@ public class RawOrderInsertService {
                     selectDate = e.getExportDate();
                     break;
                 default:
-                    //selectDate = e.getOrderDate();
                     selectDate = new Date(e.getOrderDate().getTime());
             }
 
@@ -519,44 +417,35 @@ public class RawOrderInsertService {
 
     public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
 
-        LocalDate currentDate = LocalDate.now();
-        LocalDate minDate = currentDate.minus(ChronoUnit.DAYS.between(currentDate, currentDate.minusDays(3)), ChronoUnit.DAYS);
-        LocalDate maxDate = currentDate.plusDays(3);
+        Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
+        LocalDateTime currentDate = timestamp.toLocalDateTime();
 
+        // deadLine에서 3일내 시간범위 계산
+        LocalDateTime minDate = currentDate.minusDays(3);
+        Timestamp minTimestamp = Timestamp.valueOf(minDate);
+
+        // deadLine 이 현재시간 에서 현재시간 -3일 Data만 들고옴
         Page<Raws> pages = rawRepository.findByStatusAndDeadlineBetween(
                 Status.IMPORT,
-                java.sql.Date.valueOf(minDate),
-                java.sql.Date.valueOf(maxDate),
-                pageable);
+                minTimestamp,
+                timestamp,
+                pageable );
 
         List<RawPeriodDTO> list = new ArrayList<>();
 
-        //Page<Raws> pages = rawRepository.findAll(pageable);
-
-        //LocalDate currentDate = LocalDate.now();
-
-        pages.forEach((e) -> {
-            if (e.getStatus() == Status.IMPORT && e.getDeadLine() != null) {
-                LocalDate deadlineDate = e.getDeadLine().toLocalDate();
-                long daysUntilDeadline = ChronoUnit.DAYS.between(deadlineDate, currentDate);
-
-                    if ( daysUntilDeadline <=3) {
-                        list.add(RawPeriodDTO.builder()
-                                .rawsCode(e.getRawsCode())
-                                .product(e.getProduct().getValue())
-                                .importDate(e.getImportDate())
-                                .deadLine(e.getDeadLine())
-                                .quantity(e.getQuantity())
-                                .build());
+        pages.forEach((e) ->{
+            list.add(RawPeriodDTO.builder()
+                            .rawsCode(e.getRawsCode())
+                            .product(e.getProduct().getValue())
+                            .importDate(e.getImportDate())
+                            .deadLine(new Date(e.getDeadLine().getTime()))
+                            .quantity(e.getQuantity())
+                            .build());
         });
         return list;
     }
-                }
-    }
 
-
-
-    //첫번쨰 생성이 되면
+   //첫번쨰 생성이 되면
     //분류
     public RawBOMDTO createRequirement(Order order) {
         ProductName productName = order.getProduct();
@@ -672,8 +561,8 @@ public class RawOrderInsertService {
             RawProductName rawProductName;
             double remainQuantity;
 
-            switch(product) {
-                case "양배추" :
+            switch (product) {
+                case "양배추":
                     partnerName = "에이농장";
                     rawProductName = RawProductName.CABBAGE;
                     remainQuantity = bomTotal.getCabbage() - stockQuantity;
