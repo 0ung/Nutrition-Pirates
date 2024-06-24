@@ -40,7 +40,7 @@
     <script th:inline="javascript">
         async function updateTime() {
             try {
-                const response = await fetch(url + "systemtime");
+                const response = await fetch(url +"time");
                 if (!response.ok) {
                     throw new Error('네트워크 응답이 정상적이지 않습니다');
                 }
@@ -53,7 +53,6 @@
                 throw error;
             }
         }
-        console.log(updateTime());
     </script>
 </th:block>
 
@@ -65,7 +64,7 @@
                 <div class="system-container">
                     <label id="main-label">시스템 시간 관리</label>
                     <div>
-                        2024-06-19 T16:51
+                        data
                     </div>
 
                     <div class="row" style="padding: 20px; margin-top: 30px">
