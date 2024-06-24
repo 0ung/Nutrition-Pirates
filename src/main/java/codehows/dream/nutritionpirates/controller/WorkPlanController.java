@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
+import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.service.WorkPlanService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,24 +37,36 @@ public class WorkPlanController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+/**
+ * 확인 부탁드려요
+ * @GetMapping("/workplans")
+ * 	    public String getAllWorkPlans(Model model) {
+ * 		List<WorkPlanDTO> workPlans = workPlanService.getAllWorkPlans(); // Retrieve work plans from service
+ *
+ * 		model.addAttribute("workPlans", workPlans);
+ *
+ * 		return "SengSan_check";
+ *    }
+ * */
 
 
-	@GetMapping("/workplans")
-	public String getAllWorkPlans(Model model) {
-		List<WorkPlanDTO> workPlans = workPlanService.getAllWorkPlans(); // Retrieve work plans from service
-
-		model.addAttribute("workPlans", workPlans);
-
-		return "SengSan_check";
-	}
-
-	@GetMapping("/execute/{id}")
-	public ResponseEntity<?> executeWorkPlan(@PathVariable(name = "id") Long id) {
+	@GetMapping("/{id}")
+	public void getWorkPlanDetail(@PathVariable(name = "id") Long id, Model model) {
 		try {
-			return new ResponseEntity<>(workPlanService.executeWork(id), HttpStatus.OK);
+			WorkPlan plan = workPlanService.getWorkDetail(id);
+			model.addAttribute("workplan", plan);
+		} catch (Exception e) {
+			model.addAttribute("error", "잘못된 요청");
+		}
+	}
+	@GetMapping("/execute/{id}")
+	public ResponseEntity<?> executeWorkPlan(@PathVariable(name = "id") Long id, String worker) {
+		try {
+			return new ResponseEntity<>(workPlanService.executeWork(id, worker), HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
 }

@@ -4,5 +4,4 @@ public enum FacilityStatus {
     WORKING,
     STANDBY,
     AFTER_TREATMENT,
-    WAITING
 }

@@ -1,6 +1,7 @@
 package codehows.dream.nutritionpirates.constants;
 
 
+
 public enum RawProductName {
 	CABBAGE("양배추"),
 	BLACK_GARLIC("흑마늘"),

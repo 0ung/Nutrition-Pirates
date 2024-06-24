@@ -1,5 +1,7 @@
 package codehows.dream.nutritionpirates.dto;
 
+import java.sql.Timestamp;
+
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
@@ -15,25 +17,46 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class WorkPlanDTO {
-    private Long id;
-    private Process process;
-    private String rawsCodes;
-    private String lotCodes;
-    private String startTime;
-    private String endTime;
-    private Facility facility;
-    private String worker;
 
-    public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan) {
-        return WorkPlanDTO.builder()
-                .id(workPlan.getId())
-                .process(workPlan.getProcess())
-                .endTime(workPlan.getEndTime() != null ? workPlan.getEndTime().toString() : null)
-                .startTime(workPlan.getStartTime() != null ? workPlan.getStartTime().toString() : null)
-                .rawsCodes(workPlan.getRawsCodes())
-                .facility(workPlan.getFacility())
-                .lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
-                .worker(workPlan.getWorker())
-                .build();
-    }
+	private Long id;
+	private Process process;
+	private String rawsCodes;
+	private String lotCodes;
+	private String startTime;
+	private String endTime;
+	private Facility facility;
+	private boolean activate;
+	private String processStatus;
+
+	public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan, Timestamp time) {
+		return WorkPlanDTO.builder()
+			.id(workPlan.getId())
+			.process(workPlan.getProcess())
+			.endTime(workPlan.getEndTime() != null ? workPlan.getEndTime().toString() : null)
+			.startTime(workPlan.getStartTime() != null ? workPlan.getStartTime().toString() : null)
+			.rawsCodes(workPlan.getRawsCodes())
+			.facility(workPlan.getFacility())
+			.activate(workPlan.isActivate())
+			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
+			.processStatus(calProcess(workPlan, time))
+			.build();
+
+	}
+
+	public static String calProcess(WorkPlan plan, Timestamp time) {
+		if (plan.getStartTime() == null || plan.getProcessCompletionTime() == null) {
+			return null;
+		}
+		long startTime = plan.getStartTime().getTime();
+		long endTime = plan.getProcessCompletionTime().getTime();
+		long currentTime = time.getTime();
+
+		// Calculate the progress percentage
+		long elapsedTime = currentTime - startTime;
+		long totalProcessTime = endTime - startTime;
+		double progress = ((double)elapsedTime / totalProcessTime) * 100;
+
+		return String.format("Progress: %.2f%%", progress);
+	}
+
 }
