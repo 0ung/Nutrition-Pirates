@@ -26,6 +26,7 @@ public class B6WorkPlan implements WorkPlans {
 		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
 		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -55,4 +56,7 @@ public class B6WorkPlan implements WorkPlans {
 		return Timestamp.valueOf(completeTime);
 	}
 
+	public int calCapacity(int input){
+		return input/Routing.INSPECTION_ROUTING *100;
+	}
 }

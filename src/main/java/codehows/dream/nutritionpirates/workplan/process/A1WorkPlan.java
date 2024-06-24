@@ -13,6 +13,7 @@ import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.constants.RawProductName;
+import codehows.dream.nutritionpirates.constants.Routing;
 import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.RawShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.LotCode;
@@ -64,7 +65,7 @@ public class A1WorkPlan implements WorkPlans {
 		int input = getBom(processPlan);
 
 		String[] rawsCodes = getRawsCodes(input, workPlan.getProcessPlan().getOrder().getProduct());
-
+		plan.setCapacity(calCapacity(input));
 		plan.setRawsCodes(Arrays.toString(rawsCodes));
 
 		plan.setLotCode(lotCode);
@@ -179,12 +180,22 @@ public class A1WorkPlan implements WorkPlans {
 	}
 
 	//20240621C2000T
-	public int parseAmount(String codes) {
-		return Integer.parseInt(codes.substring(13));
+	public static int parseTotal(String codes) {
+		// 날짜 (8자리) + 원자재 식별자 (1자리) 이후부터 'T' 전까지가 총량
+		int endIndex = codes.indexOf('T');
+		if (endIndex == -1) {
+			endIndex = codes.length(); // 'T'가 없으면 끝까지
+		}
+		return Integer.parseInt(codes.substring(9, endIndex));
 	}
 
-	public int parseTotal(String codes) {
-		return Integer.parseInt(codes.substring(9, 13));
+	// 사용량 부분을 파싱하는 메서드 ('T' 이후 부분)
+	public static int parseAmount(String codes) {
+		int tIndex = codes.indexOf('T');
+		if (tIndex == -1) {
+			return 0; // 'T'가 없으면 사용량은 0
+		}
+		return Integer.parseInt(codes.substring(tIndex + 1));
 	}
 
 	public int stockData(ProductName productName) {
@@ -219,4 +230,7 @@ public class A1WorkPlan implements WorkPlans {
 		}
 	}
 
+	public int calCapacity(int input) {
+		return input / Routing.WASHING_ROUTING_KG *100;
+	}
 }

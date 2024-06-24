@@ -38,6 +38,7 @@ public class CommonMethod {
 			plan.setProcessCompletionTime(processComplete);
 		} else {
 			plan.setEndTime(time);
+			plan.setActivate(false);
 			plan.setFacilityStatus(FacilityStatus.STANDBY);
 		}
 		return plan;
@@ -47,7 +48,8 @@ public class CommonMethod {
 		Process process = workPlan.getProcess();
 		Facility facility = workPlan.getFacility();
 		LocalDateTime localDateTime = time.toLocalDateTime();
-		String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String formattedDate = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHH"));
 		return formattedDate + process + facility.getValue();
 	}
+
 }

@@ -29,6 +29,7 @@ public class A3WorkPlan implements WorkPlans {
 		if (plan.getEndTime() != null) {
 			plan.setFacilityStatus(FacilityStatus.AFTER_TREATMENT);
 		}
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -63,5 +64,9 @@ public class A3WorkPlan implements WorkPlans {
 		LocalDateTime localDateTime = timestamp.toLocalDateTime();
 		LocalDateTime completeTime = localDateTime.plusMinutes(minToAdd);
 		return Timestamp.valueOf(completeTime);
+	}
+
+	public int calCapacity(int input) {
+		return input / Routing.EXTRACTION_ROUTING*100;
 	}
 }

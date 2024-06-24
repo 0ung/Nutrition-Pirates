@@ -29,6 +29,7 @@ public class A5WorkPlan implements WorkPlans {
 		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
 		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 
@@ -59,6 +60,10 @@ public class A5WorkPlan implements WorkPlans {
 		LocalDateTime localDateTime = timestamp.toLocalDateTime();
 		LocalDateTime completeTime = localDateTime.plusMinutes(minToAdd);
 		return Timestamp.valueOf(completeTime);
+	}
+
+	public int calCapacity(int input){
+		return input/Routing.STERILIZATION_ROUTING *100;
 	}
 
 }

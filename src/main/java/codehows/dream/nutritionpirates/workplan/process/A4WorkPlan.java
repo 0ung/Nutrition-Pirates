@@ -33,6 +33,7 @@ public class A4WorkPlan implements WorkPlans {
 		LotCode lotCode = getLotCode(workPlan, time);
 		lotCodeRepository.saveAndFlush(lotCode);
 		plan.setLotCode(lotCode);
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -78,5 +79,8 @@ public class A4WorkPlan implements WorkPlans {
 		String preLotCode = preWorkPlan.getLotCode().getLetCode();
 
 		return new LotCode(lotCode, preLotCode);
+	}
+	public int calCapacity(int input){
+		return input/Routing.FILTER_ROUTING *100;
 	}
 }

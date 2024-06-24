@@ -67,5 +67,8 @@ public class WorkPlan {
 	//추가된 컬럼
 	//작동 가능 여부
 	private boolean activate;
+	
+	//수행 가능 수량
+	private int capacity;
 
 }

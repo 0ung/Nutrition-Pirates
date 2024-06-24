@@ -32,7 +32,7 @@ public class B2WorkPlan implements WorkPlans {
 		LotCode lotCode = getLotCode(workPlan, time);
 		lotCodeRepository.saveAndFlush(lotCode);
 		plan.setLotCode(lotCode);
-
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -69,6 +69,10 @@ public class B2WorkPlan implements WorkPlans {
 	public LotCode getLotCode(WorkPlan workPlan, Timestamp time) {
 		String lotCode = CommonMethod.getLotCode(workPlan, time);
 		return new LotCode(lotCode);
+	}
+
+	public int calCapacity(int input){
+		return input/Routing.MIX_ROUTING *100;
 	}
 
 }

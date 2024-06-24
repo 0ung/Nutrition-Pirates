@@ -26,6 +26,7 @@ public class B4WorkPlan implements WorkPlans {
 		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		Timestamp comTime = getComplete(time, workPlan.getSemiProduct());
 		WorkPlan plan = CommonMethod.setTime(workPlan, time, comTime);
+		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -60,5 +61,9 @@ public class B4WorkPlan implements WorkPlans {
 
 	public int process(int input) {
 		return (int)Math.floor(input * 1000.0 / 5.0);
+	}
+
+	public int calCapacity(int input){
+		return input/Routing.STICK_PACKING_ROUTING *100;
 	}
 }

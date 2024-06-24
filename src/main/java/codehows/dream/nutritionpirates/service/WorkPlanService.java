@@ -1,5 +1,6 @@
 package codehows.dream.nutritionpirates.service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,10 +22,12 @@ import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
+import codehows.dream.nutritionpirates.entity.Stock;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.exception.NotFoundOrderException;
 import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
 import codehows.dream.nutritionpirates.repository.OrderRepository;
+import codehows.dream.nutritionpirates.repository.StockRepository;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
 import codehows.dream.nutritionpirates.workplan.WorkPlanFactoryProvider;
 import codehows.dream.nutritionpirates.workplan.process.A1WorkPlan;
@@ -57,6 +60,8 @@ public class WorkPlanService {
 	private final ApplicationContext context;
 	private final RawOrderInsertService rawOrderInsertService;
 	private final ProgramTimeService programTimeService;
+	private final StockRepository stockRepository;
+
 	private int semiProduct = 0;
 	//즙 공정
 	private static final List<Process> juiceProcess = new ArrayList<>(
@@ -232,15 +237,19 @@ public class WorkPlanService {
 		List<WorkPlan> list = getFacilities(next);
 		WorkPlan nextWorkplan = workPlanRepository.findByProcessPlanIdAndProcess(
 			executedWork.getProcessPlan().getId(), next);
-		if (list == null || list.isEmpty()) {
-			nextWorkplan.setActivate(true);
-		} else {
-			if (list.get(1) != null) {
-				nextWorkplan.setFacility(list.get(1).getFacility());
+
+		//재고 저장
+		if (nextWorkplan != null) {
+			if (list == null || list.isEmpty()) {
 				nextWorkplan.setActivate(true);
+			} else {
+				if (list.get(1) != null) {
+					nextWorkplan.setFacility(list.get(1).getFacility());
+					nextWorkplan.setActivate(true);
+				}
 			}
+			workPlanRepository.save(nextWorkplan);
 		}
-		workPlanRepository.save(nextWorkplan);
 		// 설비 상태 조회
 
 		return WorkPlanDTO.builder()
@@ -404,7 +413,7 @@ public class WorkPlanService {
 	}
 
 	private boolean calTime(WorkPlan workPlan) {
-		if(workPlan ==null){
+		if (workPlan == null) {
 			return false;
 		}
 		Calendar calendar = Calendar.getInstance();
