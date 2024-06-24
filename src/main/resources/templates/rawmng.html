@@ -34,7 +34,18 @@
             color: white;
         }
     </style>
-    <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
+    <link th:href="@{/css/jw.css}" type="text/css" rel="stylesheet" id="jw.css"/>
+    <link th:href="@{/css/niceForm.css}" type="text/css" rel="stylesheet" id="niceForm.css"/>
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function downloadExcel(event) {
+            event.preventDefault(); // 폼 제출 기본 동작을 막음
+            window.location.href = '/api/history';
+        }
+    </script>
 </th:block>
 
 <div layout:fragment="content">
@@ -46,7 +57,7 @@
                     <label id="main-label">입/출고 관리</label>
                     <div id="button-container">
                         <form>
-                            <button class="jw-button" onclick="">엑셀 다운</button>
+                            <button class="jw-button" onclick="downloadExcel(event)">엑셀 다운</button>
                         </form>
                     </div>
 
@@ -75,13 +86,13 @@
                                     <div class="flex-container">
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#update">
                                                 수정
                                             </button>
                                         </div>
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#delete">
                                                 삭제
                                             </button>
                                         </div>
@@ -99,13 +110,13 @@
                                     <div class="flex-container">
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#update">
                                                 수정
                                             </button>
                                         </div>
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#delete">
                                                 삭제
                                             </button>
                                         </div>
@@ -123,13 +134,13 @@
                                     <div class="flex-container">
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#update">
                                                 수정
                                             </button>
                                         </div>
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#delete">
                                                 삭제
                                             </button>
                                         </div>
@@ -147,13 +158,13 @@
                                     <div class="flex-container">
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#update">
                                                 수정
                                             </button>
                                         </div>
                                         <div class="button2-container">
                                             <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop">
+                                                    data-bs-target="#delete">
                                                 삭제
                                             </button>
                                         </div>
@@ -199,44 +210,64 @@
     <!--    End of Main Content-->
     <!-- ===============================================-->
 
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <!-- 수정버튼 Modal -->
+    <div class="modal fade" id="update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-content"
+                 style="background-color: transparent; border-color: transparent; padding: 10px; color:rgba(6, 59, 56, 0.75);">
+                <div class="chart-card">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">입/출고 삭제</h5>
+                    </div>
 
+                    <div class="modal-body">
+
+                        <div class="nice-form-group">
+                            <label class="modal-label">수량</label>
+                            <input type="number" placeholder="수량을 입력해주세요."/>
+                        </div>
+
+                        <div class="nice-form-group">
+                            <label class="modal-label">일자</label>
+                            <input type="date" value="2024-06-24"/>
+                        </div>
+
+                        <div class="nice-form-group">
+                            <label class="modal-label">사유</label>
+                            <textarea rows="3" placeholder="사유를 입력해주세요." value="" style="width: 90%;"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="margin-top: 20px;">
+                        <button type="button" class="btn btn-primary">확인</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">확인</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+            </div>
+        </div>
+    </div>
+    <!-- 삭제버튼 Modal -->
+    <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"
+                 style="background-color: transparent; border-color: transparent; padding: 10px; color:rgba(6, 59, 56, 0.75);">
+                <div class="chart-card">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel2">입/출고 삭제</h5>
+                    </div>
+                    <div class="modal-body">
+                        정말로 삭제하시겠습니까?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">삭제</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--  Modal
-     <div class="modal fade" id="#editModal2" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-         <div class="modal-dialog">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <h5 class="modal-title" id="editModalLabel2">입/출고 삭제</h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal1" aria-label="Close"></button>
-                 </div>
-                 <div class="modal-body">
-                     정말 삭제하시겠습니까?
-                 </div>
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-primary">확인</button>
-                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                 </div>
-             </div>
-         </div>
-     </div>-->
-
 </div>
 
 </html>
