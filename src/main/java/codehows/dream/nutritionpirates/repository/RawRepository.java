@@ -1,6 +1,7 @@
 package codehows.dream.nutritionpirates.repository;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,10 +23,10 @@ public interface RawRepository extends JpaRepository<Raws, Long> {
 
 	@Query("SELECT r FROM Raws r WHERE r.status = :status AND r.deadLine BETWEEN :startDate AND :endDate")
 	Page<Raws> findByStatusAndDeadlineBetween(
-		@Param("status") Status status,
-		@Param("startDate") Date startDate,
-		@Param("endDate") Date endDate,
-		Pageable pageable);
+			@Param("status") Status status,
+			@Param("startDate") Timestamp startDate,
+			@Param("endDate") Timestamp endDate,
+			Pageable pageable);
 
 	List<Raws> findByProduct(RawProductName rawProductName);
 }

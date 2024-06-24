@@ -51,19 +51,14 @@ public class RawRegisterController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /*@GetMapping("/{page}")
-    public ResponseEntity<?> getList(@PathVariable(name = "page") Optional<Integer> page) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
-
-        try {
-            return new ResponseEntity<>(rawOrderInsertService.getRawOrderList(pageable), HttpStatus.OK);
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping("/bom")
+    public ResponseEntity<?> calculateBOMs() {
+        return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
     }
-*/
+    @GetMapping("/calculate")
+    public ResponseEntity<?> getMinus() {
+        return new ResponseEntity<>(rawOrderInsertService.getMinus(), HttpStatus.OK);
+    }
     @GetMapping("/rawstock/{page}")
     public ResponseEntity<?> getRawStockList(@PathVariable(name = "page") Optional<Integer> page) {
 
@@ -77,33 +72,6 @@ public class RawRegisterController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-    // 이건 뭐지 ??????
-    @GetMapping("/rawplan")
-    public ResponseEntity<?> getRawsPlan() {
-        return new ResponseEntity<>(rawOrderInsertService.getRawsPlanDTO(), HttpStatus.OK);
-    }
-    @GetMapping("/bom")
-    public ResponseEntity<?> calculateBOMs() {
-        return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
-    }
-    @GetMapping("/calculate")
-    public ResponseEntity<?> getMinus() {
-        return new ResponseEntity<>(rawOrderInsertService.getMinus(), HttpStatus.OK);
-    }
-
-    /*@GetMapping("/rawperiod/{page}")
-    public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
-
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,10);
-
-        try {
-            return new ResponseEntity<>(rawGraphService.getPeriodList(pageable), HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }*/
 
     @GetMapping("/graph")
     public ResponseEntity<?> getRawStockGraph() {
@@ -121,6 +89,19 @@ public class RawRegisterController {
         try {
             return new ResponseEntity<>(rawOrderInsertService.checkMinimumStock(), HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/rawperiod/{page}")
+    public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,10);
+
+        try {
+            return new ResponseEntity<>(rawOrderInsertService.getPeriodList(pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
