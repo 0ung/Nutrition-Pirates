@@ -15,13 +15,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class MesOrderDTO {
-	int quantity;
-	boolean urgency;
-	Long orderId;
-	String ordererName;
-	String expectedDeliveryDate;
-	String product;
-	Date orderDate;
-	boolean visible;
+	private int quantity;
+	private boolean urgency;
+	private Long orderId;
+	private String ordererName;
+	private	String  expectedDeliveryDate;
+	private	String product;
+	private Date orderDate;
+	private	boolean visible;
 
 }

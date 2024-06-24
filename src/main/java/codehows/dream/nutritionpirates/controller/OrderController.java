@@ -1,12 +1,17 @@
 package codehows.dream.nutritionpirates.controller;
 
-import java.util.Optional;
-
+import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
+import codehows.dream.nutritionpirates.service.OrderService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
-import codehows.dream.nutritionpirates.service.OrderService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/order")
@@ -31,7 +34,7 @@ public class OrderController {
 	private final OrderService orderService;
 
 	@PostMapping("")
-	public ResponseEntity<?> insertOrder(@RequestBody MesOrderInsertDTO mesOrderInsertDTO) {
+	public @ResponseBody ResponseEntity<?> insertOrder(@RequestBody MesOrderInsertDTO mesOrderInsertDTO) {
 		try {
 			orderService.insert(mesOrderInsertDTO);
 		} catch (Exception e) {
@@ -92,7 +95,6 @@ public class OrderController {
 		}
 	}
 
-
 	@GetMapping("/orderer/{page}")
 	public String getList2(@PathVariable(name = "page") Optional<Integer> page, Model model) {
 		int currentPage = page.orElse(0);
@@ -109,7 +111,26 @@ public class OrderController {
 			return "error";
 		}
 	}
+	@GetMapping("/history")
+	public ResponseEntity<?> getExcel(HttpServletResponse response) {
+		try {
+			Workbook workbook = orderService.getHistory();
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
+			String fileName = "수주 내역.xlsx";
+			String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
 
+			// Set headers for different browsers
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+			response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
+
+			workbook.write(response.getOutputStream());
+			workbook.close();
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 }

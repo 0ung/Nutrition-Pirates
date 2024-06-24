@@ -114,9 +114,9 @@
 
     <script>
         function exportToExcel() {
-                var tableHtml = $("#ordersTable").prop('outerHTML');
-                var uri = 'data:application/vnd.ms-excel,' + encodeURIComponent(tableHtml);
-                window.open(uri, '_blank');
+            var tableHtml = $("#ordersTable").prop('outerHTML');
+            var uri = 'data:application/vnd.ms-excel,' + encodeURIComponent(tableHtml);
+            window.open(uri, '_blank');
         }
     </script>
 
