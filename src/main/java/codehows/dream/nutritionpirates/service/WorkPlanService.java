@@ -1,6 +1,5 @@
 package codehows.dream.nutritionpirates.service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +21,6 @@ import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
-import codehows.dream.nutritionpirates.entity.Stock;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.exception.NotFoundOrderException;
 import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
@@ -256,7 +254,7 @@ public class WorkPlanService {
 			.id(executedWork.getId())
 			.endTime(executedWork.getEndTime() != null ? executedWork.getEndTime().toString() : null)
 			.startTime(executedWork.getStartTime().toString())
-			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLetCode() : null)
+			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLotCode() : null)
 			.facility(executedWork.getFacility())
 			.rawsCodes(executedWork.getRawsCodes())
 			.process(executedWork.getProcess())
