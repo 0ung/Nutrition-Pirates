@@ -180,8 +180,32 @@
                     </table>
                 </div>
 
-                <div class="ss-centered">
-                    <p> [1] [2] [3] [4] [5] </p>
+
+                <div class="pagination-container">
+                    <ul class="pagination-list">
+                        <!-- Calculate the current block and the total number of blocks -->
+<!--                        <li>-->
+<!--                            <button th:disabled="${currentPage == 0}"-->
+<!--                                    th:onclick="|location.href='@{/workplan/workplan/{page}(page=${currentPage - 10 < 0 ? 0 : currentPage - 10})}'|">-->
+<!--                                이전버튼-->
+<!--                            </button>-->
+<!--                        </li>-->
+<!--                        &lt;!&ndash; Display pages in the current block &ndash;&gt;-->
+<!--                        <li th:each="startPage : ${#numbers.sequence(0, totalPages > 10 ? 9 : totalPages - 1)}">-->
+<!--                            <th:block th:with="blockIndex=${currentPage / 10}">-->
+<!--                                <a th:href="@{/order/{page}(page=${blockIndex * 10 + startPage})}"-->
+<!--                                   th:text="${blockIndex * 10 + startPage + 1}"-->
+<!--                                   th:classappend="${currentPage == (blockIndex * 10 + startPage) ? 'active' : ''}"-->
+<!--                                   class="pagination-link"></a>-->
+<!--                            </th:block>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <button th:disabled="${currentPage == totalPages }"-->
+<!--                                    th:onclick="|location.href='@{/workplan/workplan/{page}(page=${currentPage + 1})}'|">-->
+<!--                                다음버튼-->
+<!--                            </button>-->
+<!--                        </li>-->
+                    </ul>
                 </div>
             </div>
             <div class="ss-card2 ss-checkout">
