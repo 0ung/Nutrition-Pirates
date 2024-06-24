@@ -145,16 +145,16 @@ public class OrderService {
 		pages.forEach((e) -> {
 			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
 			list.add(MesOrderDTO.builder()
-					.orderId(e.getId())
-					.ordererName(orderer.getName())
-					.orderDate(e.getOrderDate())
-					.expectedDeliveryDate(e.getExpectedDeliveryDate())
-					.product(e.getProduct().getValue())
-					.quantity(e.getQuantity())
-					.urgency(e.isUrgency())
-					.visible(e.isInvisible())
-					.build());
+				.orderId(e.getId())
+				.ordererName(orderer.getName())
+				.orderDate(e.getOrderDate())
+				.expectedDeliveryDate(e.getExpectedDeliveryDate())
+				.product(e.getProduct().getValue())
+				.quantity(e.getQuantity())
+				.urgency(e.isUrgency())
+				.build());
 		});
+
 		return list;
 	}
 
@@ -165,25 +165,5 @@ public class OrderService {
 
 	public List<Orderer> getOrderer() {
 		return ordererRepository.findAll();
-	}
-
-	public List<Orderer> getOrderer(Pageable pageable) {
-		List<Orderer> list = new ArrayList<>();
-		Page<Orderer> pages = ordererRepository.findAll(pageable);
-
-		pages.forEach((e) -> {
-			Orderer orderer = ordererRepository.findById(e.getId()).orElse(null);
-			list.add(Orderer.builder()
-					.id(e.getId())
-					.name(orderer.getName())
-					.phoneNumber(orderer.getPhoneNumber())
-					.build());
-		});
-		return list;
-	}
-
-
-	public Long getTotalPages(){
-		return ordererRepository.count();
 	}
 }

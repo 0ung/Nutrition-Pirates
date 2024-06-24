@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,24 +51,16 @@ public class OrderController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-
 	@GetMapping("/{page}")
-	public String getList(@PathVariable(name = "page") Optional<Integer> page, Model model) {
-		int currentPage = page.orElse(0);
-		Pageable pageable = PageRequest.of(currentPage, 10);
-
+	public ResponseEntity<?> getList(@PathVariable(name = "page") Optional<Integer> page) {
+		Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
 		try {
-			model.addAttribute("dto", orderService.getOrderList(pageable));
-			model.addAttribute("currentPage", currentPage);
-			model.addAttribute("totalPages", orderService.getTotalPages());
-			return "/suzu_check";
-
+			return new ResponseEntity<>(orderService.getOrderList(pageable), HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			return "error";
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> cancelOrder(@PathVariable(name = "id") Long id) {
@@ -82,7 +73,7 @@ public class OrderController {
 		}
 	}
 
-	@GetMapping("/orderer/all")
+	@GetMapping("/orderer")
 	public ResponseEntity<?> getOrderer() {
 		try {
 			return new ResponseEntity<>(orderService.getOrderer(), HttpStatus.OK);
@@ -91,25 +82,4 @@ public class OrderController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
-
-	@GetMapping("/orderer/{page}")
-	public String getList2(@PathVariable(name = "page") Optional<Integer> page, Model model) {
-		int currentPage = page.orElse(0);
-		Pageable pageable = PageRequest.of(currentPage, 10);
-
-		try {
-			model.addAttribute("dto2", orderService.getOrderer(pageable));
-			model.addAttribute("currentPage", currentPage);
-			model.addAttribute("totalPages", orderService.getTotalPages());
-			return "/suzu_check_orderer";
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return "error";
-		}
-	}
-
-
-
 }

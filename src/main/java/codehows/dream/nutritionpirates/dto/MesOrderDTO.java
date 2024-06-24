@@ -22,6 +22,4 @@ public class MesOrderDTO {
 	String expectedDeliveryDate;
 	String product;
 	Date orderDate;
-	boolean visible;
-
 }
