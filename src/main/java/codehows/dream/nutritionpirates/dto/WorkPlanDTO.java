@@ -15,23 +15,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class WorkPlanDTO {
-	private Long id;
-	private Process process;
-	private String rawsCodes;
-	private String lotCodes;
-	private String startTime;
-	private String endTime;
-	private Facility facility;
+    private Long id;
+    private Process process;
+    private String rawsCodes;
+    private String lotCodes;
+    private String startTime;
+    private String endTime;
+    private Facility facility;
+    private String worker;
 
-	public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan) {
-		return WorkPlanDTO.builder()
-			.id(workPlan.getId())
-			.process(workPlan.getProcess())
-			.endTime(workPlan.getEndTime() != null ? workPlan.getEndTime().toString() : null)
-			.startTime(workPlan.getStartTime() != null ? workPlan.getStartTime().toString() : null)
-			.rawsCodes(workPlan.getRawsCodes())
-			.facility(workPlan.getFacility())
-			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
-			.build();
-	}
+    public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan) {
+        return WorkPlanDTO.builder()
+                .id(workPlan.getId())
+                .process(workPlan.getProcess())
+                .endTime(workPlan.getEndTime() != null ? workPlan.getEndTime().toString() : null)
+                .startTime(workPlan.getStartTime() != null ? workPlan.getStartTime().toString() : null)
+                .rawsCodes(workPlan.getRawsCodes())
+                .facility(workPlan.getFacility())
+                .lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
+                .worker(workPlan.getWorker())
+                .build();
+    }
 }

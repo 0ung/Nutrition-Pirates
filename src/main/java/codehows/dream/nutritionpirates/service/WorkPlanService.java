@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -234,5 +235,14 @@ public class WorkPlanService {
 			}
 		}
 		return workPlans;
+	}
+
+
+	public List<WorkPlanDTO> getAllWorkPlans() {
+		List<WorkPlan> workPlans = workPlanRepository.findAll(); // 모든 WorkPlan 조회
+
+		return workPlans.stream()
+				.map(WorkPlanDTO::toWorkPlanDTO) // Entity를 DTO로 변환
+				.collect(Collectors.toList());
 	}
 }

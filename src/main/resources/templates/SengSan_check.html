@@ -6,77 +6,35 @@
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
+    <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
     <style>
-        .ss-centered {
-            display: flex; /* Flexbox 컨테이너로 설정 */
-            justify-content: center; /* 가로 방향 가운데 정렬 */
-            align-items: center; /* 세로 방향 가운데 정렬 */
+
+        /* 주문 목록 테이블 행에 마우스를 올렸을 때 배경색 변경 */
+        #ordersTable tbody tr:hover {
+            background-color: #f0f0f0;
         }
 
-        .ss-table {
-            border-collapse: collapse;
+        /* Add or modify this section in sengsan.css */
+        #ordersTable {
             width: 100%;
-            margin: 1rem auto;
-            background-color: white;
+            border-collapse: collapse;
+            padding: 20px; /* Keep the padding as needed */
         }
 
-        .ss-th, .ss-td {
-            padding: 10px;
+        #ordersTable th {
+            background-color: #999999;
+        }
+
+        #ordersTable th,
+        #ordersTable td {
+            border: 1px solid #ddd;
+            padding: 10px; /* Ensure padding is applied uniformly */
             text-align: center;
-            border-bottom: 1px solid #ddd;
         }
 
-        .ss-th {
-            background-color: #1b1b1b;
-            color: #ddd;
-        }
 
-        .ss-tbody .ss-tr:hover {
-            background-color: #d3d3d3;
-            cursor: pointer;
-        }
-
-        /* Adjust column widths */
-        .ss-th:nth-child(1),
-        .ss-td:nth-child(1) {
-            width: 5%; /* Adjusted for 번호 */
-        }
-
-        .ss-th:nth-child(2),
-        .ss-td:nth-child(2) {
-            width: 15%; /* Adjusted for 발주처 */
-        }
-
-        .ss-th:nth-child(3),
-        .ss-td:nth-child(3) {
-            width: 15%; /* Adjusted for 제품명 */
-        }
-
-        .ss-th:nth-child(4),
-        .ss-td:nth-child(4) {
-            width: 10%; /* Adjusted for 수량(BOX) */
-        }
-
-        .ss-th:nth-child(5),
-        .ss-td:nth-child(5) {
-            width: 10%; /* Adjusted for 수주일 */
-        }
-
-        .ss-th:nth-child(6),
-        .ss-td:nth-child(6) {
-            width: 10%; /* Adjusted for 예상 납기일 */
-        }
-
-        .ss-th:nth-child(7),
-        .ss-td:nth-child(7) {
-            width: 10%; /* Adjusted for 공정 상태 */
-        }
-
-        .ss-th:nth-child(8),
-        .ss-td:nth-child(8),
-        .ss-th:nth-child(9),
-        .ss-td:nth-child(9) {
-            width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
+        .ss-container {
+            padding: 20px; /* 원하는 여백 크기로 조정 */
         }
 
         .ss-search-input {
@@ -150,9 +108,18 @@
         }
 
 
+        .gy-steps{
+            flex-direction: column;
+            padding: 20px;
+            gap: 10px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 11px;
+        }
     </style>
 
-    <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
 </th:block>
 
 
@@ -187,59 +154,27 @@
                     </span>
                 </label>
 
-                <div class="ss-steps">
-                    <table class="ss-table">
+                <div class="gy-steps">
+                    <table id="ordersTable" class="gy-table">
                         <thead>
-                        <tr class="ss-tr ss-th">
-                            <th class="ss-th">번호</th>
-                            <th class="ss-th">공정</th>
-                            <th class="ss-th">LOT</th>
-                            <th class="ss-th">시작시간</th>
-                            <th class="ss-th">수주일</th>
-                            <th class="ss-th">종료시간</th>
-                            <th class="ss-th">작업자</th>
+                        <tr class="gy-tr">
+                            <th>작업 ID</th>
+                            <th>공정</th>
+                            <th>LOT</th>
+                            <th>시작 시간</th>
+                            <th>종료 시간</th>
+                            <th>작업자</th>
                         </tr>
                         </thead>
-                        <tbody class="ss-tbody">
-                        <tr class="ss-tr">
-                            <td class="ss-td">1</td>
-                            <td class="ss-td">A1</td>
-                            <td class="ss-td">12345678</td>
-                            <td class="ss-td">100</td>
-                            <td class="ss-td">2024-06-10</td>
-                            <td class="ss-td">2024-06-20</td>
-                            <td class="ss-td">임경용</td>
-
-                        </tr>
-                        <tr class="ss-tr">
-                            <td class="ss-td">2</td>
-                            <td class="ss-td">A1</td>
-                            <td class="ss-td">12345678</td>
-                            <td class="ss-td">50</td>
-                            <td class="ss-td">2024-06-12</td>
-                            <td class="ss-td">2024-06-25</td>
-                            <td class="ss-td">임경용</td>
-
-                        </tr>
-                        <tr class="ss-tr">
-                            <td class="ss-td">3</td>
-                            <td class="ss-td">A2</td>
-                            <td class="ss-td">12345678</td>
-                            <td class="ss-td">200</td>
-                            <td class="ss-td">2024-06-14</td>
-                            <td class="ss-td">2024-06-30</td>
-                            <td class="ss-td">임경용</td>
-
-                        </tr>
-                        <tr class="ss-tr">
-                            <td class="ss-td">4</td>
-                            <td class="ss-td">A5</td>
-                            <td class="ss-td">12345678</td>
-                            <td class="ss-td">75</td>
-                            <td class="ss-td">2024-06-13</td>
-                            <td class="ss-td">2024-06-28</td>
-                            <td class="ss-td">임경용</td>
-
+                        <tbody class="gy-tbody">
+                        <!-- Iterate over each work plan and display -->
+                        <tr th:each="workPlan : ${workPlans}">
+                            <td th:text="${workPlan.id}">작업id</td>
+                            <td th:text="${workPlan.process}">공정</td>
+                            <td th:text="${workPlan.lotCodes}+임시lotcode">LOT 코드</td>
+                            <td th:text="${workPlan.startTime}">시작시간</td>
+                            <td th:text="${workPlan.endTime}">종료시간</td>
+                            <td th:text="${workPlan.worker}">임경용</td>
                         </tr>
                         </tbody>
                     </table>

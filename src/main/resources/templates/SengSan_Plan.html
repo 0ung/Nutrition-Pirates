@@ -1,204 +1,260 @@
-<!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/default}">
+    <!DOCTYPE html>
+    <html lang="ko"
+          xmlns:th="http://www.thymeleaf.org"
+          xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+          layout:decorate="~{common/layouts/default}">
 
-<!-- 사용자 CSS 추가 -->
-<th:block layout:fragment="css">
-    <style>
-        .sengsan_container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 200px;
-        }
-
-        .sengsan_choice {
-            width: 100%;
-            height: 50px;
-            margin-top: 10px;
-            background-color: #cccccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            position: relative;
-            font-weight: bold;
-        }
-
-        .sengsan_choice + .sengsan_choice::before {
-            content: '';
-            width: 100%;
-            height: 1px;
-            background-color: black;
-            position: absolute;
-            top: -1px;
-            left: 0;
-        }
-
-        .ss-steps-container {
-            display: flex;
-            width: 100%;
-        }
-
-        .ss-steps {
-            flex: 1;
-        }
-
-        .ss-steps:first-child {
-            flex: 0 0 20%;
-        }
-
-        .ss-steps:last-child {
-            flex: 0 0 80%;
-        }
-
-        .ss-steps_font {
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .ss-active {
-            background-color: #2B2B2F;
-            color: white;
-        }
-
-    </style>
-    <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
-</th:block>
-
-<!-- 사용자 스크립트 추가 -->
-<th:block layout:fragment="script">
-
-    <script th:inline="javascript">
-        function sengsan_selectChoice(element) {
-            // 모든 .choice 클래스의 요소를 선택
-            const choices = document.querySelectorAll('.sengsan_choice');
-            let isWorking = true;
-            // 모든 요소에서 .active 클래스를 제거
-            choices.forEach(choice => {
-                choice.classList.remove('ss-active');
-            });
-            if (element.innerText === "혼합기" || element.innerText === "여과기" || element.innerText === "BOX 포장기") {
-                isWorking = false;
+    <!-- 사용자 CSS 추가 -->
+    <th:block layout:fragment="css">
+        <style>
+            .sengsan_container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 200px;
             }
-            // 클릭된 요소에 .active 클래스 추가
-            element.classList.add('ss-active');
-            // 선택된 항목 상태를 업데이트
-            const status = document.getElementById('status');
-            status.innerText = `${element.innerText} 선택됨.`;
 
-            // Enable or disable start button based on active choice
-            const startButton = document.getElementById('startButton');
-            startButton.disabled = false; // Enable button by default
+            .sengsan_choice {
+                width: 100%;
+                height: 50px;
+                margin-top: 10px;
+                background-color: #cccccc;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 20px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                position: relative;
+                font-weight: bold;
+            }
 
-            // 클릭된것이 실행되는중이면 버튼 클릭안되게
-            choices.forEach(choice => {
-                if (!isWorking) {
-                } else {
-                    // If no active choice, disable the start button
-                    startButton.disabled = true;
+
+            .sengsan_choice + .sengsan_choice::before {
+                content: '';
+                width: 100%;
+                height: 1px;
+                background-color: black;
+                position: absolute;
+                top: -1px;
+                left: 0;
+            }
+
+            .ss-steps-container {
+                display: flex;
+                width: 100%;
+            }
+
+            .ss-steps {
+                flex: 1;
+            }
+
+            .ss-steps:first-child {
+                flex: 0 0 20%;
+            }
+
+            .ss-steps:last-child {
+                flex: 0 0 80%;
+            }
+
+            .ss-steps_font {
+                font-size: 40px;
+                font-weight: bold;
+            }
+
+            .ss-active {
+                background-color: #2B2B2F;
+                color: white;
+            }
+
+            .dropdown {
+                position: relative;
+                display: inline-block;
+                width: 100%;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f9f9f9;
+                min-width: 200px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content div {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content div:hover {
+                background-color: #f1f1f1;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+        </style>
+        <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
+    </th:block>
+
+    <!-- 사용자 스크립트 추가 -->
+    <th:block layout:fragment="script">
+
+        <script th:inline="javascript">
+
+            async function fetchFacilityData() {
+                try {
+                    const response = await fetch(url + "workplan/facility/activate");
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    generateDropdownMenus(data);
+                } catch (error) {
+                    console.error(`Fetch error: ${error}`);
                 }
-            });
-        }
+            }
 
-        function nextStep() {
-            alert('다음 단계로 진행합니다.');
-            closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
-        }
 
-        function closeModal() {
-            document.getElementById('myModal').style.display = "none";
-        }
+            function generateDropdownMenus(data) {
+                const facilityMapping = {
+                    'juiceMachine1': '포장기',
+                    'extractor1': '추출기',
+                    'sterilizer1': '살균기',
+                    'mixer': '혼합기',
+                    'filter': '여과기',
+                    'boxMachine': 'BOX포장기',
+                    'metalDetector': '금속 검출기',
+                    'washer': '세척기',
+                    'stickMachine1': '막대기'
+                };
 
-        function showModal() {
-            document.getElementById('myModal').style.display = "block";
-        }
+                const order = ['juiceMachine1', 'extractor1', 'sterilizer1', 'mixer', 'filter', 'boxMachine', 'metalDetector', 'washer', 'stickMachine1'];
 
-        // Close modal if clicked outside
-        window.onclick = function (event) {
-            var modal = document.getElementById('myModal');
-            if (event.target === modal) {
+                const container = document.querySelector('.sengsan_container');
+                container.innerHTML = ''; // Clear previous content
+
+                order.forEach(facilityKey => {
+                    if (data[facilityKey] && data[facilityKey].length > 0) {
+                        const dropdown = document.createElement('div');
+                        dropdown.classList.add('dropdown');
+
+                        const choice = document.createElement('div');
+                        choice.classList.add('sengsan_choice');
+                        choice.textContent = facilityMapping[facilityKey];
+                        dropdown.appendChild(choice);
+
+                        const dropdownContent = document.createElement('div');
+                        dropdownContent.classList.add('dropdown-content');
+
+                        data[facilityKey].forEach(item => {
+                            const option = document.createElement('div');
+                            option.classList.add('sengsan_choice');
+                            option.textContent = `${facilityMapping[facilityKey]}${item.id}`;
+                            option.onclick = () => sengsan_selectChoice(option);
+                            dropdownContent.appendChild(option);
+                        });
+
+                        dropdown.appendChild(dropdownContent);
+                        container.appendChild(dropdown);
+                    }
+                });
+            }
+
+            function sengsan_selectChoice(element) {
+                const choices = document.querySelectorAll('.sengsan_choice');
+                choices.forEach(choice => {
+                    choice.classList.remove('ss-active');
+                });
+                element.classList.add('ss-active');
+
+                const status = document.getElementById('status');
+                status.innerText = `${element.innerText} 선택됨.`;
+
+                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
+                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
+                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
+                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
+                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
+
+                const startButton = document.getElementById('startButton');
+                // startButton.disabled = false;
+            }
+
+
+            function nextStep() {
+                alert('다음 단계로 진행합니다.');
                 closeModal();
             }
-        }
-    </script>
 
+            function closeModal() {
+                document.getElementById('myModal').style.display = "none";
+            }
 
-</th:block>
+            function showModal() {
+                document.getElementById('myModal').style.display = "block";
+            }
 
-<div layout:fragment="content">
+            window.onclick = function (event) {
+                var modal = document.getElementById('myModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            }
 
-    <!-- ===============================================-->
-    <!--    Main Content-->
-    <!-- ===============================================-->
-    <div layout:fragment="Content" class="container">
-        <main class="main" id="top">
+            window.onload = fetchFacilityData;
+        </script>
+    </th:block>
 
-            <!--------------------->
-            <!----  Main Start ---->
-            <!--------------------->
-            <div id="myModal" class="ss-modal">
-                <div class="ss-modal-content">
-                    <h2 style="color: #0acf83">작업자 기입 </h2>
-                    <hr class="ss-hr">
-
-                    <input type="text" class="ss-text_input" placeholder="Type Your Name">
-                    <button class="ss-button" onclick="nextStep()">다음</button>
+    <div layout:fragment="content">
+        <div class="container">
+            <main class="main" id="top">
+                <div id="myModal" class="ss-modal">
+                    <div class="ss-modal-content">
+                        <h2 style="color: #0acf83">작업자 기입 </h2>
+                        <hr class="ss-hr">
+                        <input type="text" class="ss-text_input" placeholder="Type Your Name">
+                        <button class="ss-button" onclick="nextStep()">다음</button>
+                    </div>
                 </div>
-            </div>
 
-
-            <div class="ss-content">
-                <div class="ss-container">
-                    <div class="ss-card ss-cart">
-                        <label class="ss-title_form">생산 계획
-                            <span style="margin-left: 76%"></span>
-                        </label>
-                        <div class="ss-steps-container">
-                            <div class="ss-steps" style="border-right: 1px solid rgba(16, 86, 82, .75);">
-                                <div class="sengsan_container">
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">포장기</div>
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)" id="추출기">추출기</div>
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">살균기</div>
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">혼합기</div>
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">여과기</div>
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">BOX 포장기</div>
-                                    <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">금속 검출기</div>
+                <div class="ss-content">
+                    <div class="ss-container">
+                        <div class="ss-card ss-cart">
+                            <label class="ss-title_form">생산 계획
+                                <span style="margin-left: 70%"></span>
+                                <div class="status" id="status" style="font-weight: bold">선택항목 없음</div>
+                            </label>
+                            <div class="ss-steps-container">
+                                <div class="ss-steps" style="border-right: 1px solid rgba(16, 86, 82, .75);">
+                                    <div class="sengsan_container">
+                                        <!-- Dropdown menus will be generated here -->
+                                    </div>
                                 </div>
 
-                                <!--                        선택된것 확인용 -->
-                                <div class="status" id="status">선택된 항목이 없습니다.</div>
+                                <div class="ss-steps ss-steps_font">
+                                    수주번호 / 안전재고 : 12345<br>
+                                    공정 : 추출<br>
+                                    원자재 투입량 : 500kg<br>
+                                    LOT 번호 : 67890<br>
+                                    진행률 : 80%<br>
+                                    공정완료시간 : 14:30<br>
+                                    다음 공정 준비 : 혼합<br>
+                                </div>
                             </div>
-                            <div class="ss-steps ss-steps_font">
-
-                                수주번호 / 안전재고 : ${ Number }<br>
-                                공정 : ${ Process }<br>
-                                원자재 투입량 : ${ raws }<br>
-                                LOT 번호 : ${ LOT Number } <br>
-                                진행률 : ${ Progress } <br>
-                                공정완료시간 : ${ Finish Time } <br>
-                                다음 공정 준비 : ${ Next } <br>
-
-                            </div>
-                        </div>
-                        <div class="ss-card ss-checkout">
-                            <div class="ss-footer">
-                                <label class="ss-price"> </label>
-                                <button class="ss-checkout-btn" onclick="showModal()" id="startButton"> 공정시작</button>
+                            <div class="ss-card ss-checkout">
+                                <div class="ss-footer">
+                                    <label class="ss-price"> </label>
+                                    <button class="ss-checkout-btn" onclick="showModal()" id="startButton"> 공정시작</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-        </main>
-        <!-- ===============================================-->
-        <!--    End of Main Content-->
-        <!-- ===============================================-->
+            </main>
+        </div>
     </div>
-</div>
-</html>
+    </html>

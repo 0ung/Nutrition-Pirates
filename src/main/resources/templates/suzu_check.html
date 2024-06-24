@@ -112,14 +112,40 @@
         }
     </script>
 
-    <script>
-        function exportToExcel() {
-            var tableHtml = $("#ordersTable").prop('outerHTML');
-            var uri = 'data:application/vnd.ms-excel,' + encodeURIComponent(tableHtml);
-            window.open(uri, '_blank');
-        }
-    </script>
-
+<!--    <script>-->
+<!--        function exportToExcel() {-->
+<!--            var tableHtml = $("#ordersTable").prop('outerHTML');-->
+<!--            var uri = 'data:application/vnd.ms-excel,' + encodeURIComponent(tableHtml);-->
+<!--            window.open(uri, '_blank');-->
+<!--        }-->
+<!--    </script>-->
+<script>
+    function downloadExcel() {
+        fetch('/order/history', {
+            method: 'GET',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = '수주 내역.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error downloading Excel:', error);
+                // Handle error as needed
+            });
+    }
+</script>
 </th:block>
 
 <!-- ===============================================-->
@@ -213,7 +239,7 @@
             <div class="gy-card2 gy-checkout">
                 <div class="gy-footer">
                     <label class="gy-price"> </label>
-                    <button onclick="exportToExcel()" class="gy-checkout-btn"> 엑셀 저장</button>
+                    <button class="gy-checkout-btn" onclick="downloadExcel()">엑셀 저장</button>
                 </div>
             </div>
 
