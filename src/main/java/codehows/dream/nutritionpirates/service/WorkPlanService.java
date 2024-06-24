@@ -1,6 +1,5 @@
 package codehows.dream.nutritionpirates.service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +21,6 @@ import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
-import codehows.dream.nutritionpirates.entity.Stock;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.exception.NotFoundOrderException;
 import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
@@ -87,6 +85,10 @@ public class WorkPlanService {
 			Process.B7
 		)
 	);
+
+	public WorkPlan getWorkDetail(Long id) {
+		return workPlanRepository.findById(id).orElse(null);
+	}
 
 	public RawBOMDTO calInputRaws(Order order) {
 		return rawOrderInsertService.createRequirement(order);
@@ -189,7 +191,7 @@ public class WorkPlanService {
 	public ActivateFacilityDTO getActivateFacility(Facility[] facilitys) {
 
 		ActivateFacilityDTO facilityDTO = new ActivateFacilityDTO();
-
+		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		for (Facility facility : facilitys) {
 			List<WorkPlan> workPlan = getActivateFacility(facility);
 
@@ -198,7 +200,8 @@ public class WorkPlanService {
 				continue;
 			}
 
-			List<WorkPlanDTO> workPlans = workPlan.stream().map(WorkPlanDTO::toWorkPlanDTO).toList();
+			List<WorkPlanDTO> workPlans = workPlan.stream().map(e ->
+				WorkPlanDTO.toWorkPlanDTO(e, time)).toList();
 			switch (facility) {
 				case juiceMachine1 -> facilityDTO.setJuiceMachine1(workPlans);
 				case juiceMachine2 -> facilityDTO.setJuiceMachine2(workPlans);
@@ -218,13 +221,14 @@ public class WorkPlanService {
 		return facilityDTO;
 	}
 
-	public WorkPlanDTO executeWork(Long id) {
+	public WorkPlanDTO executeWork(Long id, String worker) {
 		WorkPlan workPlan = workPlanRepository.findById(id).orElse(null);
 		if (workPlan == null)
 			throw new NotFoundWorkPlanException();
 		WorkPlans work = getWorkPlanByProcess(workPlan.getProcess());
 		if (work == null)
 			throw new NotFoundWorkPlanException();
+		workPlan.setWorker(worker);
 		WorkPlan executedWork;
 		executedWork = work.execute(workPlan);
 		Process next = null;
@@ -238,18 +242,12 @@ public class WorkPlanService {
 		WorkPlan nextWorkplan = workPlanRepository.findByProcessPlanIdAndProcess(
 			executedWork.getProcessPlan().getId(), next);
 
-		//재고 저장
-		if (nextWorkplan != null) {
-			if (list == null || list.isEmpty()) {
-				nextWorkplan.setActivate(true);
-			} else {
-				if (list.get(1) != null) {
-					nextWorkplan.setFacility(list.get(1).getFacility());
-					nextWorkplan.setActivate(true);
-				}
-			}
-			workPlanRepository.save(nextWorkplan);
-		}
+		checkNextWorkPlan(nextWorkplan, list);
+
+		// 1. 2개가 전부 작동 list.size == 2
+		// 2. 1번만 작동 list = null
+		// 3. 2번만 작동 list = 1
+
 		// 설비 상태 조회
 
 		return WorkPlanDTO.builder()
@@ -261,6 +259,34 @@ public class WorkPlanService {
 			.rawsCodes(executedWork.getRawsCodes())
 			.process(executedWork.getProcess())
 			.build();
+	}
+
+	public void checkNextWorkPlan(WorkPlan nextWorkplan, List<WorkPlan> list) {
+		if (nextWorkplan != null) {
+			// 두 기계가 모두 작동 중이면 작업 실행 안 함
+			if (list == null) {
+				nextWorkplan.setActivate(true);
+				return;
+			}
+			if (list.size() == 2) {
+				nextWorkplan.setActivate(false);
+			}
+
+			// 한 기계만 작동 중이면 반대 기계를 작동
+			else if (list.size() == 1) {
+				Facility currentFacility = list.get(0).getFacility();
+				Facility oppositeFacility = getOppositeFacility(currentFacility);
+
+				if (oppositeFacility != null) {
+					nextWorkplan.setFacility(oppositeFacility);
+					nextWorkplan.setActivate(true);
+				}
+			} else {
+				nextWorkplan.setActivate(true);
+			}
+
+			workPlanRepository.save(nextWorkplan);
+		}
 	}
 
 	private WorkPlans getWorkPlanByProcess(Process process) {
@@ -367,13 +393,20 @@ public class WorkPlanService {
 		ArrayList<WorkPlan> list = new ArrayList<>();
 		WorkPlan plan = getFacilityWorking(facility1);
 		WorkPlan plans = getFacilityWorking(facility2);
+		//둘 다 작동
 		if (plan != null && plans != null) {
 			list.add(0, plan);
 			list.add(1, plans);
 		}
+		//1번기계 작동
 		if (plans != null) {
 			list.add(0, plans);
 		}
+		//1번기계 작동
+		if (plan != null) {
+			list.add(0, plan);
+		}
+
 		return list;
 	}
 
@@ -413,15 +446,35 @@ public class WorkPlanService {
 	}
 
 	private boolean calTime(WorkPlan workPlan) {
+		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
 		if (workPlan == null) {
 			return false;
 		}
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(workPlan.getEndTime());
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 
 		Timestamp oneDayAfterEndTime = new Timestamp(calendar.getTime().getTime());
 
-		return workPlan.getEndTime().after(oneDayAfterEndTime);
+		boolean isAfterOneDay = time.after(oneDayAfterEndTime);
+		System.out.println("Is End Time after One Day After End Time? " + isAfterOneDay);
+
+		return isAfterOneDay;
+	}
+
+	private Facility getOppositeFacility(Facility currentFacility) {
+		return switch (currentFacility) {
+			case juiceMachine1 -> Facility.juiceMachine2;
+			case juiceMachine2 -> Facility.juiceMachine1;
+			case StickMachine1 -> Facility.StickMachine2;
+			case StickMachine2 -> Facility.StickMachine1;
+			case extractor1 -> Facility.extractor2;
+			case extractor2 -> Facility.extractor1;
+			case sterilizer1 -> Facility.sterilizer2;
+			case sterilizer2 -> Facility.sterilizer1;
+			// 필요한 경우 다른 기계도 추가
+			default -> null;
+		};
 	}
 }
