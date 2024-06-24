@@ -9,7 +9,7 @@ public class SengSanController {
     public String getSengsanCheck(){
         return "SengSan_check";
     }
-    @GetMapping(value = {"plan","/sengsanPlan","/sengsanplan"})
+    @GetMapping(value = {"plan","/sengsanPlan","/sengsanplan" })
     public String getSengsanPlan(){
         return "SengSan_Plan";
     }
