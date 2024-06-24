@@ -24,10 +24,3 @@ spring:
       ddl-auto: validate
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
-  thymeleaf:
-    prefix=classpath: templates/
-    suffix: .html
-    check-template-location: true
-    cache: false
-  mvc:
-    static-path-pattern: "/static/**"

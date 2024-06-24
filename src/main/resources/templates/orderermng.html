@@ -4,184 +4,117 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default}">
 
-<head>
-    <meta charset="UTF-8">
-    <title>원자재 관리</title>
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
     <style>
-        h1 {
-            color: white;
-        }
-
-        /*div.div1 {*/
-        /*    width: 49%;*/
-        /*    float: left;*/
-        /*    padding: 20px; !* 내부 공간 추가 *!*/
-        /*    background-color: #eaeaea;*/
-        /*}*/
-
-        /*div.div2 {*/
-        /*    width: 49%;*/
-        /*    float: right;*/
-        /*    padding: 20px; !* 내부 공간 추가 *!*/
-        /*    background-color: #eaeaea;*/
-        /*}*/
-
-        div.input-group {
-
-            width: 20vh;
-        }
-
     </style>
+    <!--<link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>-->
+</th:block>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>뉴트리션 해적선</title>
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
-          rel="stylesheet">
-    <link href="../static/css/user-rtl.css" type="text/css" rel="stylesheet" id="style-rtl">
-    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
-    <link href="../static/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
-    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
-    <script src="../static/js/popper/popper.min.js"></script>
-    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
-    <script src="../static/js/anchorjs/anchor.min.js "></script>
-    <script src="../static/js/is/is.min.js"></script>
-    <script src="../static/js/fontawesome/all.min.js"></script>
-    <script src="../static/js/lodash/lodash.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-    <script src="../static/js/list.js/list.min.js"></script>
-    <script src="../static/js/feather-icons/feather.min.js"></script>
-    <script src="../static/js/dayjs/dayjs.min.js"></script>
-    <script src="../static/js/phoenix.js"></script>
-</head>
+<div layout:fragment="content">
 
-<body>
 
-<div layout:fragment="Content" class="container">
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col">
 
-    <h1>원자재 발주 관리
-        <hr>
-
-    </h1>
-    <div class="row mt-5">
-        <div class="col">
-            <div class="div1">
-                <div class="group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit">
-                                <i class="glyphicon glyphicon-search"></i>
-                            </button>
-                        </div>
+                    <div class="group">
+                        <label class="title_form">원자재 발주관리
+                            <span style="margin-left: 60%">
+                <input type="text" id="search-input" class="search-input" placeholder="Search..."/>
+                    </span>
+                        </label>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>공정</th>
+                                <th>LOT</th>
+                                <th>시작시간</th>
+                                <th>종료시간</th>
+                                <th>입고확인</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>A2</td>
+                                <td>20240608A1</td>
+                                <td>2024.06.7 13:00:05</td>
+                                <td>2024.06.7 13:00:05</td>
+                                <td>
+                                    <button>입고버튼</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>A2</td>
+                                <td>20240608A1</td>
+                                <td>2024.06.7 13:00:05</td>
+                                <td>2024.06.7 13:00:05</td>
+                                <td>
+                                    <button>입고버튼</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button> 엑셀 다운</button>
                     </div>
-
-                    <hr>
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">번호</th>
-                            <th scope="col">공정</th>
-                            <th scope="col">LOT</th>
-                            <th scope="col">시작시간</th>
-                            <th scope="col">종료시간</th>
-                            <th scope="col">작업자</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>A2</td>
-                            <td>20240608A1</td>
-                            <td>2024.06.7 13:00:05</td>
-                            <td>2024.06.7 13:00:05</td>
-                            <td>
-                                <button>입고버튼</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>A2</td>
-                            <td>20240608A1</td>
-                            <td>2024.06.7 13:00:05</td>
-                            <td>2024.06.7 13:00:05</td>
-                            <td>
-                                <button>입고버튼</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button> 엑셀 다운</button>
-
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="div2">
-
-                <div class="group">
-
-                    <label>발주계획서</label>
-                    <button> 발주등록</button>
-                    <hr>
-
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">번호</th>
-                            <th scope="col">발주처</th>
-                            <th scope="col">원자재명</th>
-                            <th scope="col">수량</th>
-                            <th scope="col">예상납기일</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>양배추</td>
-                            <td>2000 kg</td>
-                            <td>2024-06-19</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>벌꿀</td>
-                            <td>10 L</td>
-                            <td>2024-06-19</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>포장지</td>
-                            <td>15000 ea</td>
-                            <td>2024-06-19</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
                 </div>
 
+
+                <div class="col">
+                    <div class="group">
+
+                        <label>발주계획서
+                            <div class="card checkout">
+                                <button onclick="showModal()"> 발주 등록</button>
+                            </div>
+                        </label>
+
+                        <hr>
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>발주처</th>
+                                <th>원자재명</th>
+                                <th>수량</th>
+                                <th>예상납기일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Mark</td>
+                                <td>양배추</td>
+                                <td>2000 kg</td>
+                                <td>2024-06-19</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Jacob</td>
+                                <td>벌꿀</td>
+                                <td>10 L</td>
+                                <td>2024-06-19</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Larry</td>
+                                <td>포장지</td>
+                                <td>15000 ea</td>
+                                <td>2024-06-19</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-
 </div>
-</body>
+
 </html>

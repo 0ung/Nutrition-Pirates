@@ -13,7 +13,7 @@ public class SuJuController {
     public String getSujuCheck (){
         return "suzu_check";
     }
-    @GetMapping(value = {"/suzucheckOrderer", "/sujucheckOrderer"})
+    @GetMapping(value = {"/suzucheckOrderer", "/order/suzu_check_orderer"})
     public String getSujuCheckOrderer (){
         return "suzu_check_orderer";
     }
