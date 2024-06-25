@@ -1,7 +1,5 @@
 package codehows.dream.nutritionpirates.workplan;
 
-import static codehows.dream.nutritionpirates.workplan.process.CommonMethod.*;
-
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Routing;
@@ -168,16 +166,6 @@ public class WorkPlanDuration {
 		int max = Routing.MIX_ROUTING;
 		double waitingTime = Routing.MIX_WAITING_TIME;
 		return waitingCal(input, max, waitingTime);
-	}
-
-	public static void main(String[] args) {
-		WorkPlanDuration workPlanDuration = new WorkPlanDuration();
-
-		System.out.println("박스" +
-			getString((workPlanDuration.boxPackingWaiting(1333) + workPlanDuration.boxPackingDuration(1333))));
-		System.out.println(
-			"추출기" + getString((workPlanDuration.extractionDuration(1333) + workPlanDuration.extractionWaiting(1333)))
-		);
 	}
 
 }
