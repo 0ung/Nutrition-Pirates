@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
+
+import codehows.dream.nutritionpirates.dto.WorkPlanDetailDTO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,8 +88,10 @@ public class WorkPlanService {
 		)
 	);
 
-	public WorkPlan getWorkDetail(Long id) {
-		return workPlanRepository.findById(id).orElse(null);
+	public WorkPlanDetailDTO getWorkDetail(Long id) {
+		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
+		WorkPlan workPlan = workPlanRepository.findById(id).orElse(null);
+		return WorkPlanDetailDTO.toWorkPlanDetailDTO(workPlan,time);
 	}
 
 	public RawBOMDTO calInputRaws(Order order) {
@@ -200,8 +204,7 @@ public class WorkPlanService {
 				continue;
 			}
 
-			List<WorkPlanDTO> workPlans = workPlan.stream().map(e ->
-				WorkPlanDTO.toWorkPlanDTO(e, time)).toList();
+			List<WorkPlanDTO> workPlans = workPlan.stream().map(WorkPlanDTO::toWorkPlanDTO).toList();
 			switch (facility) {
 				case juiceMachine1 -> facilityDTO.setJuiceMachine1(workPlans);
 				case juiceMachine2 -> facilityDTO.setJuiceMachine2(workPlans);
@@ -315,16 +318,6 @@ public class WorkPlanService {
 		return workPlans;
 	}
 
-/**
- * 이거 확인 좀..
-	public List<WorkPlanDTO> getAllWorkPlans() {
-		List<WorkPlan> workPlans = workPlanRepository.findAll(); // 모든 WorkPlan 조회
-
-		return workPlans.stream()
-				.map(WorkPlanDTO::toWorkPlanDTO) // Entity를 DTO로 변환
-				.collect(Collectors.toList());
-	}
-*/
 	//@TODO 대기시간 계산 완료
 	//대기시간은 그냥 실제 가동시간에 추가해서 진행
 	//@TODO 작업지시 활성화

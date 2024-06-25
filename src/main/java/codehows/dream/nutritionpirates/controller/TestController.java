@@ -36,4 +36,15 @@ public class TestController {
     public String index1() {
         return "systemtime";
     }
+
+    @GetMapping(value = "/sengsanPlan")
+    public String inasdas(){
+        return "SengSan_Plan";
+    }
+
+
+    @GetMapping(value = "/sengsancheck")
+    public String sengsancheck(){
+        return "SengSan_check";
+    }
 }

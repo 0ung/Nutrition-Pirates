@@ -1,6 +1,7 @@
 package codehows.dream.nutritionpirates.controller;
 
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
+import codehows.dream.nutritionpirates.dto.WorkPlanDetailDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.service.WorkPlanService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -37,30 +39,21 @@ public class WorkPlanController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-/**
- * 확인 부탁드려요
- * @GetMapping("/workplans")
- * 	    public String getAllWorkPlans(Model model) {
- * 		List<WorkPlanDTO> workPlans = workPlanService.getAllWorkPlans(); // Retrieve work plans from service
- *
- * 		model.addAttribute("workPlans", workPlans);
- *
- * 		return "SengSan_check";
- *    }
- * */
-
 
 	@GetMapping("/{id}")
-	public void getWorkPlanDetail(@PathVariable(name = "id") Long id, Model model) {
+	public ResponseEntity<WorkPlanDetailDTO> getWorkPlanDetail(@PathVariable(name = "id") Long id, Model model) {
 		try {
-			WorkPlan plan = workPlanService.getWorkDetail(id);
-			model.addAttribute("workplan", plan);
+			WorkPlanDetailDTO plan = workPlanService.getWorkDetail(id);
+			return new ResponseEntity<>(plan,HttpStatus.OK);
 		} catch (Exception e) {
 			model.addAttribute("error", "잘못된 요청");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
+
 	@GetMapping("/execute/{id}")
-	public ResponseEntity<?> executeWorkPlan(@PathVariable(name = "id") Long id, String worker) {
+	public ResponseEntity<?> executeWorkPlan(@PathVariable(name = "id") Long id, @RequestParam(name = "worker") String worker) {
 		try {
 			return new ResponseEntity<>(workPlanService.executeWork(id, worker), HttpStatus.OK);
 		} catch (Exception e) {
@@ -68,5 +61,7 @@ public class WorkPlanController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
+
 
 }

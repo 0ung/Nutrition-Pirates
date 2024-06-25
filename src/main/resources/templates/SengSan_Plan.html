@@ -6,97 +6,6 @@
 
     <!-- 사용자 CSS 추가 -->
     <th:block layout:fragment="css">
-        <style>
-            .sengsan_container {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                width: 200px;
-            }
-
-            .sengsan_choice {
-                width: 100%;
-                height: 50px;
-                margin-top: 10px;
-                background-color: #cccccc;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 20px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-                position: relative;
-                font-weight: bold;
-            }
-
-
-            .sengsan_choice + .sengsan_choice::before {
-                content: '';
-                width: 100%;
-                height: 1px;
-                background-color: black;
-                position: absolute;
-                top: -1px;
-                left: 0;
-            }
-
-            .ss-steps-container {
-                display: flex;
-                width: 100%;
-            }
-
-            .ss-steps {
-                flex: 1;
-            }
-
-            .ss-steps:first-child {
-                flex: 0 0 20%;
-            }
-
-            .ss-steps:last-child {
-                flex: 0 0 80%;
-            }
-
-            .ss-steps_font {
-                font-size: 40px;
-                font-weight: bold;
-            }
-
-            .ss-active {
-                background-color: #2B2B2F;
-                color: white;
-            }
-
-            .dropdown {
-                position: relative;
-                display: inline-block;
-                width: 100%;
-            }
-
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f9f9f9;
-                min-width: 200px;
-                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                z-index: 1;
-            }
-
-            .dropdown-content div {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
-
-            .dropdown-content div:hover {
-                background-color: #f1f1f1;
-            }
-
-            .dropdown:hover .dropdown-content {
-                display: block;
-            }
-        </style>
         <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
     </th:block>
 
@@ -104,7 +13,7 @@
     <th:block layout:fragment="script">
 
         <script th:inline="javascript">
-
+            let number = 0;
             async function fetchFacilityData() {
                 try {
                     const response = await fetch(url + "workplan/facility/activate");
@@ -117,6 +26,7 @@
                     console.error(`Fetch error: ${error}`);
                 }
             }
+
 
 
             function generateDropdownMenus(data) {
@@ -153,8 +63,10 @@
                         data[facilityKey].forEach(item => {
                             const option = document.createElement('div');
                             option.classList.add('sengsan_choice');
-                            option.textContent = `${facilityMapping[facilityKey]}${item.id}`;
-                            option.onclick = () => sengsan_selectChoice(option);
+                            option.setAttribute("data-id",item.id);
+                            option.textContent = `${facilityMapping[facilityKey]}  ${item.id} 번`;
+                            option.onclick = () => {
+                                sengsan_selectChoice(option, item.id)};
                             dropdownContent.appendChild(option);
                         });
 
@@ -164,7 +76,8 @@
                 });
             }
 
-            function sengsan_selectChoice(element) {
+
+            async function sengsan_selectChoice(element, id) {
                 const choices = document.querySelectorAll('.sengsan_choice');
                 choices.forEach(choice => {
                     choice.classList.remove('ss-active');
@@ -174,21 +87,60 @@
                 const status = document.getElementById('status');
                 status.innerText = `${element.innerText} 선택됨.`;
 
-                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
-                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
-                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
-                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
-                //여기에 만약 선택된 것의 값들을 불러오셈!! 나중에 영웅씨 만들면 값만 넣으셈
+                // Fetch the work plan details using the id
+                try {
+                    const response = await fetch(`/workplan/${id}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    number = id;
+                    console.log(data); // Now data will log the parsed JSON object
+                    // Update the details with the fetched data
+                    const stepsContainer = document.querySelector('.ss-steps:last-child');
+                    stepsContainer.innerHTML = `
+                    수주번호 / 안전재고 : ${data.processPlanId}<br>
+                    공정 : ${data.process}<br>
+                    원자재 투입량 : ${data.rawsId}<br>
+                    LOT 번호 : ${data.lotCode}<br>
+                    진행률 : ${data.processStatus}<br>
+                    공정완료시간 : ${data.processCompletionTime}<br>
+                    작업자 : ${data.worker}<br>
+                `;
 
-                const startButton = document.getElementById('startButton');
-                // startButton.disabled = false;
+                } catch (error) {
+                    console.error(`Fetch error: ${error}`);
+                }
             }
 
 
             function nextStep() {
-                alert('다음 단계로 진행합니다.');
-                closeModal();
+                const workerName = document.getElementById('workerName').value;
+                const response = executeWorkPlan(workerName);
+                console.log(response);
             }
+
+            async function executeWorkPlan(workerName) {
+                const url = `/workplan/execute/${number}?worker=${encodeURIComponent(workerName)}`;
+
+                // AJAX 호출을 사용하여 백엔드 API를 호출하고, 성공 후 리디렉션을 수행합니다.
+                await fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        // 성공적으로 API가 호출되면 원래 페이지로 리디렉션
+
+                        alert('다음 단계로 진행합니다.');
+                        closeModal();
+
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+            }
+
+
 
             function closeModal() {
                 document.getElementById('myModal').style.display = "none";
@@ -197,6 +149,7 @@
             function showModal() {
                 document.getElementById('myModal').style.display = "block";
             }
+
 
             window.onclick = function (event) {
                 var modal = document.getElementById('myModal');
@@ -209,6 +162,7 @@
         </script>
     </th:block>
 
+
     <div layout:fragment="content">
         <div class="container">
             <main class="main" id="top">
@@ -216,7 +170,7 @@
                     <div class="ss-modal-content">
                         <h2 style="color: #0acf83">작업자 기입 </h2>
                         <hr class="ss-hr">
-                        <input type="text" class="ss-text_input" placeholder="Type Your Name">
+                        <input type="text" class="ss-text_input" id="workerName" placeholder="Type Your Name">
                         <button class="ss-button" onclick="nextStep()">다음</button>
                     </div>
                 </div>
@@ -236,19 +190,13 @@
                                 </div>
 
                                 <div class="ss-steps ss-steps_font">
-                                    수주번호 / 안전재고 : 12345<br>
-                                    공정 : 추출<br>
-                                    원자재 투입량 : 500kg<br>
-                                    LOT 번호 : 67890<br>
-                                    진행률 : 80%<br>
-                                    공정완료시간 : 14:30<br>
-                                    다음 공정 준비 : 혼합<br>
+                                    <!-- Detailed information will be updated here -->
                                 </div>
                             </div>
                             <div class="ss-card ss-checkout">
                                 <div class="ss-footer">
                                     <label class="ss-price"> </label>
-                                    <button class="ss-checkout-btn" onclick="showModal()" id="startButton"> 공정시작</button>
+                                    <button class="ss-checkout-btn" onclick="showModal()" id="startButton" > 공정시작</button>
                                 </div>
                             </div>
                         </div>

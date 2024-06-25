@@ -26,9 +26,8 @@ public class WorkPlanDTO {
 	private String endTime;
 	private Facility facility;
 	private boolean activate;
-	private String processStatus;
 
-	public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan, Timestamp time) {
+	public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan) {
 		return WorkPlanDTO.builder()
 			.id(workPlan.getId())
 			.process(workPlan.getProcess())
@@ -38,25 +37,9 @@ public class WorkPlanDTO {
 			.facility(workPlan.getFacility())
 			.activate(workPlan.isActivate())
 			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
-			.processStatus(calProcess(workPlan, time))
 			.build();
 
 	}
 
-	public static String calProcess(WorkPlan plan, Timestamp time) {
-		if (plan.getStartTime() == null || plan.getProcessCompletionTime() == null) {
-			return null;
-		}
-		long startTime = plan.getStartTime().getTime();
-		long endTime = plan.getProcessCompletionTime().getTime();
-		long currentTime = time.getTime();
-
-		// Calculate the progress percentage
-		long elapsedTime = currentTime - startTime;
-		long totalProcessTime = endTime - startTime;
-		double progress = ((double)elapsedTime / totalProcessTime) * 100;
-
-		return String.format("Progress: %.2f%%", progress);
-	}
 
 }
