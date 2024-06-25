@@ -80,6 +80,39 @@
             button.innerHTML = '입고됨';
             button.disabled = true;
         }
+
+        fetch(url + 'api/calculate')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 정상적이지 않습니다');
+                }
+                return response.json(); // JSON 형식으로 데이터를 파싱하여 반환
+            })
+            .then(data => {
+                // 여기서 받아온 데이터를 모델로 사용하거나 필요한 처리를 수행합니다
+                const { partnerName, product, remainingQuantity, expectedImportDate } = data;
+
+                console.log('받아온 데이터:');
+                console.log('발주처:', partnerName);
+                console.log('원자재명:', product);
+                console.log('수량:', remainingQuantity);
+                console.log('예상 납기일:', expectedImportDate);
+
+                // 예시: HTML 요소에 데이터를 채워 넣는 등의 작업을 수행할 수 있습니다
+                const tableBody = document.querySelector('#orderTable tbody');
+                const row = `
+            <tr>
+                <td>${partnerName}</td>
+                <td>${product}</td>
+                <td>${remainingQuantity}</td>
+                <td>${expectedImportDate}</td>
+            </tr>
+        `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            })
+            .catch(error => {
+                console.error('데이터를 가져오는 중 오류 발생:', error);
+            });
     </script>
 </th:block>
 

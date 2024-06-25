@@ -12,7 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
           rel="stylesheet">
-    <link href="../static/css/chulha.css" type="text/css" rel="stylesheet" id="chulha.css">
+    <link th:href="@{/css/chulha.css}" type="text/css" rel="stylesheet" id="chulha.css">
+
 
 
 </th:block>
@@ -23,47 +24,47 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const labels = ['양배추즙','흑마늘즙','석류스틱','매실스틱'];
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: '양',
+                    data: [500, 1000, 1500, 2000 , 3000],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderWidth: 2,
+                    borderRadius: Number.MAX_VALUE,
+                    borderSkipped: false,
+                }
+            ]
+        };
 
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '현재 재고 현황'
-                        }
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '현재 재고 현황'
                     }
-                },
-            };
+                }
+            },
+        };
 
-            const myChart = new Chart(
-                document.getElementById('myChart'),
-                config
-            );
-        });
-    </script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    });
+</script>
 </th:block>
 
 <!-- ===============================================-->
@@ -71,77 +72,80 @@
 <!-- ===============================================-->
 
 <div layout:fragment="content">
-    <!--------------------->
-    <!----  Main Start ---->
-    <!--------------------->
-    <div class="ch-content">
-        <div class="ch-container2">
-            <div class="ch-card2 ch-cart">
-                <label class="ch-title_form">
-                    출하현황
-                </label>
+        <!--------------------->
+        <!----  Main Start ---->
+        <!--------------------->
+        <div class="ch-content">
+            <div class="ch-container2">
+                <div class="ch-card2 ch-cart">
+                    <label class="ch-title_form">
+                        출하현황
+                    </label>
 
-                <div class="row m-5">
+                    <div class="row m-5">
                     <div class="col">
                         <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
                         <div style="  display: flex; justify-content: center; align-items: center;">
                             <!-- 차트 그릴 위치 지정 canvas webGL(그래픽엔진) 사용 -->
+                                <canvas id="myChart"></canvas>
                         </div>
-                        <div class="col">
 
-                            <h1></h1>
-                            <table class="ch-table">
-                                <thead>
-                                <tr class="ch-tr">
-                                    <th class="ch-th">번호</th>
-                                    <th class="ch-th">발주처</th>
-                                    <th class="ch-th">제품명</th>
-                                    <th class="ch-th">수량</th>
-                                    <th class="ch-th">수주일</th>
-                                    <th class="ch-th">예상납기일</th>
-                                    <th class="ch-th">공정상태</th>
-                                    <th class="ch-th">긴급여부</th>
-                                    <th class="ch-th">출하상태</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="ch-tr">
-                                    <td class="ch-td">1</td>
-                                    <td class="ch-td">ABC Corp</td>
-                                    <td class="ch-td">Widget A</td>
-                                    <td class="ch-td">100</td>
-                                    <td class="ch-td">2024-06-01</td>
-                                    <td class="ch-td">2024-06-10</td>
-                                    <td class="ch-td">생산중</td>
-                                    <td class="ch-td">아니오</td>
-                                    <td class="ch-td">대기중</td>
-                                </tr>
-                                <tr class="ch-tr">
-                                    <td class="ch-td">2</td>
-                                    <td class="ch-td">XYZ Ltd</td>
-                                    <td class="ch-td">Gadget B</td>
-                                    <td class="ch-td">200</td>
-                                    <td class="ch-td">2024-06-05</td>
-                                    <td class="ch-td">2024-06-15</td>
-                                    <td class="ch-td">완료</td>
-                                    <td class="ch-td">예</td>
-                                    <td class="ch-td">출하완료</td>
-                                </tr>
-                                <tr class="ch-tr">
-                                    <td class="ch-td">3</td>
-                                    <td class="ch-td">LMN Inc</td>
-                                    <td class="ch-td">Device C</td>
-                                    <td class="ch-td">150</td>
-                                    <td class="ch-td">2024-06-03</td>
-                                    <td class="ch-td">2024-06-12</td>
-                                    <td class="ch-td">준비중</td>
-                                    <td class="ch-td">아니오</td>
-                                    <td class="ch-td">대기중</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="ch-centered"> [1] [2] [3] [4] [5]</div>
-                        </div>
+                    </div>
+                    <div class="col">
+
+                        <h1 > </h1>
+                        <table class="ch-table">
+                            <thead>
+                            <tr class="ch-tr">
+                                <th class="ch-th">번호</th>
+                                <th class="ch-th">발주처</th>
+                                <th class="ch-th">제품명</th>
+                                <th class="ch-th">수량</th>
+                                <th class="ch-th">수주일</th>
+                                <th class="ch-th">예상납기일</th>
+                                <th class="ch-th">공정상태</th>
+                                <th class="ch-th">긴급여부</th>
+                                <th class="ch-th">출하상태</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="ch-tr">
+                                <td class="ch-td">1</td>
+                                <td class="ch-td">ABC Corp</td>
+                                <td class="ch-td">Widget A</td>
+                                <td class="ch-td">100</td>
+                                <td class="ch-td">2024-06-01</td>
+                                <td class="ch-td">2024-06-10</td>
+                                <td class="ch-td">생산중</td>
+                                <td class="ch-td">아니오</td>
+                                <td class="ch-td">대기중</td>
+                            </tr>
+                            <tr class="ch-tr">
+                                <td class="ch-td">2</td>
+                                <td class="ch-td">XYZ Ltd</td>
+                                <td class="ch-td">Gadget B</td>
+                                <td class="ch-td">200</td>
+                                <td class="ch-td">2024-06-05</td>
+                                <td class="ch-td">2024-06-15</td>
+                                <td class="ch-td">완료</td>
+                                <td class="ch-td">예</td>
+                                <td class="ch-td">출하완료</td>
+                            </tr>
+                            <tr class="ch-tr">
+                                <td class="ch-td">3</td>
+                                <td class="ch-td">LMN Inc</td>
+                                <td class="ch-td">Device C</td>
+                                <td class="ch-td">150</td>
+                                <td class="ch-td">2024-06-03</td>
+                                <td class="ch-td">2024-06-12</td>
+                                <td class="ch-td">준비중</td>
+                                <td class="ch-td">아니오</td>
+                                <td class="ch-td">대기중</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="ch-centered"> [1] [2] [3] [4] [5]</div>
+                    </div>
                     </div>
                 </div>
                 <div class="ch-card2 ch-checkout">
@@ -152,9 +156,8 @@
                 </div>
             </div>
         </div>
-        <!-- ===============================================-->
-        <!--    End of Main Content-->
-        <!-- ===============================================-->
-    </div>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 </div>
 </html>

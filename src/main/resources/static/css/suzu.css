@@ -305,8 +305,9 @@
 
 .gy-centered {
     display: flex; /* Flexbox 컨테이너로 설정 */
-    justify-content: center; /* 가로 방향 가운데 정렬 */
     align-items: center; /* 세로 방향 가운데 정렬 */
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 .gy-table {

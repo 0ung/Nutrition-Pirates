@@ -6,17 +6,148 @@
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
-</th:block>
+    <link th:href="@{/css/suzu.css}" type="text/css" rel="stylesheet" id="suzu.css"/>
+    <style>
 
+        /* 주문 목록 테이블 행에 마우스를 올렸을 때 배경색 변경 */
+        #ordersTable tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        #ordersTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #ordersTable th {
+            background-color: #999999;
+        }
+
+        #ordersTable th, #ordersTable td {
+            border: 1px solid #ddd;
+            padding: 10px; /* 패딩을 10px로 변경 */
+            text-align: center; /* 텍스트 가운데 정렬 유지 */
+        }
+
+        .cancel-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px; /* 패딩을 좀 더 크게 조정 */
+            cursor: pointer;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
+    </style>
+</th:block>
 <th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
+    </script>
     <script>
         function cancelOrder(button) {
             button.textContent = '취소됨';
             button.disabled = true;
         }
     </script>
+
+    <script>
+
+        $(document).ready(function() {
+            $('.cancel-btn').click(function() {
+                var orderId = $(this).data('orderid');
+                cancelOrder(orderId);
+            });
+        });
+
+        // 주문 취소 함수
+        function cancelOrder(orderId) {
+            $.ajax({
+                url: '/order/' + orderId,
+                type: 'DELETE',
+                success: function(result) {
+                    alert('주문 ID ' + orderId + '이(가) 성공적으로 취소되었습니다.');
+                    $('#ordersTable tbody tr').find('button[data-orderid="' + orderId + '"]').each(function() {
+                        $(this).text('취소됨');
+                        $(this).prop('disabled', true);
+                        $(this).removeClass('cancel-btn').addClass('cancel-btn-cancelled');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('주문 ID ' + orderId + ' 취소 중 오류 발생: ' + error);
+                }
+            });
+        }
+    </script>
+
+    <!--    <script>-->
+    <!--        function exportToExcel() {-->
+    <!--            var tableHtml = $("#ordersTable").prop('outerHTML');-->
+    <!--            var uri = 'data:application/vnd.ms-excel,' + encodeURIComponent(tableHtml);-->
+    <!--            window.open(uri, '_blank');-->
+    <!--        }-->
+    <!--    </script>-->
+    <script>
+        function downloadExcel() {
+            fetch('/order/history', {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = '수주 내역.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel:', error);
+                    // Handle error as needed
+                });
+        }
+    </script>
 </th:block>
+
 <!-- ===============================================-->
 <!--    Main Content-->
 <!-- ===============================================-->
@@ -29,94 +160,86 @@
             <div class="gy-card2 gy-cart">
                 <label class="gy-title_form">수주 조회
                     <span style="margin-left: 75%">
-                <input type="text" id="search-input" class="gy-search-input" placeholder="Search..."/>
+                <input type="text" id="search-input" class="gy-search-input" placeholder="Search..." />
                     </span>
                 </label>
 
+
+
                 <div class="gy-steps">
-                    <table class="gy-table">
-                        <thead class="gy-th">
+                    <table id="ordersTable" class="gy-table">
+                        <thead>
                         <tr class="gy-tr">
-                            <th class="gy-th">번호</th>
-                            <th class="gy-th">발주처</th>
-                            <th class="gy-th">제품명</th>
-                            <th class="gy-th">수량(BOX)</th>
-                            <th class="gy-th">수주일</th>
-                            <th class="gy-th">예상 납기일</th>
-                            <th class="gy-th">공정 상태</th>
-                            <th class="gy-th">긴급 여부</th>
-                            <th class="gy-th">취소 여부</th>
+                            <th>주문 ID</th>
+                            <th>주문자</th>
+                            <th>주문 날짜</th>
+                            <th>예상 납기일</th>
+                            <th>제품</th>
+                            <th>수량</th>
+                            <th>긴급 여부</th>
+                            <th>취소</th>
                         </tr>
                         </thead>
                         <tbody class="gy-tbody">
-                        <tr class="gy-tr">
-                            <td class="gy-td">1번</td>
-                            <td class="gy-td">김철수</td>
-                            <td class="gy-td">제품 A</td>
-                            <td class="gy-td">100</td>
-                            <td class="gy-td">2024-06-10</td>
-                            <td class="gy-td">2024-06-20</td>
-                            <td class="gy-td">진행중</td>
-                            <td class="gy-td">아니오</td>
-                            <td class="gy-td">
-                                <button onclick="cancelOrder(this)" class="gy-button">취소</button>
-                            </td>
+                        <!-- 주문 목록을 동적으로 생성 -->
+                        <tr th:each="order : ${dto}">
+                            <td th:text="${order.orderId}">1</td>
+                            <td th:text="${order.ordererName}">Orderer A</td>
+                            <td th:text="${order.orderDate}">2024-06-21</td>
+                            <td th:text="${order.expectedDeliveryDate}">2024-06-28</td>
+                            <td th:text="${order.product}">Product A</td>
+                            <td th:text="${order.quantity}">10</td>
+                            <td th:text="${order.urgency} ? 'Yes' : 'No'">Yes</td>
+                            <td>
 
-                        </tr>
-                        <tr class="gy-tr">
-                            <td class="gy-td">2번</td>
-                            <td class="gy-td">김백수</td>
-                            <td class="gy-td">제품 B</td>
-                            <td class="gy-td">50</td>
-                            <td class="gy-td">2024-06-12</td>
-                            <td class="gy-td">2024-06-25</td>
-                            <td class="gy-td">대기중</td>
-                            <td class="gy-td">네</td>
-                            <td class="gy-td">
-                                <button onclick="cancelOrder(this)" class="gy-button">취소</button>
-                            </td>
-
-                        </tr>
-                        <tr class="gy-tr">
-                            <td class="gy-td">3번</td>
-                            <td class="gy-td">홍길동</td>
-                            <td class="gy-td">제품 C</td>
-                            <td class="gy-td">200</td>
-                            <td class="gy-td">2024-06-14</td>
-                            <td class="gy-td">2024-06-30</td>
-                            <td class="gy-td">완료</td>
-                            <td class="gy-td">아니오</td>
-                            <td class="gy-td">
-                                <button onclick="cancelOrder(this)" class="gy-button">취소</button>
-                            </td>
-
-                        </tr>
-                        <tr class="gy-tr">
-                            <td class="gy-td">4번</td>
-                            <td class="gy-td">아무개</td>
-                            <td class="gy-td">제품 D</td>
-                            <td class="gy-td">75</td>
-                            <td class="gy-td">2024-06-13</td>
-                            <td class="gy-td">2024-06-28</td>
-                            <td class="gy-td">진행중</td>
-                            <td class="gy-td">아니오</td>
-                            <td class="gy-td">
-                                <button onclick="cancelOrder(this)" class="gy-button">취소</button>
+                                <button th:attr="data-orderid=${order.orderId}"
+                                        th:text="${order.visible == true ? '취소됨' : '취소'}"
+                                        th:class="${order.visible == true ? 'cancel-btn-cancelled' : 'cancel-btn'}"
+                                        th:disabled="${order.visible == true}"
+                                        onclick="cancelOrder(this)">
+                                </button>
                             </td>
 
                         </tr>
                         </tbody>
                     </table>
+
+
+
                 </div>
 
-                <div class="gy-centered">
-                    <p> [1] [2] [3] [4] [5] </p>
+                <div class="pagination-container">
+                    <ul class="pagination-list">
+                        <!-- Calculate the current block and the total number of blocks -->
+                        <li>
+                            <button th:disabled="${currentPage == 0}"
+                                    th:onclick="|location.href='@{/order/{page}(page=${currentPage - 10 < 0 ? 0 : currentPage - 10})}'|">
+                                이전버튼
+                            </button>
+                        </li>
+                        <!-- Display pages in the current block -->
+                        <li th:each="startPage : ${#numbers.sequence(0, totalPages > 10 ? 9 : totalPages - 1)}">
+                            <th:block th:with="blockIndex=${currentPage / 10}">
+                                <a th:href="@{/order/{page}(page=${blockIndex * 10 + startPage})}"
+                                   th:text="${blockIndex * 10 + startPage + 1}"
+                                   th:classappend="${currentPage == (blockIndex * 10 + startPage) ? 'active' : ''}"
+                                   class="pagination-link"></a>
+                            </th:block>
+                        </li>
+                        <li>
+                            <button th:disabled="${currentPage == totalPages }"
+                                    th:onclick="|location.href='@{/order/{page}(page=${currentPage + 1})}'|">
+                                다음버튼
+                            </button>
+                        </li>
+                    </ul>
                 </div>
+
             </div>
             <div class="gy-card2 gy-checkout">
                 <div class="gy-footer">
                     <label class="gy-price"> </label>
-                    <button class="gy-checkout-btn"> 엑셀 저장</button>
+                    <button class="gy-checkout-btn" onclick="downloadExcel()">엑셀 저장</button>
                 </div>
             </div>
 

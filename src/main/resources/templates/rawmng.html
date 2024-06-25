@@ -77,85 +77,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1번</td>
-                                <td>양배추</td>
-                                <td>1000kg</td>
-                                <td>출고</td>
-                                <td>2024-06-10</td>
-                                <td>공정투입</td>
-                                <td>
-                                    <div class="flex-container">
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#update">
-                                                수정
-                                            </button>
-                                        </div>
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#delete">
-                                                삭제
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2번</td>
-                                <td>양배추</td>
-                                <td>1000kg</td>
-                                <td>출고</td>
-                                <td>2024-06-10</td>
-                                <td>공정투입</td>
-                                <td>
-                                    <div class="flex-container">
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#update">
-                                                수정
-                                            </button>
-                                        </div>
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#delete">
-                                                삭제
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3번</td>
-                                <td>양배추</td>
-                                <td>1000kg</td>
-                                <td>출고</td>
-                                <td>2024-06-10</td>
-                                <td>공정투입</td>
-                                <td>
-                                    <div class="flex-container">
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#update">
-                                                수정
-                                            </button>
-                                        </div>
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#delete">
-                                                삭제
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4번</td>
-                                <td>양배추</td>
-                                <td>1000kg</td>
-                                <td>출고</td>
-                                <td>2024-06-10</td>
-                                <td>공정투입</td>
+                            <!-- 데이터베이스에서 받아온 입출고 기록을 반복해서 출력 -->
+                            <tr th:each="record : ${movementRecords}">
+                                <td th:text="${record.productCode}">1번</td>
+                                <td th:text="${record.productName}">양배추</td>
+                                <td th:text="${record.quantity}">1000kg</td>
+                                <td th:text="${record.status}">출고</td>
+                                <td th:text="${record.date}">2024-06-10</td>
+                                <td th:text="${record.reason}">공정투입</td>
                                 <td>
                                     <div class="flex-container">
                                         <div class="button2-container">
@@ -196,6 +125,7 @@
                             <li class="page-item disabled">
                                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
                             </li>
+                            <!-- 페이지 번호도 동적으로 처리할 수 있습니다. -->
                             <li class="page-item"><a class="page-link" href="#">1</a></li>
                             <li class="page-item"><a class="page-link" href="#">2</a></li>
                             <li class="page-item"><a class="page-link" href="#">3</a></li>

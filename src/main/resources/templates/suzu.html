@@ -8,7 +8,7 @@
 <th:block layout:fragment="css">
     <style>
     </style>
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
+    <link th:href="@{/css/suzu.css}" type="text/css" rel="stylesheet" id="suzu.css"/>
 </th:block>
 
 <th:block layout:fragment="script">
@@ -40,13 +40,12 @@
         }
 
         // 모달 외부 클릭 시 모달 닫기
-        window.onclick = function (event) {
+        window.onclick = function(event) {
             var modal = document.getElementById('myModal');
             if (event.target == modal) {
                 closeModal();
             }
         }
-
         function addOptionToSelect(selectElement, text, value) {
             const option = document.createElement('option');
             option.text = text;  // name
@@ -56,7 +55,7 @@
 
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/order/orderer",
+            url: "/order/orderer/all",
             success: (response) => {
                 const selectElement = document.getElementById('ordererModal');
                 response.forEach(
@@ -182,8 +181,7 @@
                 <label class="gy-title_form">수주 등록
                     <span style="margin-left: 76%">
                         <form id="excel-form" action="/order/excel" method="post" enctype="multipart/form-data">
-                            <input type="file" id="excel-upload" name="excel" style="display: none;"
-                                   accept=".xls,.xlsx">
+                            <input type="file" id="excel-upload" name="excel" style="display: none;" accept=".xls,.xlsx">
                             <button type="button" class="gy-button_right" onclick="selectExcel()">엑셀 등록</button>
                         </form>
 
