@@ -8,7 +8,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +25,7 @@ import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
 import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
+import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
@@ -254,7 +261,7 @@ public class WorkPlanService {
 			.id(executedWork.getId())
 			.endTime(executedWork.getEndTime() != null ? executedWork.getEndTime().toString() : null)
 			.startTime(executedWork.getStartTime().toString())
-			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLetCode() : null)
+			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLotCode() : null)
 			.facility(executedWork.getFacility())
 			.rawsCodes(executedWork.getRawsCodes())
 			.process(executedWork.getProcess())
@@ -476,5 +483,54 @@ public class WorkPlanService {
 			// 필요한 경우 다른 기계도 추가
 			default -> null;
 		};
+	}
+
+	public List<WorkPlanListDTO> getWorkPlanData(Pageable pageable) {
+		List<WorkPlanListDTO> list = new ArrayList<>();
+		Page<WorkPlan> pages = workPlanRepository.findByEndTimeExists(pageable);
+		pages.forEach(e -> {
+			list.add(WorkPlanListDTO.builder()
+				.work_plan_id(e.getId())
+				.lotCode(e.getLotCode().getLotCode())
+				.worker(e.getWorker())
+				.process(e.getProcess())
+				.startTime(e.getStartTime().toLocalDateTime().toString())
+				.endTime(e.getEndTime().toLocalDateTime().toString())
+				.build());
+		});
+
+		return list;
+	}
+
+	public Workbook getHistory() {
+		List<WorkPlan> list = workPlanRepository.findByEndTimeExists();
+		String time = programTimeService.getProgramTime()
+			.getCurrentProgramTime()
+			.toLocalDateTime()
+			.toLocalDate()
+			.toString();
+
+		Workbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet(time + "완료된 작업 지시");
+
+		Row headerRow = sheet.createRow(0);
+		String[] headers = new String[] {"작업지시 번호", "LOT코드", "작업자", "공정", "시작시간", "종료시간"};
+
+		for (int i = 0; i < headers.length; i++) {
+			headerRow.createCell(i).setCellValue(headers[i]);
+		}
+
+		for (int i = 1; i < list.size() + 1; i++) {
+			Row row = sheet.createRow(i);
+			WorkPlan workPlan = list.get(i - 1);
+			row.createCell(0).setCellValue(workPlan.getId());
+			row.createCell(1).setCellValue(workPlan.getLotCode() == null ? "없음" : workPlan.getLotCode().getLotCode());
+			row.createCell(2).setCellValue(workPlan.getWorker());
+			row.createCell(3).setCellValue(workPlan.getProcess().toString());
+			row.createCell(4).setCellValue(workPlan.getStartTime().toLocalDateTime().toString());
+			row.createCell(5).setCellValue(workPlan.getEndTime().toLocalDateTime().toString());
+		}
+
+		return workbook;
 	}
 }

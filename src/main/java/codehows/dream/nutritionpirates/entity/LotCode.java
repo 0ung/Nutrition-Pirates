@@ -17,11 +17,11 @@ public class LotCode {
 
 	@Id
 	@Column(name = "lotCode")
-	private String letCode;
+	private String lotCode;
 
 	private String pervLot;
 
-	public LotCode(String letCode) {
-		this.letCode = letCode;
+	public LotCode(String lotCode) {
+		this.lotCode = lotCode;
 	}
 }
