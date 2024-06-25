@@ -25,7 +25,7 @@ public class WorkPlanDetailDTO {
                 .processPlanId(workPlan.getProcessPlan().getId())
                 .process(workPlan.getProcess())
                 .rawsId(workPlan.getRawsCodes() == null ? "없음" : workPlan.getRawsCodes())
-                .lotCode(workPlan.getLotCode() ==null? "없음" : workPlan.getLotCode().getLetCode())
+                .lotCode(workPlan.getLotCode() ==null? "없음" : workPlan.getLotCode().getLotCode())
                 .processStatus(calProcess(workPlan,time))
                 .processCompletionTime(workPlan.getProcessCompletionTime().toLocalDateTime().toString())
                 .worker(workPlan.getWorker())
