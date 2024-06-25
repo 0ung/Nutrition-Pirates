@@ -53,7 +53,7 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('네트워크 오류 : error');
                 }
 
                 // 시스템 시간 데이터를 직접 가져오는 방식으로 수정
@@ -66,7 +66,7 @@
                         const systemTimeElement = document.getElementById('system-time');
                         systemTimeElement.innerText = res.formattedCurrentProgramTime;
                     })
-                    .catch(err => console.error('Failed to fetch initial system time'));
+                    .catch(err => console.error('데이터를 가져오지 못했습니다'));
                 // const currentSystemTime = await currentSystemTimeResponse.formattedCurrentProgramTime;
                 // systemTimeElement.innerText = currentSystemTime;
 
