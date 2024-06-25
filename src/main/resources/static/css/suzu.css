@@ -1,0 +1,1068 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"); /*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
+
+.gy-modal {
+    display: block; /* 처음에 모달을 보이도록 설정 */
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.gy-modal-content {
+    background-color: #000; /* 배경색 변경 */
+    width: 300px; /* 모달 창 너비 설정 */
+    color: #fff; /* 텍스트 색상 변경 */
+    text-align: center;
+    padding: 15px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 화면 크기에 따라 left 값 조정 */
+    @media (max-width: 1320px) {
+        top : 35%;
+        left: 64%; /* 화면 너비가 600px 이하일 때 */
+    }
+    @media (min-width: 1321px) {
+        left: 50%; /* 화면 너비가 1200px 이상일 때 */
+    }
+}
+
+.gy-button {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+.gy-button:hover {
+    background-color: #555;
+}
+
+.gy-dropdown {
+    background-color: #444;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.gy-dropdown:hover {
+    background-color: #555;
+}
+
+.gy-navbar-vertical {
+    top: 0;
+}
+
+
+.gy-content {
+    display: flex;
+    margin-top: 10%; /* Adjust top margin as needed */
+}
+
+@media (max-width: 1320px) {
+    .gy-content {
+        margin-left: 50px; /* Adjust left margin for smaller screens */
+    }
+}
+
+.gy-container {
+    /* Adjust top margin as needed */
+    width: 100%; /* Ensure full width */
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin: 0 auto; /* Center horizontally within parent */
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0px;
+    justify-content: center;
+}
+
+.gy-container2 {
+    margin-top: 10%; /* Adjust top margin as needed */
+    width: 100%; /* Ensure full width */
+    max-width: 1200px; /* Adjust max-width as needed */
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0;
+    justify-content: center;
+
+    @media (max-width: 1260px) {
+        margin-left: 300px;
+    }
+    @media (min-width: 1321px) {
+        margin-left: 450px ;
+    }
+}
+
+.gy-hr {
+    height: 1px;
+    background-color: rgba(16, 86, 82, .75);
+;
+    border: none;
+}
+
+
+.gy-card {
+    width: 800px;
+    background: rgb(255, 250, 235);
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+
+}
+
+.gy-card2 {
+    width: 1500px;
+    background: rgb(255, 250, 235);
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+
+}
+
+.gy-title_form {
+    width: 100%;
+    height: 70px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    border-bottom: 1px solid rgba(16, 86, 82, .75);
+;
+    font-weight: 700;
+    font-size: 20px;
+    color: #000000;
+}
+
+/* Cart */
+.gy-cart {
+    border-radius: 19px 19px 0px 0px;
+}
+
+.gy-cart .gy-steps {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.gy-cart .gy-steps .gy-step {
+    display: grid;
+    gap: 10px;
+}
+
+.gy-cart .gy-steps .gy-step span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.gy-cart .gy-steps .gy-step p {
+    font-size: 11px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Promo */
+.gy-promo gy-form {
+    display: grid;
+    grid-template-columns: 1fr ;
+    gap: 10px;
+    padding: 0px;
+}
+
+.gy-input_field {
+    width: 100%;
+    height: 36px;
+    padding: 0 0 0 12px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid  rgb(16, 86, 82);
+    background-color: rgb(251, 243, 228);
+    transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+.gy-input_field:focus {
+    border: 1px solid transparent;
+    box-shadow: 0px 0px 0px 2px rgb(251, 243, 228);
+    background-color: rgb(201, 193, 178);
+}
+
+.gy-promo gy-form gy-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 18px;
+    gap: 10px;
+    width: 100%;
+    height: 36px;
+    background: rgba(16, 86, 82, .75);
+    box-shadow: 0px 0.5px 0.5px #F3D2C9, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+    border-radius: 5px;
+    border: 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: #000000;
+}
+.gy-button_right {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 18px;
+    gap: 10px;
+    width: 100%;
+    height: 36px;
+    background: rgba(16, 86, 82, .75);
+    box-shadow: 0px 0.5px 0.5px #F3D2C9, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+    border-radius: 5px;
+    border: 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: #000000;
+}
+
+/* Checkout */
+.gy-payments .gy-details {
+    display: grid;
+    grid-template-columns: 10fr 1fr;
+    padding: 0px;
+    gap: 5px;
+}
+
+.gy-payments .gy-details span:nth-child(odd) {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000000;
+    margin: auto auto auto 0;
+}
+
+.gy-payments .gy-details span:nth-child(even) {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin: auto 0 auto auto;
+}
+
+.gy-checkout .gy-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Changed from space-between to flex-end */
+    padding: 10px 10px 10px 20px;
+    background-color: rgba(16, 86, 82, .5);
+}
+
+.gy-price {
+    position: relative;
+    font-size: 22px;
+    color: #2B2B2F;
+    font-weight: 900;
+}
+
+
+.gy-checkout .gy-checkout-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 36px;
+    background: rgba(16, 86, 82, .55);
+    box-shadow: 0px 0.5px 0.5px rgba(16, 86, 82, .75), 0px 1px 0.5px rgba(16, 86, 82, .75);
+    border-radius: 7px;
+    border: 1px solid rgb(16, 86, 82);
+    color: #000000;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+
+
+
+
+/*suzu check */
+/*suzu check */
+/*suzu check */
+/*suzu check */
+/*suzu check */
+
+
+.gy-centered {
+    display: flex; /* Flexbox 컨테이너로 설정 */
+    justify-content: center; /* 가로 방향 가운데 정렬 */
+    align-items: center; /* 세로 방향 가운데 정렬 */
+}
+
+.gy-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem auto;
+    background-color: white;
+}
+
+.gy-th, .gy-td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.gy-th {
+    background-color: #1b1b1b;
+    color: #ddd;
+}
+
+.gy-tbody .gy-tr:hover {
+    background-color: #d3d3d3;
+    cursor: pointer;
+}
+
+/* Adjust column widths */
+.gy-th:nth-child(1),
+.gy-td:nth-child(1) {
+    width: 5%; /* Adjusted for 번호 */
+}
+
+.gy-th:nth-child(2),
+.gy-td:nth-child(2) {
+    width: 15%; /* Adjusted for 발주처 */
+}
+
+.gy-th:nth-child(3),
+.gy-td:nth-child(3) {
+    width: 15%; /* Adjusted for 제품명 */
+}
+
+.gy-th:nth-child(4),
+.gy-td:nth-child(4) {
+    width: 10%; /* Adjusted for 수량(BOX) */
+}
+
+.gy-th:nth-child(5),
+.gy-td:nth-child(5) {
+    width: 10%; /* Adjusted for 수주일 */
+}
+
+.gy-th:nth-child(6),
+.gy-td:nth-child(6) {
+    width: 10%; /* Adjusted for 예상 납기일 */
+}
+
+.gy-th:nth-child(7),
+.gy-td:nth-child(7) {
+    width: 10%; /* Adjusted for 공정 상태 */
+}
+
+.gy-th:nth-child(8),
+.gy-td:nth-child(8),
+.gy-th:nth-child(9),
+.gy-td:nth-child(9) {
+    width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
+}
+
+.gy-search-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to right, #5c5c5c, #f5f5f5);
+    padding: 30px;
+    border-radius: 15px;
+    transition: background 0.3s ease;
+    perspective: 1000px;
+}
+
+.gy-label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    transition: transform 0.3s ease, font-size 0.3s ease, color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.gy-search-input {
+    position: relative;
+    width: 230px;
+    height: 40px;
+    padding: 12px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background: linear-gradient(to right, #d9d9d9, #f8f8f8);
+    font-size: 16px;
+    color: #555;
+    outline: none;
+    transition: box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, transform 0.3s ease;
+    transform-style: preserve-3d;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow for a realistic feel */
+}
+
+.gy-search-input:focus,
+.gy-search-input:not(:placeholder-shown) {
+    border-color: #4caf50;
+    background: linear-gradient(to right, #c2f0c2, #f0f0f0);
+    transform: rotateX(20deg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on focus */
+}
+
+.gy-search-input:focus + .label,
+.gy-search-input:not(:placeholder-shown) + .label {
+    transform: translateY(-120%) scale(0.8);
+    font-size: 12px;
+    color: #4caf50;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
+}
+
+.gy-search-input:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on hover */
+    background: linear-gradient(to right, #e6e6e6, #f9f9f9);
+    border-color: #999;
+}
+
+.gy-clear-button {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: #999;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+.gy-clear-button:hover {
+    color: #4caf50;
+    transform: scale(1.1);
+}
+
+.gy-search-input:not(:focus):not(:placeholder-shown) + .gy-clear-button {
+    opacity: 1;
+}
+
+.gy-shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            to bottom right,
+            rgba(255, 255, 255, 0.6),
+            transparent
+    );
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gy-search-input:focus + .gy-shine {
+    opacity: 1;
+}
+
+.gy-search-icon {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+    border-radius: 50%;
+}
+
+.gy-search-input:focus + .gy-search-icon {
+    color: #4caf50;
+    transform: translateY(-50%) scale(1.1);
+    filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.6));
+}
+
+@keyframes inputPulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.gy-search-input:focus {
+    animation: inputPulse 0.5s ease;
+}
+
+/*nice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+/*nice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+/*nice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+/*nice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+/*nice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+
+
+
+.nice-form-group {
+    --nf-input-size:1rem;
+    --nf-input-font-size:calc(var(--nf-input-size)*0.875);
+    --nf-small-font-size:calc(var(--nf-input-size)*0.875);
+    --nf-input-font-family:inherit;
+    --nf-label-font-family:inherit;
+    --nf-input-color:#20242f;
+    --nf-input-border-radius:0.25rem;
+    --nf-input-placeholder-color:#929292;
+    --nf-input-border-color:#c0c4c9;
+    --nf-input-border-width:1px;
+    --nf-input-border-style:solid;
+    --nf-input-border-bottom-width:2px;
+    --nf-input-focus-border-color:#3b4ce2;
+    --nf-input-background-color:#f9fafb;
+    --nf-invalid-input-border-color:var(--nf-input-border-color);
+    --nf-invalid-input-background-color:var(--nf-input-background-color);
+    --nf-invalid-input-color:var(--nf-input-color);
+    --nf-valid-input-border-color:var(--nf-input-border-color);
+    --nf-valid-input-background-color:var(--nf-input-background-color);
+    --nf-valid-input-color:inherit;
+    --nf-invalid-input-border-bottom-color:red;
+    --nf-valid-input-border-bottom-color:green;
+    --nf-label-font-size:var(--nf-small-font-size);
+    --nf-label-color:#374151;
+    --nf-label-font-weight:500;
+    --nf-slider-track-background:#dfdfdf;
+    --nf-slider-track-height:0.25rem;
+    --nf-slider-thumb-size:calc(var(--nf-slider-track-height)*4);
+    --nf-slider-track-border-radius:var(--nf-slider-track-height);
+    --nf-slider-thumb-border-width:2px;
+    --nf-slider-thumb-border-focus-width:1px;
+    --nf-slider-thumb-border-color:#fff;
+    --nf-slider-thumb-background:var(--nf-input-focus-border-color);
+    display: block;
+    margin-top: calc(var(--nf-input-size)*1.5);
+    line-height: 1;
+    white-space: nowrap;
+    --switch-orb-size:var(--nf-input-size);
+    --switch-orb-offset:calc(var(--nf-input-border-width)*2);
+    --switch-width:calc(var(--nf-input-size)*2.5);
+    --switch-height:calc(var(--nf-input-size)*1.25 + var(--switch-orb-offset));
+}
+
+.nice-form-group > label {
+    font-weight: var(--nf-label-font-weight);
+    display: block;
+    color: var(--nf-label-color);
+    font-size: var(--nf-label-font-size);
+    font-family: var(--nf-label-font-family);
+    margin-bottom: calc(var(--nf-input-size)/2);
+    white-space: normal;
+}
+
+.nice-form-group > label + small {
+    font-style: normal;
+}
+
+.nice-form-group small {
+    font-family: var(--nf-input-font-family);
+    display: block;
+    font-weight: 400;
+    opacity: 0.75;
+    font-size: var(--nf-small-font-size);
+    margin-bottom: calc(var(--nf-input-size)*0.75);
+}
+
+.nice-form-group small:last-child {
+    margin-bottom: 0;
+}
+
+.nice-form-group > legend {
+    font-weight: var(--nf-label-font-weight);
+    display: block;
+    color: var(--nf-label-color);
+    font-size: var(--nf-label-font-size);
+    font-family: var(--nf-label-font-family);
+    margin-bottom: calc(var(--nf-input-size)/5);
+}
+
+.nice-form-group > .nice-form-group {
+    margin-top: calc(var(--nf-input-size)/2);
+}
+
+.nice-form-group > input[type=checkbox], .nice-form-group > input[type=date], .nice-form-group > input[type=email], .nice-form-group > input[type=month], .nice-form-group > input[type=number], .nice-form-group > input[type=password], .nice-form-group > input[type=radio], .nice-form-group > input[type=search], .nice-form-group > input[type=tel], .nice-form-group > input[type=text], .nice-form-group > input[type=time], .nice-form-group > input[type=url], .nice-form-group > input[type=week], .nice-form-group > select, .nice-form-group > textarea {
+    background: var(--nf-input-background-color);
+    font-family: inherit;
+    font-size: var(--nf-input-font-size);
+    border-bottom-width: var(--nf-input-border-width);
+    font-family: var(--nf-input-font-family);
+    box-shadow: none;
+    border-radius: var(--nf-input-border-radius);
+    border: var(--nf-input-border-width) var(--nf-input-border-style) var(--nf-input-border-color);
+    border-bottom: var(--nf-input-border-bottom-width) var(--nf-input-border-style) var(--nf-input-border-color);
+    color: var(--nf-input-color);
+    width: 100%;
+    padding: calc(var(--nf-input-size)*0.75);
+    height: calc(var(--nf-input-size)*2.75);
+    line-height: normal;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: all 0.15s ease-out;
+    --icon-padding:calc(var(--nf-input-size)*2.25);
+    --icon-background-offset:calc(var(--nf-input-size)*0.75);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=date]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=email]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=month]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=number]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=password]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=radio]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=search]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=tel]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=text]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=time]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=url]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > input[type=week]:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > select:required:not(:-moz-placeholder-shown):invalid, .nice-form-group > textarea:required:not(:-moz-placeholder-shown):invalid {
+    background-color: var(--nf-invalid-input-background-color);
+    border-bottom-color: var(--nf-valid-input-border-color);
+    border-color: var(--nf-valid-input-border-color) var(--nf-valid-input-border-color) var(--nf-invalid-input-border-bottom-color);
+    color: var(--nf-invalid-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=date]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=email]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=month]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=number]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=password]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=radio]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=search]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=tel]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=text]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=time]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=url]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > input[type=week]:required:not(:-ms-input-placeholder):invalid, .nice-form-group > select:required:not(:-ms-input-placeholder):invalid, .nice-form-group > textarea:required:not(:-ms-input-placeholder):invalid {
+    background-color: var(--nf-invalid-input-background-color);
+    border-bottom-color: var(--nf-valid-input-border-color);
+    border-color: var(--nf-valid-input-border-color) var(--nf-valid-input-border-color) var(--nf-invalid-input-border-bottom-color);
+    color: var(--nf-invalid-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=date]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=email]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=month]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=number]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=password]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=radio]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=search]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=tel]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=text]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=time]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=url]:required:not(:placeholder-shown):invalid, .nice-form-group > input[type=week]:required:not(:placeholder-shown):invalid, .nice-form-group > select:required:not(:placeholder-shown):invalid, .nice-form-group > textarea:required:not(:placeholder-shown):invalid {
+    background-color: var(--nf-invalid-input-background-color);
+    border-bottom-color: var(--nf-valid-input-border-color);
+    border-color: var(--nf-valid-input-border-color) var(--nf-valid-input-border-color) var(--nf-invalid-input-border-bottom-color);
+    color: var(--nf-invalid-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=date]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=email]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=month]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=number]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=password]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=radio]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=search]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=tel]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=text]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=time]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=url]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > input[type=week]:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > select:required:not(:-moz-placeholder-shown):invalid:focus, .nice-form-group > textarea:required:not(:-moz-placeholder-shown):invalid:focus {
+    background-color: var(--nf-input-background-color);
+    border-color: var(--nf-input-border-color);
+    color: var(--nf-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=date]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=email]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=month]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=number]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=password]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=radio]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=search]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=tel]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=text]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=time]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=url]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > input[type=week]:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > select:required:not(:-ms-input-placeholder):invalid:focus, .nice-form-group > textarea:required:not(:-ms-input-placeholder):invalid:focus {
+    background-color: var(--nf-input-background-color);
+    border-color: var(--nf-input-border-color);
+    color: var(--nf-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=date]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=email]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=month]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=number]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=password]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=radio]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=search]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=tel]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=text]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=time]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=url]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > input[type=week]:required:not(:placeholder-shown):invalid:focus, .nice-form-group > select:required:not(:placeholder-shown):invalid:focus, .nice-form-group > textarea:required:not(:placeholder-shown):invalid:focus {
+    background-color: var(--nf-input-background-color);
+    border-color: var(--nf-input-border-color);
+    color: var(--nf-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=date]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=email]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=month]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=number]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=password]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=radio]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=search]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=tel]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=text]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=time]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=url]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > input[type=week]:required:not(:-moz-placeholder-shown):valid, .nice-form-group > select:required:not(:-moz-placeholder-shown):valid, .nice-form-group > textarea:required:not(:-moz-placeholder-shown):valid {
+    background-color: var(--nf-valid-input-background-color);
+    border-bottom-color: var(--nf-valid-input-border-color);
+    border-color: var(--nf-valid-input-border-color) var(--nf-valid-input-border-color) var(--nf-valid-input-border-bottom-color);
+    color: var(--nf-valid-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=date]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=email]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=month]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=number]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=password]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=radio]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=search]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=tel]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=text]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=time]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=url]:required:not(:-ms-input-placeholder):valid, .nice-form-group > input[type=week]:required:not(:-ms-input-placeholder):valid, .nice-form-group > select:required:not(:-ms-input-placeholder):valid, .nice-form-group > textarea:required:not(:-ms-input-placeholder):valid {
+    background-color: var(--nf-valid-input-background-color);
+    border-bottom-color: var(--nf-valid-input-border-color);
+    border-color: var(--nf-valid-input-border-color) var(--nf-valid-input-border-color) var(--nf-valid-input-border-bottom-color);
+    color: var(--nf-valid-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=date]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=email]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=month]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=number]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=password]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=radio]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=search]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=tel]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=text]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=time]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=url]:required:not(:placeholder-shown):valid, .nice-form-group > input[type=week]:required:not(:placeholder-shown):valid, .nice-form-group > select:required:not(:placeholder-shown):valid, .nice-form-group > textarea:required:not(:placeholder-shown):valid {
+    background-color: var(--nf-valid-input-background-color);
+    border-bottom-color: var(--nf-valid-input-border-color);
+    border-color: var(--nf-valid-input-border-color) var(--nf-valid-input-border-color) var(--nf-valid-input-border-bottom-color);
+    color: var(--nf-valid-input-color);
+}
+
+.nice-form-group > input[type=checkbox]:disabled, .nice-form-group > input[type=date]:disabled, .nice-form-group > input[type=email]:disabled, .nice-form-group > input[type=month]:disabled, .nice-form-group > input[type=number]:disabled, .nice-form-group > input[type=password]:disabled, .nice-form-group > input[type=radio]:disabled, .nice-form-group > input[type=search]:disabled, .nice-form-group > input[type=tel]:disabled, .nice-form-group > input[type=text]:disabled, .nice-form-group > input[type=time]:disabled, .nice-form-group > input[type=url]:disabled, .nice-form-group > input[type=week]:disabled, .nice-form-group > select:disabled, .nice-form-group > textarea:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.nice-form-group > input[type=checkbox]::-webkit-input-placeholder, .nice-form-group > input[type=date]::-webkit-input-placeholder, .nice-form-group > input[type=email]::-webkit-input-placeholder, .nice-form-group > input[type=month]::-webkit-input-placeholder, .nice-form-group > input[type=number]::-webkit-input-placeholder, .nice-form-group > input[type=password]::-webkit-input-placeholder, .nice-form-group > input[type=radio]::-webkit-input-placeholder, .nice-form-group > input[type=search]::-webkit-input-placeholder, .nice-form-group > input[type=tel]::-webkit-input-placeholder, .nice-form-group > input[type=text]::-webkit-input-placeholder, .nice-form-group > input[type=time]::-webkit-input-placeholder, .nice-form-group > input[type=url]::-webkit-input-placeholder, .nice-form-group > input[type=week]::-webkit-input-placeholder, .nice-form-group > select::-webkit-input-placeholder, .nice-form-group > textarea::-webkit-input-placeholder {
+    color: var(--nf-input-placeholder-color);
+    letter-spacing: 0;
+}
+
+.nice-form-group > input[type=checkbox]:-ms-input-placeholder, .nice-form-group > input[type=date]:-ms-input-placeholder, .nice-form-group > input[type=email]:-ms-input-placeholder, .nice-form-group > input[type=month]:-ms-input-placeholder, .nice-form-group > input[type=number]:-ms-input-placeholder, .nice-form-group > input[type=password]:-ms-input-placeholder, .nice-form-group > input[type=radio]:-ms-input-placeholder, .nice-form-group > input[type=search]:-ms-input-placeholder, .nice-form-group > input[type=tel]:-ms-input-placeholder, .nice-form-group > input[type=text]:-ms-input-placeholder, .nice-form-group > input[type=time]:-ms-input-placeholder, .nice-form-group > input[type=url]:-ms-input-placeholder, .nice-form-group > input[type=week]:-ms-input-placeholder, .nice-form-group > select:-ms-input-placeholder, .nice-form-group > textarea:-ms-input-placeholder {
+    color: var(--nf-input-placeholder-color);
+    letter-spacing: 0;
+}
+
+.nice-form-group > input[type=checkbox]:-moz-placeholder, .nice-form-group > input[type=checkbox]::-moz-placeholder, .nice-form-group > input[type=date]:-moz-placeholder, .nice-form-group > input[type=date]::-moz-placeholder, .nice-form-group > input[type=email]:-moz-placeholder, .nice-form-group > input[type=email]::-moz-placeholder, .nice-form-group > input[type=month]:-moz-placeholder, .nice-form-group > input[type=month]::-moz-placeholder, .nice-form-group > input[type=number]:-moz-placeholder, .nice-form-group > input[type=number]::-moz-placeholder, .nice-form-group > input[type=password]:-moz-placeholder, .nice-form-group > input[type=password]::-moz-placeholder, .nice-form-group > input[type=radio]:-moz-placeholder, .nice-form-group > input[type=radio]::-moz-placeholder, .nice-form-group > input[type=search]:-moz-placeholder, .nice-form-group > input[type=search]::-moz-placeholder, .nice-form-group > input[type=tel]:-moz-placeholder, .nice-form-group > input[type=tel]::-moz-placeholder, .nice-form-group > input[type=text]:-moz-placeholder, .nice-form-group > input[type=text]::-moz-placeholder, .nice-form-group > input[type=time]:-moz-placeholder, .nice-form-group > input[type=time]::-moz-placeholder, .nice-form-group > input[type=url]:-moz-placeholder, .nice-form-group > input[type=url]::-moz-placeholder, .nice-form-group > input[type=week]:-moz-placeholder, .nice-form-group > input[type=week]::-moz-placeholder, .nice-form-group > select:-moz-placeholder, .nice-form-group > select::-moz-placeholder, .nice-form-group > textarea:-moz-placeholder, .nice-form-group > textarea::-moz-placeholder {
+    color: var(--nf-input-placeholder-color);
+    letter-spacing: 0;
+}
+
+.nice-form-group > input[type=checkbox]:focus, .nice-form-group > input[type=date]:focus, .nice-form-group > input[type=email]:focus, .nice-form-group > input[type=month]:focus, .nice-form-group > input[type=number]:focus, .nice-form-group > input[type=password]:focus, .nice-form-group > input[type=radio]:focus, .nice-form-group > input[type=search]:focus, .nice-form-group > input[type=tel]:focus, .nice-form-group > input[type=text]:focus, .nice-form-group > input[type=time]:focus, .nice-form-group > input[type=url]:focus, .nice-form-group > input[type=week]:focus, .nice-form-group > select:focus, .nice-form-group > textarea:focus {
+    outline: none;
+    border-color: var(--nf-input-focus-border-color);
+}
+
+.nice-form-group > input[type=checkbox] + small, .nice-form-group > input[type=date] + small, .nice-form-group > input[type=email] + small, .nice-form-group > input[type=month] + small, .nice-form-group > input[type=number] + small, .nice-form-group > input[type=password] + small, .nice-form-group > input[type=radio] + small, .nice-form-group > input[type=search] + small, .nice-form-group > input[type=tel] + small, .nice-form-group > input[type=text] + small, .nice-form-group > input[type=time] + small, .nice-form-group > input[type=url] + small, .nice-form-group > input[type=week] + small, .nice-form-group > select + small, .nice-form-group > textarea + small {
+    margin-top: 0.5rem;
+}
+
+.nice-form-group > input[type=checkbox].icon-left, .nice-form-group > input[type=date].icon-left, .nice-form-group > input[type=email].icon-left, .nice-form-group > input[type=month].icon-left, .nice-form-group > input[type=number].icon-left, .nice-form-group > input[type=password].icon-left, .nice-form-group > input[type=radio].icon-left, .nice-form-group > input[type=search].icon-left, .nice-form-group > input[type=tel].icon-left, .nice-form-group > input[type=text].icon-left, .nice-form-group > input[type=time].icon-left, .nice-form-group > input[type=url].icon-left, .nice-form-group > input[type=week].icon-left, .nice-form-group > select.icon-left, .nice-form-group > textarea.icon-left {
+    background-position: left var(--icon-background-offset) bottom 50%;
+    padding-left: var(--icon-padding);
+    background-size: var(--nf-input-size);
+}
+
+.nice-form-group > input[type=checkbox].icon-right, .nice-form-group > input[type=date].icon-right, .nice-form-group > input[type=email].icon-right, .nice-form-group > input[type=month].icon-right, .nice-form-group > input[type=number].icon-right, .nice-form-group > input[type=password].icon-right, .nice-form-group > input[type=radio].icon-right, .nice-form-group > input[type=search].icon-right, .nice-form-group > input[type=tel].icon-right, .nice-form-group > input[type=text].icon-right, .nice-form-group > input[type=time].icon-right, .nice-form-group > input[type=url].icon-right, .nice-form-group > input[type=week].icon-right, .nice-form-group > select.icon-right, .nice-form-group > textarea.icon-right {
+    background-position: right var(--icon-background-offset) bottom 50%;
+    padding-right: var(--icon-padding);
+    background-size: var(--nf-input-size);
+}
+
+.nice-form-group > input[type=checkbox]:-webkit-autofill, .nice-form-group > input[type=date]:-webkit-autofill, .nice-form-group > input[type=email]:-webkit-autofill, .nice-form-group > input[type=month]:-webkit-autofill, .nice-form-group > input[type=number]:-webkit-autofill, .nice-form-group > input[type=password]:-webkit-autofill, .nice-form-group > input[type=radio]:-webkit-autofill, .nice-form-group > input[type=search]:-webkit-autofill, .nice-form-group > input[type=tel]:-webkit-autofill, .nice-form-group > input[type=text]:-webkit-autofill, .nice-form-group > input[type=time]:-webkit-autofill, .nice-form-group > input[type=url]:-webkit-autofill, .nice-form-group > input[type=week]:-webkit-autofill, .nice-form-group > select:-webkit-autofill, .nice-form-group > textarea:-webkit-autofill {
+    padding: calc(var(--nf-input-size)*0.75) !important;
+}
+
+.nice-form-group > input[type=search]:-moz-placeholder-shown {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-position: left calc(var(--nf-input-size)*0.75) bottom 50%;
+    padding-left: calc(var(--nf-input-size)*2.25);
+    background-size: var(--nf-input-size);
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=search]:-ms-input-placeholder {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-position: left calc(var(--nf-input-size)*0.75) bottom 50%;
+    padding-left: calc(var(--nf-input-size)*2.25);
+    background-size: var(--nf-input-size);
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=search]:placeholder-shown {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-position: left calc(var(--nf-input-size)*0.75) bottom 50%;
+    padding-left: calc(var(--nf-input-size)*2.25);
+    background-size: var(--nf-input-size);
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    width: var(--nf-input-size);
+    height: var(--nf-input-size);
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-x'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E");
+}
+
+.nice-form-group > input[type=search]:focus {
+    padding-left: calc(var(--nf-input-size)*0.75);
+    background-position: left calc(var(--nf-input-size)*-1) bottom 50%;
+}
+
+.nice-form-group > input[type=email][class^=icon] {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-at-sign'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M16 8v5a3 3 0 006 0v-1a10 10 0 10-3.92 7.94'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=tel][class^=icon] {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-phone'%3E%3Cpath d='M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=url][class^=icon] {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-link'%3E%3Cpath d='M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=password] {
+    letter-spacing: 2px;
+}
+
+.nice-form-group > input[type=password][class^=icon] {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-lock'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0110 0v4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+
+.nice-form-group > input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.nice-form-group > input[type=range]:focus {
+    outline: none;
+}
+
+.nice-form-group > input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: var(--nf-slider-track-height);
+    background: var(--nf-slider-track-background);
+    border-radius: var(--nf-slider-track-border-radius);
+}
+
+.nice-form-group > input[type=range]::-moz-range-track {
+    width: 100%;
+    height: var(--nf-slider-track-height);
+    background: var(--nf-slider-track-background);
+    border-radius: var(--nf-slider-track-border-radius);
+}
+
+.nice-form-group > input[type=range]::-webkit-slider-thumb {
+    height: var(--nf-slider-thumb-size);
+    width: var(--nf-slider-thumb-size);
+    border-radius: var(--nf-slider-thumb-size);
+    background: var(--nf-slider-thumb-background);
+    border: 0;
+    border: var(--nf-slider-thumb-border-width) solid var(--nf-slider-thumb-border-color);
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: calc(var(--nf-slider-track-height)*0.5 - var(--nf-slider-thumb-size)*0.5);
+}
+
+.nice-form-group > input[type=range]::-moz-range-thumb {
+    height: var(--nf-slider-thumb-size);
+    width: var(--nf-slider-thumb-size);
+    border-radius: var(--nf-slider-thumb-size);
+    background: var(--nf-slider-thumb-background);
+    border: 0;
+    border: var(--nf-slider-thumb-border-width) solid var(--nf-slider-thumb-border-color);
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+}
+
+.nice-form-group > input[type=range]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 var(--nf-slider-thumb-border-focus-width) var(--nf-slider-thumb-background);
+}
+
+.nice-form-group > input[type=range]:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 var(--nf-slider-thumb-border-focus-width) var(--nf-slider-thumb-background);
+}
+
+.nice-form-group > input[type=color] {
+    border: var(--nf-input-border-width) solid var(--nf-input-border-color);
+    border-bottom-width: var(--nf-input-border-bottom-width);
+    height: calc(var(--nf-input-size)*2);
+    border-radius: var(--nf-input-border-radius);
+    padding: calc(var(--nf-input-border-width)*2);
+}
+
+.nice-form-group > input[type=color]:focus {
+    outline: none;
+    border-color: var(--nf-input-focus-border-color);
+}
+
+.nice-form-group > input[type=color]::-webkit-color-swatch-wrapper {
+    padding: 5%;
+}
+
+.nice-form-group > input[type=color]::-moz-color-swatch {
+    border-radius: calc(var(--nf-input-border-radius)/2);
+    border: none;
+}
+
+.nice-form-group > input[type=color]::-webkit-color-swatch {
+    border-radius: calc(var(--nf-input-border-radius)/2);
+    border: none;
+}
+
+.nice-form-group > input[type=number] {
+    width: auto;
+}
+
+.nice-form-group > input[type=date], .nice-form-group > input[type=month], .nice-form-group > input[type=week] {
+    min-width: 14em;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-calendar'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+}
+
+.nice-form-group > input[type=time] {
+    min-width: 6em;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-clock'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E");
+}
+
+.nice-form-group > input[type=date], .nice-form-group > input[type=month], .nice-form-group > input[type=time], .nice-form-group > input[type=week] {
+    background-position: right calc(var(--nf-input-size)*0.75) bottom 50%;
+    background-repeat: no-repeat;
+    background-size: var(--nf-input-size);
+    width: auto;
+}
+
+.nice-form-group > input[type=date]::-webkit-calendar-picker-indicator, .nice-form-group > input[type=date]::-webkit-inner-spin-button, .nice-form-group > input[type=month]::-webkit-calendar-picker-indicator, .nice-form-group > input[type=month]::-webkit-inner-spin-button, .nice-form-group > input[type=time]::-webkit-calendar-picker-indicator, .nice-form-group > input[type=time]::-webkit-inner-spin-button, .nice-form-group > input[type=week]::-webkit-calendar-picker-indicator, .nice-form-group > input[type=week]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    cursor: pointer;
+    opacity: 0;
+}
+
+@-moz-document url-prefix() {
+    .nice-form-group > input[type=date], .nice-form-group > input[type=month], .nice-form-group > input[type=time], .nice-form-group > input[type=week] {
+        min-width: auto;
+        width: auto;
+        background-image: none;
+    }
+}
+.nice-form-group > textarea {
+    height: auto;
+}
+
+.nice-form-group > input[type=checkbox], .nice-form-group > input[type=radio] {
+    width: var(--nf-input-size);
+    height: var(--nf-input-size);
+    padding: inherit;
+    margin: 0;
+    display: inline-block;
+    vertical-align: top;
+    border-radius: calc(var(--nf-input-border-radius)/2);
+    border-width: var(--nf-input-border-width);
+    cursor: pointer;
+    background-position: 50%;
+}
+
+.nice-form-group > input[type=checkbox]:focus:not(:checked), .nice-form-group > input[type=radio]:focus:not(:checked) {
+    border: var(--nf-input-border-width) solid var(--nf-input-focus-border-color);
+    outline: none;
+}
+
+.nice-form-group > input[type=checkbox]:hover, .nice-form-group > input[type=radio]:hover {
+    border: var(--nf-input-border-width) solid var(--nf-input-focus-border-color);
+}
+
+.nice-form-group > input[type=checkbox] + label, .nice-form-group > input[type=radio] + label {
+    display: inline-block;
+    margin-bottom: 0;
+    padding-left: calc(var(--nf-input-size)/2.5);
+    font-weight: 400;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    max-width: calc(100% - var(--nf-input-size)*2);
+    line-height: normal;
+}
+
+.nice-form-group > input[type=checkbox] + label > small, .nice-form-group > input[type=radio] + label > small {
+    margin-top: calc(var(--nf-input-size)/4);
+}
+
+.nice-form-group > input[type=checkbox]:checked {
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23FFF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' class='feather feather-check'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") no-repeat 50%/85%;
+    background-color: var(--nf-input-focus-border-color);
+    border-color: var(--nf-input-focus-border-color);
+}
+
+.nice-form-group > input[type=radio] {
+    border-radius: 100%;
+}
+
+.nice-form-group > input[type=radio]:checked {
+    background-color: var(--nf-input-focus-border-color);
+    border-color: var(--nf-input-focus-border-color);
+    box-shadow: inset 0 0 0 3px #fff;
+}
+
+.nice-form-group > input[type=checkbox].switch {
+    width: var(--switch-width);
+    height: var(--switch-height);
+    border-radius: var(--switch-height);
+    position: relative;
+}
+
+.nice-form-group > input[type=checkbox].switch:after {
+    background: var(--nf-input-border-color);
+    border-radius: var(--switch-orb-size);
+    height: var(--switch-orb-size);
+    left: var(--switch-orb-offset);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--switch-orb-size);
+    content: "";
+    transition: all 0.2s ease-out;
+}
+
+.nice-form-group > input[type=checkbox].switch + label {
+    margin-top: calc(var(--switch-height)/8);
+}
+
+.nice-form-group > input[type=checkbox].switch:checked {
+    background: none;
+    background-position: 0 0;
+    background-color: var(--nf-input-focus-border-color);
+}
+
+.nice-form-group > input[type=checkbox].switch:checked:after {
+    transform: translateY(-50%) translateX(calc(var(--switch-width)/2 - var(--switch-orb-offset)));
+    background: #fff;
+}
+
+.nice-form-group > input[type=file] {
+    background: rgba(0, 0, 0, 0.025);
+    padding: var(--nf-input-size);
+    display: block;
+    width: 100%;
+    border-radius: var(--nf-input-border-radius);
+    border: 1px dashed var(--nf-input-border-color);
+    outline: none;
+    cursor: pointer;
+}
+
+.nice-form-group > input[type=file]:focus, .nice-form-group > input[type=file]:hover {
+    border-color: var(--nf-input-focus-border-color);
+}
+
+.nice-form-group > input[type=file]::file-selector-button {
+    background: var(--nf-input-focus-border-color);
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.5rem;
+    border-radius: var(--nf-input-border-radius);
+    color: #fff;
+    margin-right: 1rem;
+    outline: none;
+    font-family: var(--nf-input-font-family);
+    cursor: pointer;
+}
+
+.nice-form-group > input[type=file]::-webkit-file-upload-button {
+    background: var(--nf-input-focus-border-color);
+    border: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0.5rem;
+    border-radius: var(--nf-input-border-radius);
+    color: #fff;
+    margin-right: 1rem;
+    outline: none;
+    font-family: var(--nf-input-font-family);
+    cursor: pointer;
+}
+
+.nice-form-group > select {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right calc(var(--nf-input-size)*0.75) bottom 50%;
+    background-repeat: no-repeat;
+    background-size: var(--nf-input-size);
+}
+
+
+
+
+
+

@@ -28,6 +28,7 @@ public class RawRegisterController {
     private final OrderService orderService;
     private final OrderRepository orderRepository;
 
+    /*원자재 발주관리 발주등록버튼 선택지 연결*/
     @PostMapping("/register")
     public ResponseEntity<?> insertRawOrder(@RequestBody RawOrderInsertDTO rawOrderInsertDTO) {
         try {
@@ -55,10 +56,14 @@ public class RawRegisterController {
     public ResponseEntity<?> calculateBOMs() {
         return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
     }
+
+    /*발주계획서*/
     @GetMapping("/calculate")
     public ResponseEntity<?> getMinus() {
         return new ResponseEntity<>(rawOrderInsertService.getMinus(), HttpStatus.OK);
     }
+
+    /*입출고관리 연결*/
     @GetMapping("/rawstock/{page}")
     public ResponseEntity<?> getRawStockList(@PathVariable(name = "page") Optional<Integer> page) {
 
@@ -73,6 +78,7 @@ public class RawRegisterController {
         }
     }
 
+    /*원자재 현황 조회 그래프 연결*/
     @GetMapping("/graph")
     public ResponseEntity<?> getRawStockGraph() {
 
@@ -93,10 +99,11 @@ public class RawRegisterController {
         }
     }
 
+    /*3일 이하 원자재*/
     @GetMapping("/rawperiod/{page}")
     public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
 
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,10);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
 
         try {
             return new ResponseEntity<>(rawOrderInsertService.getPeriodList(pageable), HttpStatus.OK);
