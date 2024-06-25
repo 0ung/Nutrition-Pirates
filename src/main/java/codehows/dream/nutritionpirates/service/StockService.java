@@ -3,6 +3,7 @@ package codehows.dream.nutritionpirates.service;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.entity.Stock;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 import codehows.dream.nutritionpirates.repository.StockRepository;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class StockService {
     private final StockRepository stockRepository;
     private final WorkPlanService workPlanService;
     private final WorkPlanRepository workPlanRepository;
+    private final ProgramTimeService programTimeService;
 
 
     /*public StockShowDTO getStockByWorkPlan(Long id) {
@@ -43,49 +46,60 @@ public class StockService {
     }*/
 
     private String parseRawsCodes(String rawsCodes) {
-        StringBuilder parsedCodes = new StringBuilder();
-        if (rawsCodes != null) {
-            for (char code : rawsCodes.toCharArray()) {
-                switch (code) {
-                    case 'G':
-                        parsedCodes.append("흑마늘, ");
-                        break;
-                    case 'C':
-                        parsedCodes.append("양배추, ");
-                        break;
-                    case 'S':
-                        parsedCodes.append("석류, ");
-                        break;
-                    case 'P':
-                        parsedCodes.append("매실, ");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            // 마지막 쉼표와 공백 제거
-            if (parsedCodes.length() > 0) {
-                parsedCodes.setLength(parsedCodes.length() - 2);
-            }
+        if (rawsCodes == null) {
+            return null;
         }
-        return parsedCodes.toString();
+
+        if (rawsCodes.contains("G")) {
+            return "흑마늘";
+        } else if (rawsCodes.contains("C")) {
+            return "양배추";
+        } else if (rawsCodes.contains("S")) {
+            return "석류";
+        } else if (rawsCodes.contains("P")) {
+            return "매실";
+        }
+
+        return "알 수 없음"; // 정의되지 않은 경우
     }
+
     public List<StockShowDTO> getStock(Pageable pageable) {
         Page<WorkPlan> workPlanPage = workPlanRepository.findAll(pageable);
         List<StockShowDTO> stockShowDTOList = new ArrayList<>();
 
         for (WorkPlan workPlan : workPlanPage) {
+            String product = null;
+
+            if (workPlan.getFacility() == Facility.washer) {
+                //rawCodes 값으로 상품명 값을 반환
+                product = parseRawsCodes(workPlan.getRawsCodes());
+            }
+
             if (workPlan.getFacility() == Facility.boxMachine) {
+
                 StockShowDTO dto = StockShowDTO.builder()
-                        .product(parseRawsCodes(workPlan.getRawsCodes()))
+                        .product(product)
                         .lotCode(workPlan.getLotCode() != null ? workPlan.getLotCode().getLotCode() : null)
                         .quantity(workPlan.getSemiProduct() * 0.97)
                         .createDate(new Date(workPlan.getEndTime().getTime()))
+
                         .build();
                 stockShowDTOList.add(dto);
             }
+
         }
         return stockShowDTOList;
     }
 
+    public void releaseStock (Long id) {
+        Stock stock = stockRepository.findById(id).orElse(null);
+
+        // 프로그램 시간설정 적용
+        Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
+        Date exportDate = new Date(timestamp.getTime());
+
+        stock.setExportDate(exportDate);
+        stock.setExport(true);
+        stockRepository.save(stock);
+    }
 }

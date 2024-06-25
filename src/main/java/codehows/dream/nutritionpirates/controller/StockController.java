@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -29,5 +30,11 @@ public class StockController {
     public ResponseEntity<List<StockShowDTO>> getStocks(Pageable pageable) {
         List<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
         return ResponseEntity.ok(stockShowDTOList);
+    }
+
+    @PutMapping("/stock/{id}")
+    public ResponseEntity<?> exportStock(@PathVariable(name = "id") Long id) {
+        stockService.releaseStock(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

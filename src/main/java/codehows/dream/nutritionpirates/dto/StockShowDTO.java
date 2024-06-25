@@ -19,4 +19,5 @@ public class StockShowDTO {
     private Date createDate;
     private Date exportDate;
     private boolean isExport;
+
 }
