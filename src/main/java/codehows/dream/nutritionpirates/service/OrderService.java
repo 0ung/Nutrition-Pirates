@@ -207,10 +207,15 @@ public class OrderService {
 	@Transactional
 	public Workbook getHistory() {
 		List<Order> list = orderRepository.findAll();
+		String time = programTimeService.getProgramTime()
+			.getCurrentProgramTime()
+			.toLocalDateTime()
+			.toLocalDate()
+			.toString();
 		Workbook workbook = new XSSFWorkbook();
 
 		// Create a sheet with a name
-		Sheet sheet = workbook.createSheet(LocalDate.now() + " 주문 내역");
+		Sheet sheet = workbook.createSheet(time + " 주문 내역");
 
 		// Create header row
 		Row headerRow = sheet.createRow(0);

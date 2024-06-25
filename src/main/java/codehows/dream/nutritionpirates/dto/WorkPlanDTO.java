@@ -36,9 +36,9 @@ public class WorkPlanDTO {
 			.rawsCodes(workPlan.getRawsCodes())
 			.facility(workPlan.getFacility())
 			.activate(workPlan.isActivate())
-			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
+			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLotCode() : null)
+			.processStatus(calProcess(workPlan, time))
 			.build();
-
 	}
 
 

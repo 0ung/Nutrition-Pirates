@@ -76,7 +76,7 @@ public class A4WorkPlan implements WorkPlans {
 		if (preWorkPlan == null) {
 			throw new NotFoundWorkPlanException();
 		}
-		String preLotCode = preWorkPlan.getLotCode().getLetCode();
+		String preLotCode = preWorkPlan.getLotCode().getLotCode();
 
 		return new LotCode(lotCode, preLotCode);
 	}
