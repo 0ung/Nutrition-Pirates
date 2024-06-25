@@ -19,22 +19,34 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/stock")
 @RequiredArgsConstructor
 @Log4j2
 public class StockController {
 
     private final StockService stockService;
 
-    @GetMapping("/stock/{page}")
+    @GetMapping("/{page}")
     public ResponseEntity<List<StockShowDTO>> getStocks(Pageable pageable) {
         List<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
         return ResponseEntity.ok(stockShowDTOList);
     }
 
-    @PutMapping("/stock/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> exportStock(@PathVariable(name = "id") Long id) {
         stockService.releaseStock(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    /*원자재 현황 조회 그래프 연결*/
+    @GetMapping("/graph")
+    public ResponseEntity<?> getRawStockGraph() {
+
+        try {
+            return new ResponseEntity<>(stockService.getGraphStock(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

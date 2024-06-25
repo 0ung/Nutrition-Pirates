@@ -2,6 +2,8 @@ package codehows.dream.nutritionpirates.service;
 
 
 import codehows.dream.nutritionpirates.constants.Facility;
+import codehows.dream.nutritionpirates.constants.ProductName;
+import codehows.dream.nutritionpirates.dto.StockGraphDTO;
 import codehows.dream.nutritionpirates.dto.StockShowDTO;
 import codehows.dream.nutritionpirates.entity.Stock;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -63,31 +67,24 @@ public class StockService {
         return "알 수 없음"; // 정의되지 않은 경우
     }
 
-    public List<StockShowDTO> getStock(Pageable pageable) {
-        Page<WorkPlan> workPlanPage = workPlanRepository.findAll(pageable);
+
+    // isExport 가 1(true) 이면 입고 0 (false) 이면 출고
+    public List<StockShowDTO> getStock(Pageable pageable){
+        Page<Stock> stocks = stockRepository.findAll(pageable);
         List<StockShowDTO> stockShowDTOList = new ArrayList<>();
 
-        for (WorkPlan workPlan : workPlanPage) {
-            String product = null;
-
-            if (workPlan.getFacility() == Facility.washer) {
-                //rawCodes 값으로 상품명 값을 반환
-                product = parseRawsCodes(workPlan.getRawsCodes());
-            }
-
-            if (workPlan.getFacility() == Facility.boxMachine) {
-
-                StockShowDTO dto = StockShowDTO.builder()
-                        .product(product)
-                        .lotCode(workPlan.getLotCode() != null ? workPlan.getLotCode().getLotCode() : null)
-                        .quantity(workPlan.getSemiProduct() * 0.97)
-                        .createDate(new Date(workPlan.getEndTime().getTime()))
-
-                        .build();
-                stockShowDTOList.add(dto);
-            }
-
-        }
+        stocks.forEach((e)->{
+            stockShowDTOList.add(
+                    StockShowDTO.builder()
+                            .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
+                            .lotCode(e.getWorkPlan().getLotCode().getLotCode())
+                            .quantity(e.getQuantity())
+                            .createDate(e.getCreateDate())
+                            .isExport(e.getExportDate() == null? false : true )
+                            .exportDate(e.getExportDate())
+                            .build()
+            );
+        });
         return stockShowDTOList;
     }
 
@@ -98,8 +95,31 @@ public class StockService {
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
         Date exportDate = new Date(timestamp.getTime());
 
-        stock.setExportDate(exportDate);
-        stock.setExport(true);
+        stock.updateIsExport(false, exportDate);
         stockRepository.save(stock);
     }
+
+    public List<StockGraphDTO> getGraphStock () {
+
+        Map<String, Integer> stockQuantityMap = new HashMap<>();
+        for (ProductName productName : ProductName.values()) {
+            stockQuantityMap.put(productName.getValue(), 0); // 기본값으로 설정
+        }
+
+        List<Stock> stockList = stockRepository.findAll();
+
+        for(Stock stock : stockList) {
+            if(stock.isExport() == false) {
+                String product = ProductName.CABBAGE_JUICE.getValue();
+                int quantity = stock.getQuantity();
+                stockQuantityMap.put(product, stockQuantityMap.get(product) + quantity);
+            }
+        }
+        List<StockGraphDTO> list = new ArrayList<>();
+        stockQuantityMap.forEach((product, quantity) -> {
+            list.add(new StockGraphDTO(product, quantity));
+        });
+        return list;
+    }
+
 }
