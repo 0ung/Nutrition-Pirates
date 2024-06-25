@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
@@ -52,7 +53,8 @@ public class WorkPlanController {
 	}
 
 	@GetMapping("/execute/{id}")
-	public ResponseEntity<?> executeWorkPlan(@PathVariable(name = "id") Long id, String worker) {
+	public ResponseEntity<?> executeWorkPlan(@PathVariable(name = "id") Long id,
+		@RequestParam(name = "worker") String worker) {
 		try {
 			return new ResponseEntity<>(workPlanService.executeWork(id, worker), HttpStatus.OK);
 		} catch (Exception e) {
@@ -70,14 +72,15 @@ public class WorkPlanController {
 			model.addAttribute("error", "잘못된 요청");
 		}
 	}
+
 	@GetMapping("/history")
-	public void getWorkPlanExcel(HttpServletResponse response){
-		try{
+	public void getWorkPlanExcel(HttpServletResponse response) {
+		try {
 			Workbook workbook = workPlanService.getHistory();
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
 			String fileName = "작업지시 조회 내역.xlsx";
-			String encodedFileName = java.net.	URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+			String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
 
 			// Set headers for different browsers
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -85,7 +88,7 @@ public class WorkPlanController {
 
 			workbook.write(response.getOutputStream());
 			workbook.close();
-		}catch (Exception e){
+		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
 	}
