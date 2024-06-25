@@ -69,7 +69,7 @@
                                 datasets: [
                                     {
                                         label: '현재 보유량',
-                                        data: [2000, 1500, 500, 500, 100, 10000, 1500],
+                                        data: [500, 1500, 500, 500, 100, 10000, 1500],
                                         borderWidth: 1,
                                     }
                                 ]
@@ -81,6 +81,55 @@
                                     }
                                 }
                             }
+                        });
+
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const page = 0; // 페이지 번호를 여기에 설정
+                            fetch(`/api/rawperiod/${page}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok ' + response.statusText);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const tbody = document.getElementById('period-records');
+                                    tbody.innerHTML = ''; // 기존 내용을 비웁니다.
+
+                                    data.forEach((item) => {
+                                        const row = document.createElement('tr');
+
+                                        const codeCell = document.createElement('td');
+                                        codeCell.textContent = item.rawsCode; // 제품코드
+                                        row.appendChild(codeCell);
+
+                                        const productCell = document.createElement('td');
+                                        productCell.textContent = item.product; // 제품명
+                                        row.appendChild(productCell);
+
+                                        const importDateCell = document.createElement('td');
+                                        importDateCell.textContent = item.importDate; // 입고일자
+                                        row.appendChild(importDateCell);
+
+                                        const deadlineCell = document.createElement('td');
+                                        deadlineCell.textContent = item.deadLine; // 사용기한
+                                        row.appendChild(deadlineCell);
+
+                                        const quantityCell = document.createElement('td');
+                                        quantityCell.textContent = item.quantity; // 수량
+                                        row.appendChild(quantityCell);
+
+                                        tbody.appendChild(row);
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                });
                         });
                     </script>
                 </div>
@@ -95,11 +144,16 @@
                         <tr>
                             <th scope="col">제품코드</th>
                             <th scope="col">제품명</th>
+                            <th scpoe="col">입고일자</th>
                             <th scope="col">사용기한</th>
                             <th scope="col">수량</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="period-records">
+                        <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
+                        </tbody>
+                      <!--
+                          <tbody></tbody>
                         <tr>
                             <td>275437395487</td>
                             <td>흑마늘</td>
@@ -133,8 +187,8 @@
                             <td>2024-06-09</td>
                             <td>300kg</td>
 
-                        </tr>
-                        </tbody>
+                        </tr>-->
+
                     </table>
                     <div class="empty-container2"></div>
 
