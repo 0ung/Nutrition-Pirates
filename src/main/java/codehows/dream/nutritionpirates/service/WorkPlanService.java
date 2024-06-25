@@ -6,8 +6,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
+import codehows.dream.nutritionpirates.dto.WorkPlanDetailDTO;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -93,8 +95,10 @@ public class WorkPlanService {
 		)
 	);
 
-	public WorkPlan getWorkDetail(Long id) {
-		return workPlanRepository.findById(id).orElse(null);
+	public WorkPlanDetailDTO getWorkDetail(Long id) {
+		Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
+		WorkPlan workPlan = workPlanRepository.findById(id).orElse(null);
+		return WorkPlanDetailDTO.toWorkPlanDetailDTO(workPlan,time);
 	}
 
 	public RawBOMDTO calInputRaws(Order order) {
@@ -207,8 +211,7 @@ public class WorkPlanService {
 				continue;
 			}
 
-			List<WorkPlanDTO> workPlans = workPlan.stream().map(e ->
-				WorkPlanDTO.toWorkPlanDTO(e, time)).toList();
+			List<WorkPlanDTO> workPlans = workPlan.stream().map(WorkPlanDTO::toWorkPlanDTO).toList();
 			switch (facility) {
 				case juiceMachine1 -> facilityDTO.setJuiceMachine1(workPlans);
 				case juiceMachine2 -> facilityDTO.setJuiceMachine2(workPlans);

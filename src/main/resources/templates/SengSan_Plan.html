@@ -1,260 +1,208 @@
-<!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/default}">
-<head>
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>뉴트리션 해적선</title>
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
-          rel="stylesheet">
-    <link href="../static/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
-    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
-    <link href="../static/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
-    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
-    <link href="../static/css/sengsan.css" type="text/css" rel="stylesheet" id="sengsan.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <!--    <script>-->
-    <!--        $.ajax({-->
-    <!--            type: "GET",-->
-    <!--            url: "http://localhost:8080/order/orderer",-->
-    <!--            success: (response)=>{-->
-    <!--                response.forEach(-->
-    <!--                    (e)=>{-->
-    <!--                        console.log(e.id);-->
-    <!--                        console.log(e.name);-->
-    <!--                        console.log(e.phoneNumber);-->
-    <!--                    }-->
-    <!--                )-->
-    <!--            },-->
-    <!--            error: (error)=>{-->
-    <!--                console.log(error)-->
-    <!--            }-->
-    <!--        })-->
-    <!--    </script>-->
+    <!DOCTYPE html>
+    <html lang="ko"
+          xmlns:th="http://www.thymeleaf.org"
+          xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+          layout:decorate="~{common/layouts/default}">
 
-    <style>
+    <!-- 사용자 CSS 추가 -->
+    <th:block layout:fragment="css">
+        <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
+    </th:block>
 
-        .sengsan_container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 200px;
-        }
-        .sengsan_choice {
-            width: 100%;
-            height: 50px;
-            margin-top: 10px;
-            background-color: #cccccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            position: relative;
-            font-weight: bold;
-        }
-        .sengsan_choice + .sengsan_choice::before {
-            content: '';
-            width: 100%;
-            height: 1px;
-            background-color: black;
-            position: absolute;
-            top: -1px;
-            left: 0;
-        }
-        .steps-container {
-            display: flex;
-            width: 100%;
-        }
+    <!-- 사용자 스크립트 추가 -->
+    <th:block layout:fragment="script">
 
-        .steps {
-            flex: 1;
-        }
-
-        .steps:first-child {
-            flex: 0 0 20%;
-        }
-
-        .steps:last-child {
-            flex: 0 0 80%;
-        }
-        .steps_font{
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .active {
-            background-color: #2B2B2F;
-            color: white;
-        }
+        <script th:inline="javascript">
+            let number = 0;
+            async function fetchFacilityData() {
+                try {
+                    const response = await fetch(url + "workplan/facility/activate");
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    generateDropdownMenus(data);
+                } catch (error) {
+                    console.error(`Fetch error: ${error}`);
+                }
+            }
 
 
-    </style>
-</head>
+
+            function generateDropdownMenus(data) {
+                const facilityMapping = {
+                    'juiceMachine1': '포장기',
+                    'extractor1': '추출기',
+                    'sterilizer1': '살균기',
+                    'mixer': '혼합기',
+                    'filter': '여과기',
+                    'boxMachine': 'BOX포장기',
+                    'metalDetector': '금속 검출기',
+                    'washer': '세척기',
+                    'stickMachine1': '막대기'
+                };
+
+                const order = ['juiceMachine1', 'extractor1', 'sterilizer1', 'mixer', 'filter', 'boxMachine', 'metalDetector', 'washer', 'stickMachine1'];
+
+                const container = document.querySelector('.sengsan_container');
+                container.innerHTML = ''; // Clear previous content
+
+                order.forEach(facilityKey => {
+                    if (data[facilityKey] && data[facilityKey].length > 0) {
+                        const dropdown = document.createElement('div');
+                        dropdown.classList.add('dropdown');
+
+                        const choice = document.createElement('div');
+                        choice.classList.add('sengsan_choice');
+                        choice.textContent = facilityMapping[facilityKey];
+                        dropdown.appendChild(choice);
+
+                        const dropdownContent = document.createElement('div');
+                        dropdownContent.classList.add('dropdown-content');
+
+                        data[facilityKey].forEach(item => {
+                            const option = document.createElement('div');
+                            option.classList.add('sengsan_choice');
+                            option.setAttribute("data-id",item.id);
+                            option.textContent = `${facilityMapping[facilityKey]}  ${item.id} 번`;
+                            option.onclick = () => {
+                                sengsan_selectChoice(option, item.id)};
+                            dropdownContent.appendChild(option);
+                        });
+
+                        dropdown.appendChild(dropdownContent);
+                        container.appendChild(dropdown);
+                    }
+                });
+            }
 
 
-<body>
-<!-- ===============================================-->
-<!--    Main Content-->
-<!-- ===============================================-->
-<div layout:fragment="Content" class="container">
-    <main class="main" id="top">
+            async function sengsan_selectChoice(element, id) {
+                const choices = document.querySelectorAll('.sengsan_choice');
+                choices.forEach(choice => {
+                    choice.classList.remove('ss-active');
+                });
+                element.classList.add('ss-active');
 
-        <!--------------------->
-        <!----  Main Start ---->
-        <!--------------------->
-        <div id="myModal" class="modal" >
-            <div class="modal-content">
-                <h2 style="color: #0acf83">작업자 기입 </h2>
-                <hr>
+                const status = document.getElementById('status');
+                status.innerText = `${element.innerText} 선택됨.`;
 
-                <input type="text" class="text_input" placeholder="Type Your Name">
-                <button class="button" onclick="nextStep()">다음</button>
-            </div>
-        </div>
+                // Fetch the work plan details using the id
+                try {
+                    const response = await fetch(`/workplan/${id}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    number = id;
+                    console.log(data); // Now data will log the parsed JSON object
+                    // Update the details with the fetched data
+                    const stepsContainer = document.querySelector('.ss-steps:last-child');
+                    stepsContainer.innerHTML = `
+                    수주번호 / 안전재고 : ${data.processPlanId}<br>
+                    공정 : ${data.process}<br>
+                    원자재 투입량 : ${data.rawsId}<br>
+                    LOT 번호 : ${data.lotCode}<br>
+                    진행률 : ${data.processStatus}<br>
+                    공정완료시간 : ${data.processCompletionTime}<br>
+                    작업자 : ${data.worker}<br>
+                `;
+
+                } catch (error) {
+                    console.error(`Fetch error: ${error}`);
+                }
+            }
 
 
-        <div class="content">
-            <div class="container">
-                <div class="card cart">
-                    <label class="title_form">생산 계획
-                        <span style="margin-left: 76%"></span>
-                    </label>
-                    <div class="steps-container">
-                        <div class="steps" style="    border-right: 1px solid rgba(16, 86, 82, .75);">
-                            <div class="sengsan_container">
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">포장기</div>
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)" id="추출기">추출기</div>
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">살균기</div>
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">혼합기</div>
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">여과기</div>
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">BOX 포장기</div>
-                                <div class="sengsan_choice" onclick="sengsan_selectChoice(this)">금속 검출기</div>
-                            </div>
+            function nextStep() {
+                const workerName = document.getElementById('workerName').value;
+                const response = executeWorkPlan(workerName);
+                console.log(response);
+            }
 
-                            <!--                        선택된것 확인용 -->
-                            <div class="status" id="status">선택된 항목이 없습니다.</div>
-                        </div>
-                        <div class="steps steps_font">
+            async function executeWorkPlan(workerName) {
+                const url = `/workplan/execute/${number}?worker=${encodeURIComponent(workerName)}`;
 
-                            수주번호 / 안전재고 :  ${ Number }<br>
-                            공정 : ${ Process }<br>
-                            원자재 투입량 : ${ raws }<br>
-                            LOT 번호 : ${ LOT Number } <br>
-                            진행률 : ${ Progress } <br>
-                            공정완료시간 : ${ Finish Time } <br>
-                            다음 공정 준비 : ${ Next  } <br>
+                // AJAX 호출을 사용하여 백엔드 API를 호출하고, 성공 후 리디렉션을 수행합니다.
+                await fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        // 성공적으로 API가 호출되면 원래 페이지로 리디렉션
 
-                        </div>
+                        alert('다음 단계로 진행합니다.');
+                        closeModal();
+
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+            }
+
+
+
+            function closeModal() {
+                document.getElementById('myModal').style.display = "none";
+            }
+
+            function showModal() {
+                document.getElementById('myModal').style.display = "block";
+            }
+
+
+            window.onclick = function (event) {
+                var modal = document.getElementById('myModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            }
+
+            window.onload = fetchFacilityData;
+        </script>
+    </th:block>
+
+
+    <div layout:fragment="content">
+        <div class="container">
+            <main class="main" id="top">
+                <div id="myModal" class="ss-modal">
+                    <div class="ss-modal-content">
+                        <h2 style="color: #0acf83">작업자 기입 </h2>
+                        <hr class="ss-hr">
+                        <input type="text" class="ss-text_input" id="workerName" placeholder="Type Your Name">
+                        <button class="ss-button" onclick="nextStep()">다음</button>
                     </div>
-                    <div class="card checkout">
-                        <div class="footer">
-                            <label class="price"> </label>
-                            <button class="checkout-btn" onclick="showModal()" id="startButton"> 공정시작</button>
+                </div>
+
+                <div class="ss-content">
+                    <div class="ss-container">
+                        <div class="ss-card ss-cart">
+                            <label class="ss-title_form">생산 계획
+                                <span style="margin-left: 70%"></span>
+                                <div class="status" id="status" style="font-weight: bold">선택항목 없음</div>
+                            </label>
+                            <div class="ss-steps-container">
+                                <div class="ss-steps" style="border-right: 1px solid rgba(16, 86, 82, .75);">
+                                    <div class="sengsan_container">
+                                        <!-- Dropdown menus will be generated here -->
+                                    </div>
+                                </div>
+
+                                <div class="ss-steps ss-steps_font">
+                                    <!-- Detailed information will be updated here -->
+                                </div>
+                            </div>
+                            <div class="ss-card ss-checkout">
+                                <div class="ss-footer">
+                                    <label class="ss-price"> </label>
+                                    <button class="ss-checkout-btn" onclick="showModal()" id="startButton" > 공정시작</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
-
-    </main>
-    <!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
-
-
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
-    <script>
-    </script>
-
-    <script>
-
-
-        function sengsan_selectChoice(element) {
-            // 모든 .choice 클래스의 요소를 선택
-            const choices = document.querySelectorAll('.sengsan_choice');
-            let isWorking = true;
-            // 모든 요소에서 .active 클래스를 제거
-            choices.forEach(choice => {
-                choice.classList.remove('active');
-            });
-            if (element.innerText == "혼합기" || element.innerText == "여과기" || element.innerText == "BOX 포장기" ){
-                isWorking = false;
-            }
-            // 클릭된 요소에 .active 클래스 추가
-            element.classList.add('active');
-            // 선택된 항목 상태를 업데이트
-            const status = document.getElementById('status');
-            status.innerText = `${element.innerText} 선택됨.`;
-
-            // Enable or disable start button based on active choice
-            const startButton = document.getElementById('startButton');
-            startButton.disabled = false; // Enable button by default
-
-            // 클릭된것이 실행되는중이면 버튼 클릭안되게
-            choices.forEach(choice => {
-                if (!isWorking) {
-                    return; //
-                }
-                else{
-                    // If no active choice, disable the start button
-                    startButton.disabled = true;
-                }
-            });
-        }
-
-        function nextStep() {
-            alert('다음 단계로 진행합니다.');
-            closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
-        }
-        function closeModal() {
-            document.getElementById('myModal').style.display = "none";
-        }
-
-        function showModal() {
-            document.getElementById('myModal').style.display = "block";
-        }
-
-        // Close modal if clicked outside
-        window.onclick = function(event) {
-            var modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-    </script>
-    <script src="../static/js/popper/popper.min.js"></script>
-    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
-    <script src="../static/js/anchorjs/anchor.min.js"></script>
-    <script src="../static/js/is/is.min.js"></script>
-    <script src="../static/js/fontawesome/all.min.js"></script>
-    <script src="../static/js/lodash/lodash.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-    <script src="../static/js/list.js/list.min.js"></script>
-    <script src="../static/js/feather-icons/feather.min.js"></script>
-    <script src="../static/js/dayjs/dayjs.min.js"></script>
-    <script src="../static/js/phoenix.js"></script>
-</div>
-</body>
-
-</html>
+    </div>
+    </html>
