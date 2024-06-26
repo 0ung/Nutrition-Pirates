@@ -47,7 +47,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-           const page = 0; // 페이지 번호를 여기에 설정
+            const page = 0; // 페이지 번호를 여기에 설정
             fetch(`/api/rawstock/${page}`, {
                 method: 'GET',
                 headers: {
@@ -131,34 +131,34 @@
                             <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
                             </tbody>
                         </table>
-                            <!--<tbody>
-                            &lt;!&ndash; 데이터베이스에서 받아온 입출고 기록을 반복해서 출력 &ndash;&gt;
-                            <tr th:each="record : ${movementRecords}">
-                                <td th:text="${record.productCode}">1번</td>
-                                <td th:text="${record.productName}">양배추</td>
-                                <td th:text="${record.quantity}">1000kg</td>
-                                <td th:text="${record.status}">출고</td>
-                                <td th:text="${record.date}">2024-06-10</td>
-                                <td th:text="${record.reason}">공정투입</td>
-                                <td>
-                                    <div class="flex-container">
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#update">
-                                                수정
-                                            </button>
-                                        </div>
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#delete">
-                                                삭제
-                                            </button>
-                                        </div>
+                        <!--<tbody>
+                        &lt;!&ndash; 데이터베이스에서 받아온 입출고 기록을 반복해서 출력 &ndash;&gt;
+                        <tr th:each="record : ${movementRecords}">
+                            <td th:text="${record.productCode}">1번</td>
+                            <td th:text="${record.productName}">양배추</td>
+                            <td th:text="${record.quantity}">1000kg</td>
+                            <td th:text="${record.status}">출고</td>
+                            <td th:text="${record.date}">2024-06-10</td>
+                            <td th:text="${record.reason}">공정투입</td>
+                            <td>
+                                <div class="flex-container">
+                                    <div class="button2-container">
+                                        <button class="jw-button2" data-bs-toggle="modal"
+                                                data-bs-target="#update">
+                                            수정
+                                        </button>
                                     </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>-->
+                                    <div class="button2-container">
+                                        <button class="jw-button2" data-bs-toggle="modal"
+                                                data-bs-target="#delete">
+                                            삭제
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>-->
                     </div>
 
                 </div>
