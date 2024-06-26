@@ -11,9 +11,11 @@ import codehows.dream.nutritionpirates.repository.StockRepository;
 import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -68,7 +70,7 @@ public class StockService {
     }
 
 
-    // isExport 가 1(true) 이면 입고 0 (false) 이면 출고
+    // isExport 가 1(true) 이면 출고 0 (false) 이면 입고
     public List<StockShowDTO> getStock(Pageable pageable){
         Page<Stock> stocks = stockRepository.findAll(pageable);
         List<StockShowDTO> stockShowDTOList = new ArrayList<>();
@@ -95,7 +97,7 @@ public class StockService {
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
         Date exportDate = new Date(timestamp.getTime());
 
-        stock.updateIsExport(false, exportDate);
+        stock.updateIsExport(true, exportDate);
         stockRepository.save(stock);
     }
 
@@ -121,5 +123,11 @@ public class StockService {
         });
         return list;
     }
+
+    // 재고현황 엑셀파일 다운로드
+    /*@Transactional
+    public Workbook getHistorystock() {
+        List<StockShowDTO> liset =
+    }*/
 
 }

@@ -327,7 +327,7 @@ public class RawOrderInsertService {
         return list;
     }
 
-    // 재고현황에서 엑설 파일로 다운로드
+    // 원자재현황에서 엑설 파일로 다운로드
     @Transactional
     public Workbook getHistory() {
         List<Raws> list = rawRepository.findAll();
@@ -539,6 +539,7 @@ public class RawOrderInsertService {
             totalBOM.setPlum(totalBOM.getPlum() + bomDTO.getPlum());
             totalBOM.setHoney(totalBOM.getHoney() + bomDTO.getHoney());
             totalBOM.setPaper(totalBOM.getPaper() + bomDTO.getPaper());
+            totalBOM.setCollagen(totalBOM.getCollagen() + bomDTO.getCollagen());
             totalBOM.setBox(totalBOM.getBox() + bomDTO.getBox());
         }
         return totalBOM;
