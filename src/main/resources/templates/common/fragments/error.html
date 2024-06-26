@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+
+<th:block layout:fragment="script">
+</th:block>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+
+<div layout:fragment="content" class="container">
+    <div>
+        잘못된 요청입니다.
+        <p th:text="${error}">
+        </p>
+    </div>
+</div>
+</html>

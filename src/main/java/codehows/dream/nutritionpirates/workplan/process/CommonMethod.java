@@ -31,9 +31,6 @@ public class CommonMethod {
 
 		if (plan.getStartTime() == null) {
 			plan.setStartTime(time);
-			//@TODO 이거변수 처리해야됨
-			plan.setWorker("김영웅");
-			plan.setSemiProduct(1000);
 			plan.setFacilityStatus(FacilityStatus.WORKING);
 			plan.setProcessCompletionTime(processComplete);
 		} else {

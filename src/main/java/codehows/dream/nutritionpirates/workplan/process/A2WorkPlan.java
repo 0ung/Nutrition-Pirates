@@ -27,10 +27,6 @@ public class A2WorkPlan implements WorkPlans {
 		workPlan.setStartTime(time);
 		workPlan.setEndTime(time);
 		workPlan.setActivate(false);
-
-
-		//@TODO 이거 변수 처리해야됨
-		workPlan.setWorker("김영웅");
 		return workPlan;
 	}
 

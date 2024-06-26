@@ -270,6 +270,7 @@ public class RawOrderInsertService {
         List<RawsListDTO> list = new ArrayList<>();
 
         Page<Raws> pages = rawRepository.findAll(pageable);
+        int totalPages = pages.getTotalPages();
 
         pages.forEach((e) -> {
 
@@ -299,8 +300,13 @@ public class RawOrderInsertService {
                     .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
                     .build());
         });
+
+        // 원하는 위치에 전체 페이지 수를 사용
+        System.out.println("Total pages: " + totalPages);
+
         return list;
     }
+
 
     // 입고된 총 양만 list에 담아서 보여주기
     public List<RawShowGraphDTO> getRawStockGraph() {
@@ -429,23 +435,23 @@ public class RawOrderInsertService {
                 Status.IMPORT,
                 minTimestamp,
                 timestamp,
-                pageable );
+                pageable);
 
         List<RawPeriodDTO> list = new ArrayList<>();
 
-        pages.forEach((e) ->{
+        pages.forEach((e) -> {
             list.add(RawPeriodDTO.builder()
-                            .rawsCode(e.getRawsCode())
-                            .product(e.getProduct().getValue())
-                            .importDate(e.getImportDate())
-                            .deadLine(new Date(e.getDeadLine().getTime()))
-                            .quantity(e.getQuantity())
-                            .build());
+                    .rawsCode(e.getRawsCode())
+                    .product(e.getProduct().getValue())
+                    .importDate(e.getImportDate())
+                    .deadLine(new Date(e.getDeadLine().getTime()))
+                    .quantity(e.getQuantity())
+                    .build());
         });
         return list;
     }
 
-   //첫번쨰 생성이 되면
+    //첫번쨰 생성이 되면
     //분류
     public RawBOMDTO createRequirement(Order order) {
         ProductName productName = order.getProduct();
@@ -621,6 +627,10 @@ public class RawOrderInsertService {
                 result.add(new RawOrderPlanDTO(partnerName, rawProductName.getValue(), remainQuantity, formattedExpectedImportDate));
             }
         }
+
         return result;
+
+
     }
+
 }

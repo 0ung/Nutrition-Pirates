@@ -72,9 +72,15 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        //입고됨 버튼
+        function handleButtonClick(button) {
+            console.log('Button clicked'); // 콘솔 로그 추가
+            button.innerHTML = '입고됨';
+            button.disabled = true;
+        }
 
 
-
+        //발주 스크립트
         document.getElementById('form_save').addEventListener('click', function (event) {
             event.preventDefault();
 
@@ -85,38 +91,41 @@
 
             // Create the DTO object
             const rawOrderInsertDTO = {
-                partner : partner,
-                product : product,
-                quantity : quantity,
+                partner: partner,
+                product: product,
+                quantity: quantity,
 
             };
 
             fetch('/api/register', {
                 method: 'POST',
-                headers : {
-                    'Content-Type' : 'application/json'
+                headers: {
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(rawOrderInsertDTO)
             })
                 .then(response => {
-                    if(response.status === 201) {
+                    if (response.status === 201) {
                         alert('발주 주문이 성공적을 되었습니다!');
                         document.getElementById("partner_select").value = "";
                         document.getElementById("product_select").value = "";
                         document.getElementById("form_quantity").value = "";
-                    } else  {
+                    } else {
                         return response.json().then(data => {
                             alert('발주 주문 error : ' + (data.message || response.statusText));
                         });
                     }
                 })
                 .catch(error => {
-                    console.error('Error : ' , error);
+                    console.error('Error : ', error);
                     alert('Error creating order: ' + error.message);
                 });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+
+
+        //자동 계산 스크립트
+        document.addEventListener('DOMContentLoaded', function () {
             fetch('/api/calculate', {
                 method: 'GET',
                 headers: {
@@ -163,11 +172,9 @@
                     console.error('Error fetching data:', error);
                 });
         });
-        /*function handleButtonClick(button) {
-            console.log('Button clicked'); // 콘솔 로그 추가
-            button.innerHTML = '입고됨';
-            button.disabled = true;
-        }
+
+
+        /*
 
         fetch(url + 'api/calculate')
             .then(response => {
@@ -341,7 +348,7 @@
 
                                         <div class="nice-form-group">
                                             <label>거래처</label>
-                                            <select id = "partner_select">
+                                            <select id="partner_select">
                                                 <option>에이농장</option>
                                                 <option>OO농협</option>
                                                 <option>OO포장</option>
@@ -350,7 +357,7 @@
 
                                         <div class="nice-form-group">
                                             <label>제품명</label>
-                                            <select id = "product_select">
+                                            <select id="product_select">
                                                 <option value="CABBAGE">양배추</option>
                                                 <option value="BLACK_GARLIC">흑마늘</option>
                                                 <option value="HONEY">벌꿀</option>
@@ -364,11 +371,11 @@
 
                                         <div class="nice-form-group">
                                             <label>수량</label>
-                                            <input type="number" placeholder="수량을 입력해주세요" id = "form_quantity"/>
+                                            <input type="number" placeholder="수량을 입력해주세요" id="form_quantity"/>
                                         </div>
 
                                         <div class="modal-footer" style="margin-top: 20px;">
-                                            <button type="button" class="btn btn-primary" id = "form_save">저장</button>
+                                            <button type="button" class="btn btn-primary" id="form_save">저장</button>
                                         </div>
                                     </div>
                                 </div>

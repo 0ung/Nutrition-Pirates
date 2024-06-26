@@ -46,8 +46,113 @@
             window.location.href = '/api/history';
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-           const page = 0; // 페이지 번호를 여기에 설정
+        document.addEventListener('DOMContentLoaded', function () {
+            let currentPage = 0; // 페이지 번호를 여기에 설정
+            loadPage(currentPage);
+
+            // 페이지를 로드하는 함수
+            function loadPage(page) {
+                fetch(`/api/rawstock/${page}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const tbody = document.getElementById('movement-records');
+                        tbody.innerHTML = ''; // 기존 내용을 비웁니다.
+
+                        data.content.forEach((item) => {
+                            const row = document.createElement('tr');
+
+                            const codeCell = document.createElement('td');
+                            codeCell.textContent = item.rawsCode; // 제품코드
+                            row.appendChild(codeCell);
+
+                            const productCell = document.createElement('td');
+                            productCell.textContent = item.product; // 제품명
+                            row.appendChild(productCell);
+
+                            const quantityCell = document.createElement('td');
+                            quantityCell.textContent = item.quantity; // 수량
+                            row.appendChild(quantityCell);
+
+                            const statusCell = document.createElement('td');
+                            statusCell.textContent = item.status; // 상태
+                            row.appendChild(statusCell);
+
+                            const dateCell = document.createElement('td');
+                            dateCell.textContent = item.date; // 일자
+                            row.appendChild(dateCell);
+
+                            const reasonCell = document.createElement('td');
+                            reasonCell.textContent = item.rawsReason; // 사유
+                            row.appendChild(reasonCell);
+
+                            tbody.appendChild(row);
+                        });
+
+                        // 페이지네이션 갱신
+                        const pagination = document.querySelector('.pagination');
+                        pagination.innerHTML = ''; // 기존 페이지네이션을 비웁니다.
+
+                        // 이전 페이지 버튼
+                        const prevPageItem = document.createElement('li');
+                        prevPageItem.className = 'page-item' + (data.first ? ' disabled' : '');
+                        const prevPageLink = document.createElement('a');
+                        prevPageLink.className = 'page-link';
+                        prevPageLink.href = '#';
+                        prevPageLink.innerHTML = '&laquo;';
+                        prevPageLink.addEventListener('click', () => {
+                            if (!data.first) {
+                                loadPage(data.number - 1);
+                            }
+                        });
+                        prevPageItem.appendChild(prevPageLink);
+                        pagination.appendChild(prevPageItem);
+
+                        // 페이지 번호 버튼
+                        for (let i = 0; i < data.totalPages; i++) {
+                            const pageItem = document.createElement('li');
+                            pageItem.className = 'page-item' + (i === data.number ? ' active' : '');
+                            const pageLink = document.createElement('a');
+                            pageLink.className = 'page-link';
+                            pageLink.href = '#';
+                            pageLink.textContent = i + 1;
+                            pageLink.addEventListener('click', () => loadPage(i));
+                            pageItem.appendChild(pageLink);
+                            pagination.appendChild(pageItem);
+                        }
+
+                        // 다음 페이지 버튼
+                        const nextPageItem = document.createElement('li');
+                        nextPageItem.className = 'page-item' + (data.last ? ' disabled' : '');
+                        const nextPageLink = document.createElement('a');
+                        nextPageLink.className = 'page-link';
+                        nextPageLink.href = '#';
+                        nextPageLink.innerHTML = '&raquo;';
+                        nextPageLink.addEventListener('click', () => {
+                            if (!data.last) {
+                                loadPage(data.number + 1);
+                            }
+                        });
+                        nextPageItem.appendChild(nextPageLink);
+                        pagination.appendChild(nextPageItem);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+        });
+
+        /*document.addEventListener('DOMContentLoaded', function () {
+            const page = 0; // 페이지 번호를 여기에 설정
             fetch(`/api/rawstock/${page}`, {
                 method: 'GET',
                 headers: {
@@ -97,7 +202,7 @@
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
-        });
+        });*/
     </script>
 </th:block>
 
@@ -120,45 +225,24 @@
                             <tr>
                                 <th scope="col">제품코드</th>
                                 <th scope="col">제품명</th>
-                                <th scope="col">수량</th>
                                 <th scope="col">상태</th>
                                 <th scope="col">일자</th>
+                                <th scope="col">수량</th>
                                 <th scope="col">사유</th>
                                 <!--<th scope="col">수정/삭제</th>-->
                             </tr>
                             </thead>
                             <tbody id="movement-records">
-                            <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
-                            </tbody>
-                        </table>
-                            <!--<tbody>
-                            &lt;!&ndash; 데이터베이스에서 받아온 입출고 기록을 반복해서 출력 &ndash;&gt;
-                            <tr th:each="record : ${movementRecords}">
-                                <td th:text="${record.productCode}">1번</td>
-                                <td th:text="${record.productName}">양배추</td>
-                                <td th:text="${record.quantity}">1000kg</td>
-                                <td th:text="${record.status}">출고</td>
-                                <td th:text="${record.date}">2024-06-10</td>
-                                <td th:text="${record.reason}">공정투입</td>
-                                <td>
-                                    <div class="flex-container">
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#update">
-                                                수정
-                                            </button>
-                                        </div>
-                                        <div class="button2-container">
-                                            <button class="jw-button2" data-bs-toggle="modal"
-                                                    data-bs-target="#delete">
-                                                삭제
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
+                            <tr th:each="raws : ${list}">
+                                <td th:text="${raws.rawsCode}"></td>
+                                <td th:text="${raws.product}"></td>
+                                <td th:text="${raws.status}"></td>
+                                <td th:text="${raws.Date}"></td>
+                                <td th:text="${raws.quantity}"></td>
+                                <td th:text="${raws.rawsReason}"></td>
                             </tr>
                             </tbody>
-                        </table>-->
+                        </table>
                     </div>
 
                 </div>
@@ -166,13 +250,8 @@
 
                 <div class="empty-container"></div>
 
-                <!-------------
-                ---------------
-                ---------------
-                페이지네이션
-                ---------------
-                ---------------
-                -------------->
+
+                <!------------- 페이지네이션 -------------->
 
 
                 <div id="pagination">
@@ -182,9 +261,9 @@
                                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
                             </li>
                             <!-- 페이지 번호도 동적으로 처리할 수 있습니다. -->
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="0">1</a></li>
+                            <li class="page-item"><a class="page-link" href="1">2</a></li>
+                            <li class="page-item"><a class="page-link" href="2">3</a></li>
                             <li class="page-item">
                                 <a class="page-link" href="#">&raquo;</a>
                             </li>
