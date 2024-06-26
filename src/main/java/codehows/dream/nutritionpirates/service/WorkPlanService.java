@@ -191,7 +191,7 @@ public class WorkPlanService {
 		return currentProgramTime.toLocalDateTime().plusMinutes(deliveryTimeMinutes).toString();
 	}
 
-	private List<WorkPlan> getActivateFacility(Facility facility) {
+	public List<WorkPlan> getActivateFacility(Facility facility) {
 		List<WorkPlan> workPlans = workPlanRepository.findByFacility(facility);
 		if (workPlans.isEmpty()) {
 			return null;
