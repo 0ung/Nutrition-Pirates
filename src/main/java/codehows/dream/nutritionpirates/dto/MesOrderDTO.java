@@ -19,7 +19,9 @@ public class MesOrderDTO {
 	private boolean urgency;
 	private Long orderId;
 	private String ordererName;
-	private String expectedDeliveryDate;
-	private String product;
+	private	String  expectedDeliveryDate;
+	private	String product;
 	private Date orderDate;
+	private	boolean visible;
+
 }

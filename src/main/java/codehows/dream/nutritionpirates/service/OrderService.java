@@ -37,7 +37,6 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrdererRepository ordererRepository;
 	private final ProcessPlanService processPlanService;
-	private final BOMCalculatorService bomCalculatorService;
 	private final RawOrderInsertService rawOrderInsertService;
 	private final ProgramTimeService programTimeService;
 
@@ -72,11 +71,14 @@ public class OrderService {
 			.build());
 
 		//검토가 먼저 일어나야겟지?
-		RawBOMDTO rawBOMDTO = bomCalculatorService.createRequirement(order);
+		RawBOMDTO rawBOMDTO = rawOrderInsertService.createRequirement(order);
 		log.info(rawBOMDTO.toString());
 		//재고 내역 확인(박스 수량)
 
 		//발주 계획 생성
+
+		//기존 생산계획 검토 후 추가가능하면 원자재 추가;
+		//즉 CAPA가 100%가 될때까지 투입
 
 		//생산계획 생성
 		processPlanService.createProcessPlan(order);
@@ -153,13 +155,30 @@ public class OrderService {
 		};
 	}
 
-	public List<MesOrderDTO> getOrderList(Pageable pageable) {
-		List<MesOrderDTO> list = new ArrayList<>();
-		Page<Order> pages = orderRepository.findAll(pageable);
-
-		pages.forEach((e) -> {
-			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
-			list.add(MesOrderDTO.builder()
+//	public List<MesOrderDTO> getOrderList(Pageable pageable) {
+//		List<MesOrderDTO> list = new ArrayList<>();
+//		Page<Order> pages = orderRepository.findAll(pageable);
+//
+//		pages.forEach((e) -> {
+//			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
+//			list.add(MesOrderDTO.builder()
+//					.orderId(e.getId())
+//					.ordererName(orderer.getName())
+//					.orderDate(e.getOrderDate())
+//					.expectedDeliveryDate(e.getExpectedDeliveryDate())
+//					.product(e.getProduct().getValue())
+//					.quantity(e.getQuantity())
+//					.urgency(e.isUrgency())
+//					.visible(e.isInvisible())
+//					.build());
+//		});
+//		return list;
+//	}
+public Page<MesOrderDTO> getOrderList(Pageable pageable) {
+	Page<Order> pages = orderRepository.findAll(pageable);
+	return pages.map(e -> {
+		Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
+		return MesOrderDTO.builder()
 				.orderId(e.getId())
 				.ordererName(orderer.getName())
 				.orderDate(e.getOrderDate())
@@ -167,28 +186,49 @@ public class OrderService {
 				.product(e.getProduct().getValue())
 				.quantity(e.getQuantity())
 				.urgency(e.isUrgency())
-				.build());
-		});
-
-		return list;
-	}
+				.visible(e.isInvisible())
+				.build();
+	});
+}
 
 	public void cancelOrder(Long id) {
 		Order order = orderRepository.findById(id).orElse(null);
 		order.updateInvisible(true);
 	}
 
+	public Page<Orderer> getOrderer(Pageable pageable) {
+		return ordererRepository.findAll(pageable);
+	}
 	public List<Orderer> getOrderer() {
 		return ordererRepository.findAll();
 	}
 
+	public Page<Orderer> getOrderer2(Pageable pageable) {
+		Page<Orderer> pages = ordererRepository.findAll(pageable);
+
+		return pages.map(e -> {
+			Orderer orderer = ordererRepository.findById(e.getId()).orElse(null);
+			return Orderer.builder()
+					.id(e.getId())
+					.name(orderer.getName())
+					.phoneNumber(e.getPhoneNumber())
+					.build();
+		});
+	}
+
+
 	@Transactional
 	public Workbook getHistory() {
 		List<Order> list = orderRepository.findAll();
+		String time = programTimeService.getProgramTime()
+			.getCurrentProgramTime()
+			.toLocalDateTime()
+			.toLocalDate()
+			.toString();
 		Workbook workbook = new XSSFWorkbook();
 
 		// Create a sheet with a name
-		Sheet sheet = workbook.createSheet(LocalDate.now() + " 주문 내역");
+		Sheet sheet = workbook.createSheet(time + " 주문 내역");
 
 		// Create header row
 		Row headerRow = sheet.createRow(0);

@@ -1,5 +1,7 @@
 package codehows.dream.nutritionpirates.dto;
 
+import java.sql.Timestamp;
+
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
@@ -15,6 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class WorkPlanDTO {
+
 	private Long id;
 	private Process process;
 	private String rawsCodes;
@@ -22,6 +25,7 @@ public class WorkPlanDTO {
 	private String startTime;
 	private String endTime;
 	private Facility facility;
+	private boolean activate;
 
 	public static WorkPlanDTO toWorkPlanDTO(WorkPlan workPlan) {
 		return WorkPlanDTO.builder()
@@ -31,7 +35,10 @@ public class WorkPlanDTO {
 			.startTime(workPlan.getStartTime() != null ? workPlan.getStartTime().toString() : null)
 			.rawsCodes(workPlan.getRawsCodes())
 			.facility(workPlan.getFacility())
-			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLetCode() : null)
+			.activate(workPlan.isActivate())
+			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLotCode() : null)
 			.build();
 	}
+
+
 }

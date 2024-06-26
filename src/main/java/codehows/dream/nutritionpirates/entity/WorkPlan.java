@@ -34,7 +34,7 @@ public class WorkPlan {
 	@Column(name = "work_plan_id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "process_plan_id")
 	private ProcessPlan processPlan;
 
@@ -67,5 +67,8 @@ public class WorkPlan {
 	//추가된 컬럼
 	//작동 가능 여부
 	private boolean activate;
+	
+	//수행 가능 수량
+	private int capacity;
 
 }
