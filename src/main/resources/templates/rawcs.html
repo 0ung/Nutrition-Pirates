@@ -36,54 +36,47 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Fetch API를 사용하여 데이터를 가져오기
+            fetch('/api/graph')
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('네트워크 응답이 올바르지 않습니다.');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data); // 데이터 전체를 콘솔에 출력
 
-        <!-- chart.js 설치 -->
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+                    // 차트를 업데이트
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    const labels = data.map(item => item.product);
+                    const quantities = data.map(item => item.quantity);
 
-    </script>
-</th:block>
-
-<div layout:fragment="content">
-
-    <div id="main-content">
-        <div class="main-container" id="main-container">
-            <div id="card1">
-                <label class="main-label">원자재 현황 조회 </label>
-                <div class="container">
-                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
-                    <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
-                        <canvas id="myChart"></canvas>
-                    </div>
-
-                    <!-- include Chart.js from a CDN -->
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                    <script>
-                        const ctx = document.querySelector('#myChart');
-
-                        //만들위치, 설정값객체
-                        new Chart(ctx, {
-                            type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                            data: {
-                                labels: ['양배추', '흑마늘', '석류', '매실', '벌꿀', '박스', '포장지'],
-                                datasets: [
-                                    {
-                                        label: '현재 보유량',
-                                        data: [500, 1500, 500, 500, 100, 10000, 1500],
-                                        borderWidth: 1,
-                                    }
-                                ]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
+                    new Chart(ctx, {
+                        type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '현재 보유량',
+                                data: quantities,
+                                borderWidth: 1,
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
                                 }
                             }
-                        });
+                        }
+                    });
+                })
+                .catch(err => console.error('데이터 가져오기 오류:', err));
+        });
 
-                        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
                             const page = 0; // 페이지 번호를 여기에 설정
                             fetch(`/api/rawperiod/${page}`, {
                                 method: 'GET',
@@ -131,7 +124,23 @@
                                     console.error('Error fetching data:', error);
                                 });
                         });
-                    </script>
+
+    </script>
+    <!-- Chart.js 라이브러리 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</th:block>
+
+<div layout:fragment="content">
+
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <div id="card1">
+                <label class="main-label">원자재 현황 조회 </label>
+                <div class="container">
+                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                    <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                        <canvas id="myChart"></canvas>
+                    </div>
                 </div>
                 <div class="empty-container2"></div>
                 <label class="main-label">보관기한 3일 이하 원자재 List</label>
