@@ -270,6 +270,7 @@ public class RawOrderInsertService {
         List<RawsListDTO> list = new ArrayList<>();
 
         Page<Raws> pages = rawRepository.findAll(pageable);
+        int totalPages = pages.getTotalPages();
 
         pages.forEach((e) -> {
 
@@ -299,6 +300,10 @@ public class RawOrderInsertService {
                     .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
                     .build());
         });
+
+        // 원하는 위치에 전체 페이지 수를 사용
+        System.out.println("Total pages: " + totalPages);
+
         return list;
     }
 
