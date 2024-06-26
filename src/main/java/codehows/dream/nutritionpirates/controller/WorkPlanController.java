@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
@@ -87,7 +88,6 @@ public class WorkPlanController {
 		}
 	}
 
-
 	@GetMapping("/history")
 	public ResponseEntity<?> getWorkPlanExcel(HttpServletResponse response){
 		try{
@@ -95,7 +95,7 @@ public class WorkPlanController {
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
 			String fileName = "작업지시 조회 내역.xlsx";
-			String encodedFileName = java.net.	URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+			String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
 
 			// Set headers for different browsers
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");

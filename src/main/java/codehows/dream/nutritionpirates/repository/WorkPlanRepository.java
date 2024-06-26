@@ -1,5 +1,6 @@
 package codehows.dream.nutritionpirates.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -32,4 +33,6 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 
 	@Query("SELECT w FROM WorkPlan w where w.endTime IS NOT null ")
 	List<WorkPlan> findByEndTimeExists();
+
+	List<WorkPlan> findByEndTimeBetween(Timestamp startTime, Timestamp endTime);
 }
