@@ -210,24 +210,25 @@
 
                 <div class="pagination-container">
                     <ul class="pagination-list">
-                        <!-- Calculate the current block and the total number of blocks -->
+                        <!-- Previous button -->
                         <li>
                             <button th:disabled="${currentPage == 0}"
-                                    th:onclick="|location.href='@{/order/{page}(page=${currentPage - 10 < 0 ? 0 : currentPage - 10})}'|">
+                                    th:onclick="|location.href='@{/order/{page}(page=${currentPage - 1})}'|">
                                 이전버튼
                             </button>
                         </li>
-                        <!-- Display pages in the current block -->
-                        <li th:each="startPage : ${#numbers.sequence(0, totalPages > 10 ? 9 : totalPages - 1)}">
-                            <th:block th:with="blockIndex=${currentPage / 10}">
-                                <a th:href="@{/order/{page}(page=${blockIndex * 10 + startPage})}"
-                                   th:text="${blockIndex * 10 + startPage + 1}"
-                                   th:classappend="${currentPage == (blockIndex * 10 + startPage) ? 'active' : ''}"
-                                   class="pagination-link"></a>
-                            </th:block>
+
+                        <!-- Page numbers -->
+                        <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a th:href="@{/order/{page}(page=${pageNum})}"
+                               th:text="${pageNum + 1}"
+                               th:classappend="${currentPage == pageNum ? 'active' : ''}"
+                               class="pagination-link"></a>
                         </li>
+
+                        <!-- Next button -->
                         <li>
-                            <button th:disabled="${currentPage == totalPages }"
+                            <button th:disabled="${currentPage == totalPages - 1}"
                                     th:onclick="|location.href='@{/order/{page}(page=${currentPage + 1})}'|">
                                 다음버튼
                             </button>

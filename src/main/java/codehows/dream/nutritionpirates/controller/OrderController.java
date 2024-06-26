@@ -1,11 +1,14 @@
 package codehows.dream.nutritionpirates.controller;
 
+import codehows.dream.nutritionpirates.dto.MesOrderDTO;
 import codehows.dream.nutritionpirates.dto.MesOrderInsertDTO;
+import codehows.dream.nutritionpirates.entity.Orderer;
 import codehows.dream.nutritionpirates.service.OrderService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -55,18 +58,35 @@ public class OrderController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-
 	@GetMapping("/{page}")
 	public String getList(@PathVariable(name = "page") Optional<Integer> page, Model model) {
 		int currentPage = page.orElse(0);
 		Pageable pageable = PageRequest.of(currentPage, 10);
 
 		try {
-			model.addAttribute("dto", orderService.getOrderList(pageable));
+			Page<MesOrderDTO> orderPage = orderService.getOrderList(pageable);
+			model.addAttribute("dto", orderPage.getContent());
 			model.addAttribute("currentPage", currentPage);
-			model.addAttribute("totalPages", orderService.getTotalPages());
+			model.addAttribute("totalPages", orderPage.getTotalPages());
 			return "/suzu_check";
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return "error";
+		}
+	}
 
+
+	 @GetMapping("/orderer/{page}")
+	public String getList2(@PathVariable(name = "page") Optional<Integer> page, Model model) {
+		int currentPage = page.orElse(0);
+		Pageable pageable = PageRequest.of(currentPage, 10);
+
+		try {
+			Page<Orderer> orderPage = orderService.getOrderer(pageable);
+			model.addAttribute("dto2", orderPage.getContent()); // Set the content, not the repository itself
+			model.addAttribute("currentPage", currentPage);
+			model.addAttribute("totalPages", orderPage.getTotalPages());
+			return "/suzu_check_orderer";
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return "error";
@@ -84,31 +104,13 @@ public class OrderController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
 	@GetMapping("/orderer/all")
-	public ResponseEntity<?> getOrderer() {
+	public ResponseEntity<?> getOrderer5() {
 		try {
 			return new ResponseEntity<>(orderService.getOrderer(), HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@GetMapping("/orderer/{page}")
-	public String getList2(@PathVariable(name = "page") Optional<Integer> page, Model model) {
-		int currentPage = page.orElse(0);
-		Pageable pageable = PageRequest.of(currentPage, 10);
-
-		try {
-			model.addAttribute("dto2", orderService.getOrderer(pageable));
-			model.addAttribute("currentPage", currentPage);
-			model.addAttribute("totalPages", orderService.getTotalPages());
-			return "/suzu_check_orderer";
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return "error";
 		}
 	}
 	@GetMapping("/history")

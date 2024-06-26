@@ -118,6 +118,38 @@
             display: block;
             font-size: 11px;
         }
+
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
     </style>
 
 </th:block>
@@ -135,6 +167,31 @@
             document.getElementById('myModal').style.display = "none";
         }
 
+
+        function SengSandownloadExcel() {
+            fetch('/workplan/history', {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = '작업지시 조회 내역.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel:', error);
+                });
+        }
     </script>
 </th:block>
 
@@ -168,13 +225,13 @@
                         </thead>
                         <tbody class="gy-tbody">
                         <!-- Iterate over each work plan and display -->
-                        <tr th:each="workPlan : ${workPlans}">
-                            <td th:text="${workPlan.id}">작업id</td>
+                        <tr th:each="workPlan : ${List}">
+                            <td th:text="${workPlan.work_plan_id}">작업id</td>
                             <td th:text="${workPlan.process}">공정</td>
-                            <td th:text="${workPlan.lotCodes}+임시lotcode">LOT 코드</td>
+                            <td th:text="${workPlan.lotCode}">LOT 코드</td>
                             <td th:text="${workPlan.startTime}">시작시간</td>
                             <td th:text="${workPlan.endTime}">종료시간</td>
-                            <td th:text="${workPlan.worker}">임경용</td>
+                            <td th:text="${workPlan.worker}">작업자</td>
                         </tr>
                         </tbody>
                     </table>
@@ -182,36 +239,35 @@
 
 
                 <div class="pagination-container">
-                    <ul class="pagination-list">
-                        <!-- Calculate the current block and the total number of blocks -->
-<!--                        <li>-->
-<!--                            <button th:disabled="${currentPage == 0}"-->
-<!--                                    th:onclick="|location.href='@{/workplan/workplan/{page}(page=${currentPage - 10 < 0 ? 0 : currentPage - 10})}'|">-->
-<!--                                이전버튼-->
-<!--                            </button>-->
-<!--                        </li>-->
-<!--                        &lt;!&ndash; Display pages in the current block &ndash;&gt;-->
-<!--                        <li th:each="startPage : ${#numbers.sequence(0, totalPages > 10 ? 9 : totalPages - 1)}">-->
-<!--                            <th:block th:with="blockIndex=${currentPage / 10}">-->
-<!--                                <a th:href="@{/order/{page}(page=${blockIndex * 10 + startPage})}"-->
-<!--                                   th:text="${blockIndex * 10 + startPage + 1}"-->
-<!--                                   th:classappend="${currentPage == (blockIndex * 10 + startPage) ? 'active' : ''}"-->
-<!--                                   class="pagination-link"></a>-->
-<!--                            </th:block>-->
-<!--                        </li>-->
-<!--                        <li>-->
-<!--                            <button th:disabled="${currentPage == totalPages }"-->
-<!--                                    th:onclick="|location.href='@{/workplan/workplan/{page}(page=${currentPage + 1})}'|">-->
-<!--                                다음버튼-->
-<!--                            </button>-->
-<!--                        </li>-->
-                    </ul>
+                <ul class="pagination-list">
+                    <!-- Previous button -->
+                    <li>
+                        <button th:disabled="${currentPage == 0}"
+                                th:onclick="|location.href='@{/workplan/list/{page}(page=${currentPage - 1})}'|">
+                            이전버튼
+                        </button>
+                    </li>
+                    <!-- Page numbers -->
+                    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:href="@{/workplan/list/{page}(page=${pageNum})}"
+                           th:text="${pageNum + 1}"
+                           th:classappend="${currentPage == pageNum ? 'active' : ''}"
+                           class="pagination-link"></a>
+                    </li>
+                    <!-- Next button -->
+                    <li>
+                        <button th:disabled="${currentPage == totalPages - 1}"
+                                th:onclick="|location.href='@{/workplan/list/{page}(page=${currentPage + 1})}'|">
+                            다음버튼
+                        </button>
+                    </li>
+                </ul>
                 </div>
             </div>
             <div class="ss-card2 ss-checkout">
                 <div class="ss-footer">
                     <label class="ss-price"> </label>
-                    <button class="ss-checkout-btn"> 엑셀 저장</button>
+                    <button class="ss-checkout-btn" onclick="SengSandownloadExcel()"> 엑셀 저장</button>
                 </div>
             </div>
         </div>

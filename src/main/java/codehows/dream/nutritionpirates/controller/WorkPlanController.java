@@ -4,7 +4,10 @@ import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
 import codehows.dream.nutritionpirates.dto.WorkPlanDetailDTO;
 import java.util.Optional;
 
+import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
+import codehows.dream.nutritionpirates.entity.Orderer;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -68,17 +71,25 @@ public class WorkPlanController {
 		}
 	}
 
-	@GetMapping("/{page}")
-	public void getDoneWorkPlan(@PathVariable(name = "page") Optional<Integer> page, Model model) {
-		Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
+	@GetMapping("/list/{page}")
+	public String getDoneWorkPlan(@PathVariable(name = "page") Optional<Integer> page, Model model) {
+		int currentPage = page.orElse(0);
+		Pageable pageable = PageRequest.of(currentPage, 10);
 		try {
-			model.addAttribute("List", workPlanService.getWorkPlanData(pageable));
+			Page<WorkPlanListDTO> list =  workPlanService.getWorkPlanData(pageable);
+			model.addAttribute("List", list);// Set the content, not the repository itself
+			model.addAttribute("currentPage", currentPage);
+			model.addAttribute("totalPages", list.getTotalPages());
+			return "SengSan_check";
 		} catch (Exception e) {
 			model.addAttribute("error", "잘못된 요청");
+			return "error";
 		}
 	}
+
+
 	@GetMapping("/history")
-	public void getWorkPlanExcel(HttpServletResponse response){
+	public ResponseEntity<?> getWorkPlanExcel(HttpServletResponse response){
 		try{
 			Workbook workbook = workPlanService.getHistory();
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -92,8 +103,10 @@ public class WorkPlanController {
 
 			workbook.write(response.getOutputStream());
 			workbook.close();
+			return new ResponseEntity<>(HttpStatus.OK);
 		}catch (Exception e){
 			log.error(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 }

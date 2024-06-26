@@ -155,54 +155,67 @@ public class OrderService {
 		};
 	}
 
-	public List<MesOrderDTO> getOrderList(Pageable pageable) {
-		List<MesOrderDTO> list = new ArrayList<>();
-		Page<Order> pages = orderRepository.findAll(pageable);
-
-		pages.forEach((e) -> {
-			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
-			list.add(MesOrderDTO.builder()
-					.orderId(e.getId())
-					.ordererName(orderer.getName())
-					.orderDate(e.getOrderDate())
-					.expectedDeliveryDate(e.getExpectedDeliveryDate())
-					.product(e.getProduct().getValue())
-					.quantity(e.getQuantity())
-					.urgency(e.isUrgency())
-					.visible(e.isInvisible())
-					.build());
-		});
-		return list;
-	}
+//	public List<MesOrderDTO> getOrderList(Pageable pageable) {
+//		List<MesOrderDTO> list = new ArrayList<>();
+//		Page<Order> pages = orderRepository.findAll(pageable);
+//
+//		pages.forEach((e) -> {
+//			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
+//			list.add(MesOrderDTO.builder()
+//					.orderId(e.getId())
+//					.ordererName(orderer.getName())
+//					.orderDate(e.getOrderDate())
+//					.expectedDeliveryDate(e.getExpectedDeliveryDate())
+//					.product(e.getProduct().getValue())
+//					.quantity(e.getQuantity())
+//					.urgency(e.isUrgency())
+//					.visible(e.isInvisible())
+//					.build());
+//		});
+//		return list;
+//	}
+public Page<MesOrderDTO> getOrderList(Pageable pageable) {
+	Page<Order> pages = orderRepository.findAll(pageable);
+	return pages.map(e -> {
+		Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
+		return MesOrderDTO.builder()
+				.orderId(e.getId())
+				.ordererName(orderer.getName())
+				.orderDate(e.getOrderDate())
+				.expectedDeliveryDate(e.getExpectedDeliveryDate())
+				.product(e.getProduct().getValue())
+				.quantity(e.getQuantity())
+				.urgency(e.isUrgency())
+				.visible(e.isInvisible())
+				.build();
+	});
+}
 
 	public void cancelOrder(Long id) {
 		Order order = orderRepository.findById(id).orElse(null);
 		order.updateInvisible(true);
 	}
 
+	public Page<Orderer> getOrderer(Pageable pageable) {
+		return ordererRepository.findAll(pageable);
+	}
 	public List<Orderer> getOrderer() {
 		return ordererRepository.findAll();
 	}
 
-	public List<Orderer> getOrderer(Pageable pageable) {
-		List<Orderer> list = new ArrayList<>();
+	public Page<Orderer> getOrderer2(Pageable pageable) {
 		Page<Orderer> pages = ordererRepository.findAll(pageable);
 
-		pages.forEach((e) -> {
+		return pages.map(e -> {
 			Orderer orderer = ordererRepository.findById(e.getId()).orElse(null);
-			list.add(Orderer.builder()
+			return Orderer.builder()
 					.id(e.getId())
 					.name(orderer.getName())
-					.phoneNumber(orderer.getPhoneNumber())
-					.build());
+					.phoneNumber(e.getPhoneNumber())
+					.build();
 		});
-		return list;
 	}
 
-
-	public Long getTotalPages(){
-		return ordererRepository.count();
-	}
 
 	@Transactional
 	public Workbook getHistory() {

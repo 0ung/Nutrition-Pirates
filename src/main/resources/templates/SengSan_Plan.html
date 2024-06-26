@@ -1,208 +1,222 @@
-    <!DOCTYPE html>
-    <html lang="ko"
-          xmlns:th="http://www.thymeleaf.org"
-          xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-          layout:decorate="~{common/layouts/default}">
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
 
-    <!-- 사용자 CSS 추가 -->
-    <th:block layout:fragment="css">
-        <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
-    </th:block>
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
+</th:block>
 
-    <!-- 사용자 스크립트 추가 -->
-    <th:block layout:fragment="script">
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
 
-        <script th:inline="javascript">
-            let number = 0;
-            async function fetchFacilityData() {
-                try {
-                    const response = await fetch(url + "workplan/facility/activate");
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const data = await response.json();
-                    generateDropdownMenus(data);
-                } catch (error) {
-                    console.error(`Fetch error: ${error}`);
+    <script th:inline="javascript">
+        let number = 0;
+        let processStatus = 0;
+
+        async function fetchFacilityData() {
+            try {
+                const response = await fetch(url + "workplan/facility/activate");
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                const data = await response.json();
+                generateDropdownMenus(data);
+            } catch (error) {
+                console.error(`Fetch error: ${error}`);
             }
+        }
 
+        function generateDropdownMenus(data) {
+            const facilityMapping = {
+                'juiceMachine1': '포장기',
+                'extractor1': '추출기',
+                'sterilizer1': '살균기',
+                'mixer': '혼합기',
+                'filter': '여과기',
+                'boxMachine': 'BOX포장기',
+                'metalDetector': '금속 검출기',
+                'washer': '세척기',
+                'stickMachine1': '막대기'
+            };
 
+            const order = ['washer', 'extractor1', 'mixer', 'sterilizer1', 'stickMachine1', 'juiceMachine1', 'metalDetector', 'boxMachine'];
 
-            function generateDropdownMenus(data) {
-                const facilityMapping = {
-                    'juiceMachine1': '포장기',
-                    'extractor1': '추출기',
-                    'sterilizer1': '살균기',
-                    'mixer': '혼합기',
-                    'filter': '여과기',
-                    'boxMachine': 'BOX포장기',
-                    'metalDetector': '금속 검출기',
-                    'washer': '세척기',
-                    'stickMachine1': '막대기'
-                };
+            const container = document.querySelector('.sengsan_container');
+            container.innerHTML = ''; // Clear previous content
 
-                const order = ['juiceMachine1', 'extractor1', 'sterilizer1', 'mixer', 'filter', 'boxMachine', 'metalDetector', 'washer', 'stickMachine1'];
+            order.forEach(facilityKey => {
+                if (data[facilityKey] && data[facilityKey].length > 0) {
+                    const dropdown = document.createElement('div');
+                    dropdown.classList.add('dropdown');
 
-                const container = document.querySelector('.sengsan_container');
-                container.innerHTML = ''; // Clear previous content
+                    const choice = document.createElement('div');
+                    choice.classList.add('sengsan_choice');
+                    choice.textContent = facilityMapping[facilityKey];
+                    dropdown.appendChild(choice);
 
-                order.forEach(facilityKey => {
-                    if (data[facilityKey] && data[facilityKey].length > 0) {
-                        const dropdown = document.createElement('div');
-                        dropdown.classList.add('dropdown');
+                    const dropdownContent = document.createElement('div');
+                    dropdownContent.classList.add('dropdown-content');
 
-                        const choice = document.createElement('div');
-                        choice.classList.add('sengsan_choice');
-                        choice.textContent = facilityMapping[facilityKey];
-                        dropdown.appendChild(choice);
+                    data[facilityKey].forEach(item => {
+                        const option = document.createElement('div');
+                        option.classList.add('sengsan_choice');
+                        option.setAttribute("data-id", item.id);
+                        // option.textContent = `${facilityMapping[facilityKey]}  ${item.id} 번`;
+                        if (processStatus === 100) {
+                            option.innerHTML = `<span style="color: red">${facilityMapping[facilityKey]} ${item.id} 번</span>`;
+                        } else if (processStatus > 0 && processStatus < 100) {
+                            option.innerHTML = `<span style="color: green">${facilityMapping[facilityKey]} ${item.id} 번</span>`;
+                        } else {
+                            option.textContent = `${facilityMapping[facilityKey]} ${item.id} 번`;
+                        }
+                        option.onclick = () => {
+                            sengsan_selectChoice(option, item.id)
+                        };
+                        dropdownContent.appendChild(option);
+                    });
 
-                        const dropdownContent = document.createElement('div');
-                        dropdownContent.classList.add('dropdown-content');
+                    dropdown.appendChild(dropdownContent);
+                    container.appendChild(dropdown);
+                }
+            });
+        }
 
-                        data[facilityKey].forEach(item => {
-                            const option = document.createElement('div');
-                            option.classList.add('sengsan_choice');
-                            option.setAttribute("data-id",item.id);
-                            option.textContent = `${facilityMapping[facilityKey]}  ${item.id} 번`;
-                            option.onclick = () => {
-                                sengsan_selectChoice(option, item.id)};
-                            dropdownContent.appendChild(option);
-                        });
+        async function sengsan_selectChoice(element, id) {
+            const choices = document.querySelectorAll('.sengsan_choice');
+            choices.forEach(choice => {
+                choice.classList.remove('ss-active');
+            });
+            element.classList.add('ss-active');
 
-                        dropdown.appendChild(dropdownContent);
-                        container.appendChild(dropdown);
-                    }
-                });
-            }
+            const status = document.getElementById('status');
+            status.innerText = `${element.innerText} 선택됨.`;
 
+            // Fetch the work plan details using the id
+            try {
+                const response = await fetch(`/workplan/${id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                number = id;
+                processStatus = data.processStatus;
+                console.log(number);
 
-            async function sengsan_selectChoice(element, id) {
-                const choices = document.querySelectorAll('.sengsan_choice');
-                choices.forEach(choice => {
-                    choice.classList.remove('ss-active');
-                });
-                element.classList.add('ss-active');
-
-                const status = document.getElementById('status');
-                status.innerText = `${element.innerText} 선택됨.`;
-
-                // Fetch the work plan details using the id
-                try {
-                    const response = await fetch(`/workplan/${id}`);
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    const data = await response.json();
-                    number = id;
-                    console.log(data); // Now data will log the parsed JSON object
-                    // Update the details with the fetched data
-                    const stepsContainer = document.querySelector('.ss-steps:last-child');
-                    stepsContainer.innerHTML = `
+                // Update the details with the fetched data
+                const stepsContainer = document.querySelector('.ss-steps:last-child');
+                stepsContainer.innerHTML = `
                     수주번호 / 안전재고 : ${data.processPlanId}<br>
                     공정 : ${data.process}<br>
                     원자재 투입량 : ${data.rawsId}<br>
                     LOT 번호 : ${data.lotCode}<br>
-                    진행률 : ${data.processStatus}<br>
+                    진행률 : Progress: ${data.processStatus}%<br>
                     공정완료시간 : ${data.processCompletionTime}<br>
                     작업자 : ${data.worker}<br>
                 `;
 
-                } catch (error) {
-                    console.error(`Fetch error: ${error}`);
+                // Update the button based on the process status
+                const startButton = document.getElementById('startButton');
+                if (processStatus === 0 || isNaN(processStatus)) {
+                    startButton.innerText = '공정시작';
+                    startButton.disabled = false;
+                } else if (processStatus > 0 && processStatus < 100) {
+                    startButton.innerText = '공정중';
+                    startButton.disabled = true;
+                } else if (processStatus === 100) {
+                    startButton.innerText = '공정완료';
+                    startButton.disabled = true;
                 }
+            } catch (error) {
+                console.error(`Fetch error: ${error}`);
             }
+        }
 
+        function nextStep() {
+            const workerName = document.getElementById('workerName').value;
+            const response = executeWorkPlan(workerName);
+            console.log(response);
+        }
 
-            function nextStep() {
-                const workerName = document.getElementById('workerName').value;
-                const response = executeWorkPlan(workerName);
-                console.log(response);
-            }
+        async function executeWorkPlan(workerName) {
+            const url = `/workplan/execute/${number}?worker=${encodeURIComponent(workerName)}`;
 
-            async function executeWorkPlan(workerName) {
-                const url = `/workplan/execute/${number}?worker=${encodeURIComponent(workerName)}`;
-
-                // AJAX 호출을 사용하여 백엔드 API를 호출하고, 성공 후 리디렉션을 수행합니다.
-                await fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        // 성공적으로 API가 호출되면 원래 페이지로 리디렉션
-
-                        alert('다음 단계로 진행합니다.');
-                        closeModal();
-
-                    })
-                    .catch(error => {
-                        console.error('Fetch error:', error);
-                    });
-            }
-
-
-
-            function closeModal() {
-                document.getElementById('myModal').style.display = "none";
-            }
-
-            function showModal() {
-                document.getElementById('myModal').style.display = "block";
-            }
-
-
-            window.onclick = function (event) {
-                var modal = document.getElementById('myModal');
-                if (event.target === modal) {
+            // AJAX 호출을 사용하여 백엔드 API를 호출하고, 성공 후 리디렉션을 수행합니다.
+            await fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // 성공적으로 API가 호출되면 원래 페이지로 리디렉션
+                    alert('다음 단계로 진행합니다.');
                     closeModal();
-                }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+
+        function showModal() {
+            document.getElementById('myModal').style.display = "block";
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                closeModal();
             }
+        }
 
-            window.onload = fetchFacilityData;
-        </script>
-    </th:block>
+        window.onload = fetchFacilityData;
+    </script>
+</th:block>
 
-
-    <div layout:fragment="content">
-        <div class="container">
-            <main class="main" id="top">
-                <div id="myModal" class="ss-modal">
-                    <div class="ss-modal-content">
-                        <h2 style="color: #0acf83">작업자 기입 </h2>
-                        <hr class="ss-hr">
-                        <input type="text" class="ss-text_input" id="workerName" placeholder="Type Your Name">
-                        <button class="ss-button" onclick="nextStep()">다음</button>
-                    </div>
+<div layout:fragment="content">
+    <div class="container">
+        <main class="main" id="top">
+            <div id="myModal" class="ss-modal">
+                <div class="ss-modal-content">
+                    <h2 style="color: #0acf83">작업자 기입 </h2>
+                    <hr class="ss-hr">
+                    <input type="text" class="ss-text_input" id="workerName" placeholder="Type Your Name">
+                    <button class="ss-button" onclick="nextStep()">다음</button>
                 </div>
+            </div>
 
-                <div class="ss-content">
-                    <div class="ss-container">
-                        <div class="ss-card ss-cart">
-                            <label class="ss-title_form">생산 계획
-                                <span style="margin-left: 70%"></span>
-                                <div class="status" id="status" style="font-weight: bold">선택항목 없음</div>
-                            </label>
-                            <div class="ss-steps-container">
-                                <div class="ss-steps" style="border-right: 1px solid rgba(16, 86, 82, .75);">
-                                    <div class="sengsan_container">
-                                        <!-- Dropdown menus will be generated here -->
-                                    </div>
-                                </div>
-
-                                <div class="ss-steps ss-steps_font">
-                                    <!-- Detailed information will be updated here -->
+            <div class="ss-content">
+                <div class="ss-container">
+                    <div class="ss-card ss-cart">
+                        <label class="ss-title_form">생산 계획
+                            <span style="margin-left: 70%"></span>
+                            <div class="status" id="status" style="font-weight: bold">선택항목 없음</div>
+                        </label>
+                        <div class="ss-steps-container">
+                            <div class="ss-steps" style="border-right: 1px solid rgba(16, 86, 82, .75);">
+                                <div class="sengsan_container">
+                                    <!-- Dropdown menus will be generated here -->
                                 </div>
                             </div>
-                            <div class="ss-card ss-checkout">
-                                <div class="ss-footer">
-                                    <label class="ss-price"> </label>
-                                    <button class="ss-checkout-btn" onclick="showModal()" id="startButton" > 공정시작</button>
-                                </div>
+
+                            <div class="ss-steps ss-steps_font">
+                                <!-- Detailed information will be updated here -->
+                            </div>
+                        </div>
+                        <div class="ss-card ss-checkout">
+                            <div class="ss-footer">
+                                <label class="ss-price"> </label>
+                                <button class="ss-checkout-btn" onclick="showModal()" id="startButton" disabled>공정시작</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
-    </html>
+</div>
+</html>
