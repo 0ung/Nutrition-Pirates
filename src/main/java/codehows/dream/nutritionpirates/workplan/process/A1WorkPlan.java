@@ -164,7 +164,7 @@ public class A1WorkPlan implements WorkPlans {
 				int newData = data + usedAmount;
 
 				// 원자재 코드 업데이트
-				String newCode = raw.getRawsCode().substring(0, 13) + "T" + newData;
+				String newCode = raw.getRawsCode().substring(0, raw.getRawsCode().length()) + "T" + newData;
 				updatedCodes.add(newCode);
 
 				// 원자재 코드 업데이트 후 저장
