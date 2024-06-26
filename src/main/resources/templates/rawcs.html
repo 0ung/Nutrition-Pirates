@@ -37,6 +37,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function () {
+            
             // Fetch API를 사용하여 데이터를 가져오기
             fetch('/api/graph')
                 .then(res => {
@@ -75,6 +76,55 @@
                 .catch(err => console.error('데이터 가져오기 오류:', err));
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+                            const page = 0; // 페이지 번호를 여기에 설정
+                            fetch(`/api/rawperiod/${page}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok ' + response.statusText);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const tbody = document.getElementById('period-records');
+                                    tbody.innerHTML = ''; // 기존 내용을 비웁니다.
+
+                                    data.forEach((item) => {
+                                        const row = document.createElement('tr');
+
+                                        const codeCell = document.createElement('td');
+                                        codeCell.textContent = item.rawsCode; // 제품코드
+                                        row.appendChild(codeCell);
+
+                                        const productCell = document.createElement('td');
+                                        productCell.textContent = item.product; // 제품명
+                                        row.appendChild(productCell);
+
+                                        const importDateCell = document.createElement('td');
+                                        importDateCell.textContent = item.importDate; // 입고일자
+                                        row.appendChild(importDateCell);
+
+                                        const deadlineCell = document.createElement('td');
+                                        deadlineCell.textContent = item.deadLine; // 사용기한
+                                        row.appendChild(deadlineCell);
+
+                                        const quantityCell = document.createElement('td');
+                                        quantityCell.textContent = item.quantity; // 수량
+                                        row.appendChild(quantityCell);
+
+                                        tbody.appendChild(row);
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                });
+                        });
+
     </script>
     <!-- Chart.js 라이브러리 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -91,7 +141,6 @@
                     <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
                         <canvas id="myChart"></canvas>
                     </div>
-
                 </div>
                 <div class="empty-container2"></div>
                 <label class="main-label">보관기한 3일 이하 원자재 List</label>
@@ -104,11 +153,16 @@
                         <tr>
                             <th scope="col">제품코드</th>
                             <th scope="col">제품명</th>
+                            <th scpoe="col">입고일자</th>
                             <th scope="col">사용기한</th>
                             <th scope="col">수량</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="period-records">
+                        <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
+                        </tbody>
+                      <!--
+                          <tbody></tbody>
                         <tr>
                             <td>275437395487</td>
                             <td>흑마늘</td>
@@ -142,8 +196,8 @@
                             <td>2024-06-09</td>
                             <td>300kg</td>
 
-                        </tr>
-                        </tbody>
+                        </tr>-->
+
                     </table>
                     <div class="empty-container2"></div>
 

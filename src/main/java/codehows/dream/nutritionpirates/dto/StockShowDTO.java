@@ -3,6 +3,7 @@ package codehows.dream.nutritionpirates.dto;
 import lombok.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 
 @NoArgsConstructor
@@ -12,10 +13,11 @@ import java.sql.Date;
 @Builder
 public class StockShowDTO {
 
-    private Long id;
-    private String LotCode;
-    private int quantity;
+    private String product;
+    private String lotCode;
+    private double quantity;
     private Date createDate;
     private Date exportDate;
     private boolean isExport;
+
 }

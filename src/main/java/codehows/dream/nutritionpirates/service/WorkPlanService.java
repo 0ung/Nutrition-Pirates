@@ -254,7 +254,7 @@ public class WorkPlanService {
 			.id(executedWork.getId())
 			.endTime(executedWork.getEndTime() != null ? executedWork.getEndTime().toString() : null)
 			.startTime(executedWork.getStartTime().toString())
-			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLetCode() : null)
+			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLotCode() : null)
 			.facility(executedWork.getFacility())
 			.rawsCodes(executedWork.getRawsCodes())
 			.process(executedWork.getProcess())

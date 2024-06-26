@@ -46,7 +46,58 @@
             window.location.href = '/api/history';
         }
 
+        document.addEventListener('DOMContentLoaded', function() {
+           const page = 0; // 페이지 번호를 여기에 설정
+            fetch(`/api/rawstock/${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tbody = document.getElementById('movement-records');
+                    tbody.innerHTML = ''; // 기존 내용을 비웁니다.
 
+                    data.forEach((item) => {
+                        const row = document.createElement('tr');
+
+                        const codeCell = document.createElement('td');
+                        codeCell.textContent = item.rawsCode; // 제품코드
+                        row.appendChild(codeCell);
+
+                        const productCell = document.createElement('td');
+                        productCell.textContent = item.product; // 제품명
+                        row.appendChild(productCell);
+
+                        const quantityCell = document.createElement('td');
+                        quantityCell.textContent = item.quantity; // 수량
+                        row.appendChild(quantityCell);
+
+                        const statusCell = document.createElement('td');
+                        statusCell.textContent = item.status; // 상태
+                        row.appendChild(statusCell);
+
+                        const dateCell = document.createElement('td');
+                        dateCell.textContent = item.date; // 일자
+                        row.appendChild(dateCell);
+
+                        const reasonCell = document.createElement('td');
+                        reasonCell.textContent = item.rawsReason; // 사유
+                        row.appendChild(reasonCell);
+
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
     </script>
 </th:block>
 
@@ -73,11 +124,15 @@
                                 <th scope="col">상태</th>
                                 <th scope="col">일자</th>
                                 <th scope="col">사유</th>
-                                <th scope="col">수정/삭제</th>
+                                <!--<th scope="col">수정/삭제</th>-->
                             </tr>
                             </thead>
-                            <tbody>
-                            <!-- 데이터베이스에서 받아온 입출고 기록을 반복해서 출력 -->
+                            <tbody id="movement-records">
+                            <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
+                            </tbody>
+                        </table>
+                            <!--<tbody>
+                            &lt;!&ndash; 데이터베이스에서 받아온 입출고 기록을 반복해서 출력 &ndash;&gt;
                             <tr th:each="record : ${movementRecords}">
                                 <td th:text="${record.productCode}">1번</td>
                                 <td th:text="${record.productName}">양배추</td>
@@ -103,8 +158,9 @@
                                 </td>
                             </tr>
                             </tbody>
-                        </table>
+                        </table>-->
                     </div>
+
                 </div>
 
 
