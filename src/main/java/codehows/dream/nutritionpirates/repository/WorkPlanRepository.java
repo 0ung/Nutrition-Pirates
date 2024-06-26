@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.FacilityStatus;
@@ -35,4 +36,8 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 	List<WorkPlan> findByEndTimeExists();
 
 	List<WorkPlan> findByEndTimeBetween(Timestamp startTime, Timestamp endTime);
+
+	@Query("SELECT w FROM WorkPlan w WHERE w.lotCode.id = :lotCodeId")
+	WorkPlan findByLotCodeId(@Param("lotCodeId") String lotCodeId);
+
 }

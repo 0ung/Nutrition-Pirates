@@ -44,7 +44,7 @@ public class WorkPlan {
 	private String rawsCodes;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "lotCode")
+	@JoinColumn(name = "lotCode_id")
 	private LotCode lotCode;
 
 	private String worker;

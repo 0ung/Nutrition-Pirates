@@ -16,7 +16,7 @@ import lombok.Setter;
 public class LotCode {
 
 	@Id
-	@Column(name = "lotCode")
+	@Column(name = "lotCode_id")
 	private String lotCode;
 
 	private String pervLot;

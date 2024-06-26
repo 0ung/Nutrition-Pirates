@@ -192,7 +192,7 @@ public class WorkPlanService {
         return currentProgramTime.toLocalDateTime().plusMinutes(deliveryTimeMinutes).toString();
     }
 
-    private List<WorkPlan> getActivateFacility(Facility facility) {
+    public List<WorkPlan> getActivateFacility(Facility facility) {
         List<WorkPlan> workPlans = workPlanRepository.findByFacility(facility);
         if (workPlans.isEmpty()) {
             return null;
@@ -203,7 +203,6 @@ public class WorkPlanService {
     public ActivateFacilityDTO getActivateFacility(Facility[] facilitys) {
 
         ActivateFacilityDTO facilityDTO = new ActivateFacilityDTO();
-        Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
         for (Facility facility : facilitys) {
             List<WorkPlan> workPlan = getActivateFacility(facility);
 
