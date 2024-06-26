@@ -11,9 +11,12 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -63,18 +66,18 @@ public class RawRegisterController {
         return new ResponseEntity<>(rawOrderInsertService.getMinus(), HttpStatus.OK);
     }
 
-    /*입출고관리 연결*/
+    /*입출고관리 페이징 연결*/
+    //페이징 기능
     @GetMapping("/rawstock/{page}")
-    public ResponseEntity<?> getRawStockList(@PathVariable(name = "page") Optional<Integer> page) {
-
+    public String getRawStockList(@PathVariable(name = "page") Optional<Integer> page, @PageableDefault(page=0,size = 10,sort = "id",
+            direction = Sort.Direction.DESC) Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
-
         try {
-            return new ResponseEntity<>(rawOrderInsertService.getRawStockList(pageable), HttpStatus.OK);
-
+            model.addAttribute("list", rawOrderInsertService.getRawStockList(pageable));
+            return "rawmng";
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return "error";
         }
     }
 

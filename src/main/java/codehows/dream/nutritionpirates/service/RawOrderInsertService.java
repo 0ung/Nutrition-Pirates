@@ -302,6 +302,7 @@ public class RawOrderInsertService {
         return list;
     }
 
+
     // 입고된 총 양만 list에 담아서 보여주기
     public List<RawShowGraphDTO> getRawStockGraph() {
 
@@ -327,7 +328,7 @@ public class RawOrderInsertService {
         return list;
     }
 
-    // 재고현황에서 엑설 파일로 다운로드
+    // 재고현황에서 엑셀 파일로 다운로드
     @Transactional
     public Workbook getHistory() {
         List<Raws> list = rawRepository.findAll();
@@ -429,23 +430,23 @@ public class RawOrderInsertService {
                 Status.IMPORT,
                 minTimestamp,
                 timestamp,
-                pageable );
+                pageable);
 
         List<RawPeriodDTO> list = new ArrayList<>();
 
-        pages.forEach((e) ->{
+        pages.forEach((e) -> {
             list.add(RawPeriodDTO.builder()
-                            .rawsCode(e.getRawsCode())
-                            .product(e.getProduct().getValue())
-                            .importDate(e.getImportDate())
-                            .deadLine(new Date(e.getDeadLine().getTime()))
-                            .quantity(e.getQuantity())
-                            .build());
+                    .rawsCode(e.getRawsCode())
+                    .product(e.getProduct().getValue())
+                    .importDate(e.getImportDate())
+                    .deadLine(new Date(e.getDeadLine().getTime()))
+                    .quantity(e.getQuantity())
+                    .build());
         });
         return list;
     }
 
-   //첫번쨰 생성이 되면
+    //첫번쨰 생성이 되면
     //분류
     public RawBOMDTO createRequirement(Order order) {
         ProductName productName = order.getProduct();
@@ -620,6 +621,10 @@ public class RawOrderInsertService {
                 result.add(new RawOrderPlanDTO(partnerName, rawProductName.getValue(), remainQuantity, formattedExpectedImportDate));
             }
         }
+
         return result;
+
+
     }
+
 }
