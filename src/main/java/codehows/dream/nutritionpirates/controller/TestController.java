@@ -48,4 +48,18 @@ public class TestController {
         return "SengSan_check";
     }
 
+    @GetMapping(value = "/orderermng")
+    public String index11() {
+        return "orderermng";
+    }
+
+    @GetMapping(value = "/rawmng")
+    public String index21() {
+        return "rawmng";
+    }
+
+    @GetMapping(value = "/rawcs")
+    public String index31() {
+        return "rawcs";
+    }
 }

@@ -25,20 +25,20 @@ import codehows.dream.nutritionpirates.service.WorkPlanService;
 @TestPropertySource("classpath:application.yml")
 public class WorkPlanServiceTest {
 
-	@Mock
-	private WorkPlanRepository workPlanRepository;
+    @Mock
+    private WorkPlanRepository workPlanRepository;
 
-	@Mock
-	private ProgramTimeService programTimeService;
+    @Mock
+    private ProgramTimeService programTimeService;
 
-	@InjectMocks
-	private WorkPlanService workPlanService;
+    @InjectMocks
+    private WorkPlanService workPlanService;
 
-	@Test
-	public void remainTime_ShouldActivateWorkPlan_WhenElapsedEnoughTime() {
-		workPlanService.remainTime();
-	}
+    @Test
+    public void remainTime_ShouldActivateWorkPlan_WhenElapsedEnoughTime() {
+        workPlanService.remainTime();
+    }
 
-	// Add more test cases to cover other scenarios, edge cases, and error conditions
+    // Add more test cases to cover other scenarios, edge cases, and error conditions
 
 }

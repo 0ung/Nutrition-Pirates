@@ -7,8 +7,36 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
+        .jw-row {
+            width: 1500px;
+            height: 100%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .jw-div1 {
+            padding: 10px;
+            background: rgb(255, 250, 235);
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 30px; /* 모서리를 둥글게 함 */
+            width: 49.5%;
+            height: 110%;
+            float: left;
+
+        }
+
+        .jw-div2 {
+            padding: 10px;
+            background: rgb(255, 250, 235);
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 30px; /* 모서리를 둥글게 함 */
+            width: 49.5%;
+            height: 110%;
+            float: right;
+
+        }
     </style>
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css"/>
+    <link th:href="@{/css/jw.css}" type="text/css" rel="stylesheet" id="jw.css"/>
 </th:block>
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
@@ -21,102 +49,110 @@
 
 <div layout:fragment="content">
 
-    <h1>재고 현황</h1>
-    <hr>
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <label class="jw-titleLabel">재고 현황</label>
+            <div class="jw-row">
+                <div class="jw-div1">
+                    <label class="main-label">현재 재고 입고 현황
+                        <span style="margin-left: auto; width: 150px">
+                            <label class="jw-timeline">2024-06-19T12:45</label>
+                                </span>
+                    </label>
+                    <div class="group">
+                        <div class="chart1">
+                            <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                            <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                                <canvas id="myChart1"></canvas>
+                            </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <label class="timeline">2024-06-19T12:45</label>
-                <label class="title_form">현재 재고 입고 현황</label>
-                <div class="chart">
-                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
-                    <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
-                        <canvas id="myChart1"></canvas>
+                            <!-- include Chart.js from a CDN -->
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                            <script>
+                                const ctx = document.querySelector('#myChart1');
+
+                                //만들위치, 설정값객체
+                                new Chart(ctx, {
+                                    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                    data: {
+                                        labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
+                                        datasets: [
+                                            {
+                                                type: 'line',
+                                                label: '안전 재고량 적정선',
+                                                data: [1000, 1000, 1000, 1000],
+                                                borderWidth: 1,
+                                            },
+                                            {
+                                                label: '재고(BOX)',
+                                                data: [2000, 500, 1500, 1000],
+                                                borderWidth: 1,
+                                            }],
+
+
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
                     </div>
 
-                    <!-- include Chart.js from a CDN -->
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                    <script>
-                        const ctx = document.querySelector('#myChart1');
-
-                        //만들위치, 설정값객체
-                        new Chart(ctx, {
-                            type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                            data: {
-                                labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
-                                datasets: [
-                                    {
-                                        type: 'line',
-                                        label: '안전 재고량 적정선',
-                                        data: [1000, 1000, 1000, 1000],
-                                        borderWidth: 1,
-                                    },
-                                    {
-                                        label: '재고(BOX)',
-                                        data: [2000, 500, 1500, 1000],
-                                        borderWidth: 1,
-                                    }],
-
-
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-                    </script>
                 </div>
 
-            </div>
+                <div class="jw-div2">
+                    <label class="main-label">월 재고 출고 현황
+                        <span style="margin-left: auto; width: 150px">
+                            <label class="jw-timeline">2024-06-19T12:45</label>
+                            </span>
+                    </label>
+                    <div class="group">
+                        <div class="chart2">
+                            <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                            <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                                <canvas id="myChart2"></canvas>
+                            </div>
 
-            <div class="col">
-                <label class="timeline">2024-06-19T12:45</label>
-                <label class="title_form">월 재고 출고 현황</label>
+                            <!-- include Chart.js from a CDN -->
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                <div class="chart">
-                    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
-                    <div style="width:100vw;height:50vh;border:none; display: flex; justify-content: center; align-items: center;">
-                        <canvas id="myChart2"></canvas>
-                    </div>
+                            <script>
+                                const ctx2 = document.querySelector('#myChart2');
 
-                    <!-- include Chart.js from a CDN -->
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                    <script>
-                        const ctx = document.querySelector('#myChart2');
-
-                        //만들위치, 설정값객체
-                        new Chart(ctx, {
-                            type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                            data: {
-                                labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
-                                datasets: [
-                                    {
-                                        label: '월 재고 출고 현황',
-                                        data: [700, 300, 1500, 1000],
-                                        borderWidth: 1,
-                                    }],
+                                //만들위치, 설정값객체
+                                new Chart(ctx2, {
+                                    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                    data: {
+                                        labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
+                                        datasets: [
+                                            {
+                                                label: '월 재고 출고 현황',
+                                                data: [700, 300, 1500, 1000],
+                                                borderWidth: 1,
+                                            }],
 
 
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                        });
-                    </script>
+                                });
+                            </script>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 </html>

@@ -43,4 +43,8 @@ public class Stock {
 
 	private boolean isExport;
 
+	public void updateIsExport (boolean isExport, Date exportDate) {
+		this.isExport = isExport;
+		this.exportDate = exportDate;
+	}
 }
