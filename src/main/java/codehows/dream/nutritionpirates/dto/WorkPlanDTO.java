@@ -35,6 +35,7 @@ public class WorkPlanDTO {
 			.startTime(workPlan.getStartTime() != null ? workPlan.getStartTime().toString() : null)
 			.rawsCodes(workPlan.getRawsCodes())
 			.facility(workPlan.getFacility())
+			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLotCode() : null)
 			.activate(workPlan.isActivate())
 			.lotCodes(workPlan.getLotCode() != null ? workPlan.getLotCode().getLotCode() : null)
 			.build();

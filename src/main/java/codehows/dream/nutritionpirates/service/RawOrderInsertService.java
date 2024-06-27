@@ -263,6 +263,37 @@ public class RawOrderInsertService {
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
+    // 발주등록이후 테이블
+     /*public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
+
+        List<RawOrderListDTO> list = new ArrayList<>();
+
+        Page<Raws> pages = rawRepository.findAll(pageable);
+
+//       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//
+//        pages.forEach((e) -> {
+//            String formattedDate = null;
+//            if(e.getOrderDate() != null) {
+//                //LocalDateTime localDateTime = LocalDateTime.parse(e.getOrderDate());
+//                formattedDate = localDateTime.format(formatter);
+//            }
+//
+//            list.add(
+//                    RawOrderListDTO.builder()
+//                            .rawsCode(e.getRawsCode())
+//                            .product(e.getProduct().getValue())
+//                            .quantity(e.getQuantity())
+//                            .status(e.getStatus().getValue())
+//                            .orderDate(formattedDate)
+//                            .importDate(e.getImportDate())
+//                            .build()
+//            )
+//
+//        });
+
+    }*/
+
 
     // 재고현황 테이블
     public List<RawsListDTO> getRawStockList(Pageable pageable) {
@@ -270,6 +301,7 @@ public class RawOrderInsertService {
         List<RawsListDTO> list = new ArrayList<>();
 
         Page<Raws> pages = rawRepository.findAll(pageable);
+        int totalPages = pages.getTotalPages();
 
         pages.forEach((e) -> {
 
@@ -299,8 +331,13 @@ public class RawOrderInsertService {
                     .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
                     .build());
         });
+
+        // 원하는 위치에 전체 페이지 수를 사용
+        System.out.println("Total pages: " + totalPages);
+
         return list;
     }
+
 
     // 입고된 총 양만 list에 담아서 보여주기
     public List<RawShowGraphDTO> getRawStockGraph() {
@@ -327,7 +364,7 @@ public class RawOrderInsertService {
         return list;
     }
 
-    // 재고현황에서 엑설 파일로 다운로드
+    // 원자재현황에서 엑설 파일로 다운로드
     @Transactional
     public Workbook getHistory() {
         List<Raws> list = rawRepository.findAll();
@@ -429,23 +466,23 @@ public class RawOrderInsertService {
                 Status.IMPORT,
                 minTimestamp,
                 timestamp,
-                pageable );
+                pageable);
 
         List<RawPeriodDTO> list = new ArrayList<>();
 
-        pages.forEach((e) ->{
+        pages.forEach((e) -> {
             list.add(RawPeriodDTO.builder()
-                            .rawsCode(e.getRawsCode())
-                            .product(e.getProduct().getValue())
-                            .importDate(e.getImportDate())
-                            .deadLine(new Date(e.getDeadLine().getTime()))
-                            .quantity(e.getQuantity())
-                            .build());
+                    .rawsCode(e.getRawsCode())
+                    .product(e.getProduct().getValue())
+                    .importDate(e.getImportDate())
+                    .deadLine(new Date(e.getDeadLine().getTime()))
+                    .quantity(e.getQuantity())
+                    .build());
         });
         return list;
     }
 
-   //첫번쨰 생성이 되면
+    //첫번쨰 생성이 되면
     //분류
     public RawBOMDTO createRequirement(Order order) {
         ProductName productName = order.getProduct();
@@ -539,6 +576,7 @@ public class RawOrderInsertService {
             totalBOM.setPlum(totalBOM.getPlum() + bomDTO.getPlum());
             totalBOM.setHoney(totalBOM.getHoney() + bomDTO.getHoney());
             totalBOM.setPaper(totalBOM.getPaper() + bomDTO.getPaper());
+            totalBOM.setCollagen(totalBOM.getCollagen() + bomDTO.getCollagen());
             totalBOM.setBox(totalBOM.getBox() + bomDTO.getBox());
         }
         return totalBOM;
@@ -620,6 +658,10 @@ public class RawOrderInsertService {
                 result.add(new RawOrderPlanDTO(partnerName, rawProductName.getValue(), remainQuantity, formattedExpectedImportDate));
             }
         }
+
         return result;
+
+
     }
+
 }
