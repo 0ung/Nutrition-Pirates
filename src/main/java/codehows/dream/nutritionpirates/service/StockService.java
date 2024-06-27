@@ -1,13 +1,13 @@
 package codehows.dream.nutritionpirates.service;
 
 
-import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.dto.ShipmentListDTO;
 import codehows.dream.nutritionpirates.dto.StockGraphDTO;
 import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.dto.ShipShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
 import codehows.dream.nutritionpirates.entity.Stock;
@@ -22,7 +22,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,6 +158,25 @@ public class StockService {
         return list;
     }
 
+    /* process 공정찾는 메서드*/
+    public Process getProcess(Long orderId) {
+        //1. processPlan 찾고
+        //2. workplan을 찾고
+        //3. 진행중인 공정을 반환
+        ProcessPlan plan = processPlanRepository.findByOrderId(orderId);
+        List<WorkPlan> workPlan = workPlanRepository.findAllByProcessPlanId(plan.getId());
+
+        for (WorkPlan workPlan1 : workPlan) {
+            if (workPlan1.getFacilityStatus() == FacilityStatus.WORKING) {
+                return workPlan1.getProcess();
+            }
+            if (workPlan1.getFacilityStatus() == FacilityStatus.STANDBY && workPlan1.getProcess() == Process.A8 && workPlan1.getRawsCodes() != null) {
+                return workPlan1.getProcess();
+            }
+        }
+        throw new IllegalArgumentException("대기중");
+    }
+
     // 출하 DTO 만들기
     public List<ShipmentListDTO> getShip(Pageable pageable) {
         Page<Order> orders = orderRepository.findAll(pageable);
@@ -192,21 +209,20 @@ public class StockService {
         });
         return shipmentListDTOList;
     }
-    /* process 공정찾는 메서드*/
-    public Process getProcess(Long orderId) {
-        //1. processPlan 찾고
-        //2. workplan을 찾고
-        //3. 진행중인 공정을 반환
-        ProcessPlan plan = processPlanRepository.findByOrderId(orderId);
-        List<WorkPlan> workPlan = workPlanRepository.findAllByProcessPlanId(plan.getId());
+    // 출하 그래프
+    /*public List<ShipShowGraphDTO> getShipGraph() {
 
-        for (WorkPlan workPlan1 : workPlan) {
-            if (workPlan1.getFacilityStatus() == FacilityStatus.WORKING) {
-                return workPlan1.getProcess();
-            }
+        Map<String, Integer> shipQuantityMap = new HashMap<>();
+        for (ProductName productName : ProductName.values()) {
+            shipQuantityMap.put(productName.getValue(), 0); // 기본값은 0으로 설정
         }
-        throw new IllegalArgumentException("대기중");
-    }
+        List<Stock> shipList = stockRepository.findAll();
+
+        for (Stock stock : shipList) {
+            if(stock.)
+        }
+    }*/
+
 
     // 재고현황 엑셀파일 다운로드
     @Transactional

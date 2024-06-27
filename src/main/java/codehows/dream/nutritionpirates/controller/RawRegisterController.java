@@ -61,6 +61,38 @@ public class RawRegisterController {
         return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
     }
 
+    /*원자재 발주 관리 입고 테이블 */
+    @GetMapping("/list/{page}")
+    public ResponseEntity<?> getRawStockList(Pageable pageable) {
+        try {
+            return new ResponseEntity<>(rawOrderInsertService.getRawOrderList(pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*원자재 발주 관리 입고 엑셀 다운로드*/
+    @GetMapping("/rawhistory")
+    public ResponseEntity<?> getrawExcel(HttpServletResponse response) {
+        try {
+            Workbook workbook = rawOrderInsertService.getHistoryRaw();
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+            String fileName = "원자재 발주 현황 내역.xlsx";
+            String encodeFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodeFileName);
+
+            workbook.write(response.getOutputStream());
+            workbook.close();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     /*발주계획서*/
     @GetMapping("/calculate")
     public ResponseEntity<?> getMinus() {

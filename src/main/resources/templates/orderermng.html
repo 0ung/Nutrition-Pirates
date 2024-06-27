@@ -72,13 +72,37 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        //입고됨 버튼
-        function handleButtonClick(button) {
-            console.log('Button clicked'); // 콘솔 로그 추가
-            button.innerHTML = '입고됨';
-            button.disabled = true;
-        }
 
+
+        /*원자재 발주 관리 입고 엑셀 다운로드*/
+        function downloadExcel(event) {
+            event.preventDefault(); // 폼 제출 기본 동작을 막음
+            window.location.href = '/api/rawhistory';
+        }
+        //입고됨 버튼
+        function handleButtonClick(button, rawsCode) {
+            console.log('Button clicked'); // 콘솔 로그 추가
+
+            fetch(`/api/${rawsCode}`, {
+                method : 'PUT',
+                headers : {
+                    'Content-Type' : 'application/json'
+                }
+            })
+                .then(response =>{
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    button.innerHTML = '입고됨';
+                    button.disabled = true;
+                })
+                .catch(error => {
+                    console.error('Error import fecthing data :', error);
+                });
+        }
 
         //발주 스크립트
         document.getElementById('form_save').addEventListener('click', function (event) {
@@ -121,7 +145,69 @@
                     alert('Error creating order: ' + error.message);
                 });
         });
+        // 발주 입고 대기 현황
+        document.addEventListener('DOMContentLoaded', function () {
+            const page = 0; // 페이지 번호를 여기에 설정
+           fetch(`/api/list/${page}`, {
+               method : 'GET',
+               headers : {
+                   'Content-Type' : 'application/json'
+               }
+           })
+               .then(response => {
+                   if (!response.ok) {
+                       throw new Error('Network response was not ok' + response.statusText);
+                   }
+                   return response.json();
+               })
+               .then(data => {
+                   const tbody = document.getElementById('import-table-body');
+                   tbody.innerHTML = ''; // 기존 내용을 비우고
 
+                   data.forEach((item) => {
+                       const row = document.createElement('tr');
+
+                       const codeCell = document.createElement('td');
+                       codeCell.textContent = item.rawsCode; // 제품코드
+                       row.appendChild(codeCell);
+
+                       const productCell = document.createElement('td');
+                       productCell.textContent = item.product; // 원자재명
+                       row.appendChild(productCell);
+
+                       const quantityCell = document.createElement('td');
+                       quantityCell.textContent = item.quantity; // 수량
+                       row.appendChild(quantityCell);
+
+                       const statusCell = document.createElement('td');
+                       statusCell.textContent = item.status; // 입고상태
+                       row.appendChild(statusCell);
+
+                       const orderDateCell = document.createElement('td');
+                       orderDateCell.textContent = item.orderDate; // 주문일자
+                       row.appendChild(orderDateCell);
+
+                       const importDateCell = document.createElement('td');
+                       importDateCell.textContent = item.importDate; // 입고일자
+                       row.appendChild(importDateCell);
+
+                       const buttonCell = document.createElement('td');
+                       const importButton = document.createElement('button');
+                       importButton.className = 'jw-button2';
+                       importButton.textContent = '입고버튼';
+                       importButton.onclick = function () {
+                           handleButtonClick(importButton, item.rawsCode);
+                       };
+                       buttonCell.appendChild(importButton);
+                       row.appendChild(buttonCell);
+
+                       tbody.appendChild(row);
+                   });
+               })
+               .catch(error => {
+                   console.error('Error fetching data : ', error);
+               })
+        });
 
 
         //자동 계산 스크립트
@@ -227,15 +313,19 @@
                             <table class="jw-table">
                                 <thead>
                                 <tr>
-                                    <th scope="col">번호</th>
-                                    <th scope="col">공정</th>
-                                    <th scope="col">LOT</th>
-                                    <th scope="col">시작시간</th>
-                                    <th scope="col">종료시간</th>
-                                    <th scope="col">입고확인</th>
+                                    <th scope="col">제품코드</th>
+                                    <th scope="col">원자재명</th>
+                                    <th scope="col">수량</th>
+                                    <th scope="col">입고상태</th>
+                                    <th scope="col">주문일자</th>
+                                    <th scope="col">입고일자</th>
+                                    <th scope="col">입고버튼</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="import-table-body">
+                                <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
+                                </tbody>
+                                <!--<tbody>
                                 <tr>
                                     <td>1</td>
                                     <td>A2</td>
@@ -256,11 +346,13 @@
                                         <button class="jw-button2" onclick="handleButtonClick(this)">입고버튼</button>
                                     </td>
                                 </tr>
-                                </tbody>
+                                </tbody>-->
                             </table>
                             <div style="margin-left: 73%">
-                                <div class="empty-container">
-                                    <button class="jw-button" onclick="downloadExcel()">엑셀 다운</button>
+                                <div class="empty-container" id = "button-container">
+                                    <form>
+                                        <button class="jw-button" onclick="downloadExcel(event)">엑셀 다운</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
