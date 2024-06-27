@@ -41,6 +41,7 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
         function downloadExcel(event) {
             event.preventDefault(); // 폼 제출 기본 동작을 막음
             window.location.href = '/api/history';
@@ -109,7 +110,8 @@
                         prevPageLink.className = 'page-link';
                         prevPageLink.href = '#';
                         prevPageLink.innerHTML = '&laquo;';
-                        prevPageLink.addEventListener('click', () => {
+                        prevPageLink.addEventListener('click', (event) => {
+                            event.preventDefault();
                             if (!data.first) {
                                 loadPage(data.number - 1);
                             }
@@ -125,7 +127,10 @@
                             pageLink.className = 'page-link';
                             pageLink.href = '#';
                             pageLink.textContent = i + 1;
-                            pageLink.addEventListener('click', () => loadPage(i));
+                            pageLink.addEventListener('click', (event) => {
+                                event.preventDefault();
+                                loadPage(i);
+                            });
                             pageItem.appendChild(pageLink);
                             pagination.appendChild(pageItem);
                         }
@@ -137,13 +142,18 @@
                         nextPageLink.className = 'page-link';
                         nextPageLink.href = '#';
                         nextPageLink.innerHTML = '&raquo;';
-                        nextPageLink.addEventListener('click', () => {
+                        nextPageLink.addEventListener('click', (event) => {
+                            event.preventDefault();
                             if (!data.last) {
                                 loadPage(data.number + 1);
                             }
                         });
                         nextPageItem.appendChild(nextPageLink);
                         pagination.appendChild(nextPageItem);
+
+                        // 페이지네이션 디버그 정보 콘솔에 출력
+                        console.log('총 페이지 수:', data.totalPages);
+                        console.log('현재 페이지:', data.number);
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
@@ -207,7 +217,6 @@
 </th:block>
 
 <div layout:fragment="content">
-
     <div id="main-content">
         <div class="main-container" id="main-container">
             <div id="card1">
@@ -229,7 +238,6 @@
                                 <th scope="col">일자</th>
                                 <th scope="col">수량</th>
                                 <th scope="col">사유</th>
-                                <!--<th scope="col">수정/삭제</th>-->
                             </tr>
                             </thead>
                             <tbody id="movement-records">
@@ -244,30 +252,15 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
-
 
                 <div class="empty-container"></div>
 
-
                 <!------------- 페이지네이션 -------------->
-
 
                 <div id="pagination">
                     <nav aria-label="...">
-                        <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
-                            </li>
-                            <!-- 페이지 번호도 동적으로 처리할 수 있습니다. -->
-                            <li class="page-item"><a class="page-link" href="0">1</a></li>
-                            <li class="page-item"><a class="page-link" href="1">2</a></li>
-                            <li class="page-item"><a class="page-link" href="2">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">&raquo;</a>
-                            </li>
-                        </ul>
+                        <ul class="pagination"></ul>
                     </nav>
                 </div>
             </div>
@@ -276,6 +269,7 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
+
 
     <!-- 수정버튼 Modal -->
     <div class="modal fade" id="update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
