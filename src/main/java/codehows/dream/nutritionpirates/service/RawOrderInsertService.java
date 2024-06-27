@@ -13,7 +13,6 @@ import codehows.dream.nutritionpirates.repository.RawRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,6 +258,7 @@ public class RawOrderInsertService {
         rawRepository.save(raw);
     }
 
+
     public void rawExport(String rawsCode) {
         Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
 
@@ -269,7 +269,6 @@ public class RawOrderInsertService {
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
-
     // 발주등록이후 테이블
     public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
@@ -349,7 +348,6 @@ public class RawOrderInsertService {
     }
 
 
-
     // 재고현황 테이블
     public Page<RawsListDTO> getRawStockList(Pageable pageable) {
         Page<Raws> pages = rawRepository.findAll(pageable);
@@ -362,7 +360,7 @@ public class RawOrderInsertService {
                     selectDate = new Date(e.getOrderDate().getTime());
                     break;
                 case IMPORT:
-                    selectDate = e.getImportDate();
+                    selectDate = new Date(e.getImportDate().getTime());
                     break;
                 case EXPORT:
                     selectDate = e.getExportDate();
@@ -403,7 +401,7 @@ public class RawOrderInsertService {
                     selectDate = new Date(e.getOrderDate().getTime());
                     break;
                 case IMPORT:
-                    selectDate = new Date(e.getImportDate().getTime());
+                    selectDate = e.getImportDate();
                     break;
                 case EXPORT:
                     selectDate = e.getExportDate();
