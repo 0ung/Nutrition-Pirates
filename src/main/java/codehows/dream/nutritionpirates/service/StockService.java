@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +88,7 @@ public class StockService {
 
 
     // isExport 가 1(true) 이면 출고 0 (false) 이면 입고
-    public List<StockShowDTO> getStock(Pageable pageable) {
+    /*public List<StockShowDTO> getStock(Pageable pageable) {
         Page<Stock> stocks = stockRepository.findAll(pageable);
         List<StockShowDTO> stockShowDTOList = new ArrayList<>();
 
@@ -101,6 +105,26 @@ public class StockService {
             );
         });
         return stockShowDTOList;
+    }*/
+    // 재고 현황 테이블 - /api/stock/{page}
+    public Page<StockShowDTO> getStock(Pageable pageable) {
+        Page<Stock> pages = stockRepository.findAll(pageable);
+
+        List<StockShowDTO> list = pages.stream().map(e ->
+
+            StockShowDTO.builder()
+                    .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
+                    .lotCode(e.getWorkPlan().getLotCode().getLotCode())
+                    .quantity(e.getQuantity())
+                    .createDate(e.getCreateDate())
+                    .exportDate(e.getExportDate())
+                    .isExport(e.getExportDate() == null ? false : true)
+                    .build()
+
+        ).collect(Collectors.toList());
+
+        // Page 객체를 반환하기 위해 List를 Page 로 변환
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
     }
 
     public void releaseStock(Long id) {
@@ -232,7 +256,8 @@ public class StockService {
         Pageable pageable = Pageable.unpaged();
 
         // getStock메서드를 호출하여 StockShowDTO 리스트 가져오기
-        List<StockShowDTO> list = getStock(pageable);
+        Page<StockShowDTO> page = getStock(pageable);
+        List<StockShowDTO> list = page.getContent();
 
         Workbook workbook = new XSSFWorkbook();
 
