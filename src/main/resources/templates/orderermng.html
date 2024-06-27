@@ -145,68 +145,69 @@
                     alert('Error creating order: ' + error.message);
                 });
         });
+
         // 발주 입고 대기 현황
         document.addEventListener('DOMContentLoaded', function () {
             const page = 0; // 페이지 번호를 여기에 설정
-           fetch(`/api/list/${page}`, {
-               method : 'GET',
-               headers : {
-                   'Content-Type' : 'application/json'
-               }
-           })
-               .then(response => {
-                   if (!response.ok) {
-                       throw new Error('Network response was not ok' + response.statusText);
-                   }
-                   return response.json();
-               })
-               .then(data => {
-                   const tbody = document.getElementById('import-table-body');
-                   tbody.innerHTML = ''; // 기존 내용을 비우고
+            fetch(`/api/list/${page}`, {
+                method : 'GET',
+                headers : {
+                    'Content-Type' : 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tbody = document.getElementById('import-table-body');
+                    tbody.innerHTML = ''; // 기존 내용을 비우고
 
-                   data.forEach((item) => {
-                       const row = document.createElement('tr');
+                    data.forEach((item) => {
+                        const row = document.createElement('tr');
 
-                       const codeCell = document.createElement('td');
-                       codeCell.textContent = item.rawsCode; // 제품코드
-                       row.appendChild(codeCell);
+                        const codeCell = document.createElement('td');
+                        codeCell.textContent = item.rawsCode; // 제품코드
+                        row.appendChild(codeCell);
 
-                       const productCell = document.createElement('td');
-                       productCell.textContent = item.product; // 원자재명
-                       row.appendChild(productCell);
+                        const productCell = document.createElement('td');
+                        productCell.textContent = item.product; // 원자재명
+                        row.appendChild(productCell);
 
-                       const quantityCell = document.createElement('td');
-                       quantityCell.textContent = item.quantity; // 수량
-                       row.appendChild(quantityCell);
+                        const quantityCell = document.createElement('td');
+                        quantityCell.textContent = item.quantity; // 수량
+                        row.appendChild(quantityCell);
 
-                       const statusCell = document.createElement('td');
-                       statusCell.textContent = item.status; // 입고상태
-                       row.appendChild(statusCell);
+                        const statusCell = document.createElement('td');
+                        statusCell.textContent = item.status; // 입고상태
+                        row.appendChild(statusCell);
 
-                       const orderDateCell = document.createElement('td');
-                       orderDateCell.textContent = item.orderDate; // 주문일자
-                       row.appendChild(orderDateCell);
+                        const orderDateCell = document.createElement('td');
+                        orderDateCell.textContent = item.orderDate; // 주문일자
+                        row.appendChild(orderDateCell);
 
-                       const importDateCell = document.createElement('td');
-                       importDateCell.textContent = item.importDate; // 입고일자
-                       row.appendChild(importDateCell);
+                        const importDateCell = document.createElement('td');
+                        importDateCell.textContent = item.importDate; // 입고일자
+                        row.appendChild(importDateCell);
 
-                       const buttonCell = document.createElement('td');
-                       const importButton = document.createElement('button');
-                       importButton.className = 'jw-button2';
-                       importButton.textContent = '입고버튼';
-                       importButton.onclick = function () {
-                           handleButtonClick(importButton, item.rawsCode);
-                       };
-                       buttonCell.appendChild(importButton);
-                       row.appendChild(buttonCell);
+                        const buttonCell = document.createElement('td');
+                        const importButton = document.createElement('button');
+                        importButton.className = 'jw-button2';
+                        importButton.textContent = '입고버튼';
+                        importButton.onclick = function () {
+                            handleButtonClick(importButton, item.rawsCode);
+                        };
+                        buttonCell.appendChild(importButton);
+                        row.appendChild(buttonCell);
 
-                       tbody.appendChild(row);
-                   });
-               })
-               .catch(error => {
-                   console.error('Error fetching data : ', error);
-               })
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data : ', error);
+                })
         });
 
 
