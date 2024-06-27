@@ -203,7 +203,6 @@ public class WorkPlanService {
     public ActivateFacilityDTO getActivateFacility(Facility[] facilitys) {
 
         ActivateFacilityDTO facilityDTO = new ActivateFacilityDTO();
-        Timestamp time = programTimeService.getProgramTime().getCurrentProgramTime();
         for (Facility facility : facilitys) {
             List<WorkPlan> workPlan = getActivateFacility(facility);
 
