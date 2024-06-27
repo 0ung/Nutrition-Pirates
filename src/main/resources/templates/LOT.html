@@ -4,7 +4,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default}">
 
-
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <link th:href="@{/css/lot.css}" type="text/css" rel="stylesheet" id="lot.css">
@@ -57,17 +56,107 @@
             color: #262626;
         }
 
+        .lot-td:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
-
 </th:block>
-
 
 <th:block layout:fragment="script">
     <!-- chart.js 설치 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rows = document.querySelectorAll('.lot-td');
+            const modal = document.getElementById("myModal");
+            const span = document.getElementsByClassName("close")[0];
 
+            rows.forEach(row => {
+                row.addEventListener('click', () => {
+                    modal.style.display = "block";
+                });
+            });
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
 </th:block>
 
 <!-- ===============================================-->
@@ -102,62 +191,52 @@
                             <thead>
                             <tr class="lot-tr">
                                 <th class="lot-th">번호</th>
-                                <th class="lot-th">발주처</th>
-                                <th class="lot-th">제품명</th>
-                                <th class="lot-th">수량</th>
-                                <th class="lot-th">수주일</th>
-                                <th class="lot-th">예상납기일</th>
-                                <th class="lot-th">공정상태</th>
-                                <th class="lot-th">긴급여부</th>
-                                <th class="lot-th">출하상태</th>
+                                <th class="lot-th">LOT</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="lot-tr">
-                                <td class="lot-td">1</td>
-                                <td class="lot-td">ABC Corp</td>
-                                <td class="lot-td">Widget A</td>
-                                <td class="lot-td">100</td>
-                                <td class="lot-td">2024-06-01</td>
-                                <td class="lot-td">2024-06-10</td>
-                                <td class="lot-td">생산중</td>
-                                <td class="lot-td">아니오</td>
-                                <td class="lot-td">대기중</td>
-                            </tr>
-                            <tr class="lot-tr">
-                                <td class="lot-td">2</td>
-                                <td class="lot-td">XYZ Ltd</td>
-                                <td class="lot-td">Gadget B</td>
-                                <td class="lot-td">200</td>
-                                <td class="lot-td">2024-06-05</td>
-                                <td class="lot-td">2024-06-15</td>
-                                <td class="lot-td">완료</td>
-                                <td class="lot-td">예</td>
-                                <td class="lot-td">출하완료</td>
-                            </tr>
-                            <tr class="lot-tr">
-                                <td class="lot-td">3</td>
-                                <td class="lot-td">LMN Inc</td>
-                                <td class="lot-td">Device C</td>
-                                <td class="lot-td">150</td>
-                                <td class="lot-td">2024-06-03</td>
-                                <td class="lot-td">2024-06-12</td>
-                                <td class="lot-td">준비중</td>
-                                <td class="lot-td">아니오</td>
-                                <td class="lot-td">대기중</td>
+                            <tr th:each="lot, iterStat : ${list}">
+                                <td class="lot-td" th:text="${iterStat.index + 1}">1</td>
+                                <td class="lot-td" th:text="${lot}">20240608A8</td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="lot-centered"> [1] [2] [3] [4] [5]</div>
+                        <div class="pagination-container">
+                            <div class="pagination-list lot-centered">
+                                <!-- Previous button -->
+                                <li>
+                                    <button th:disabled="${currentPage == 0}"
+                                            th:onclick="|location.href='@{/lot/list/{page}(page=${currentPage - 1})}'|">
+                                        이전버튼
+                                    </button>
+                                </li>
+                                <!-- Page numbers -->
+                                <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                                    <a th:href="@{/lot/list/{page}(page=${pageNum})}"
+                                       th:text="${pageNum + 1}"
+                                       th:classappend="${currentPage == pageNum ? 'active' : ''}"
+                                       class="pagination-link"></a>
+                                </li>
+                                <!-- Next button -->
+                                <li>
+                                    <button th:disabled="${currentPage >= totalPages - 1}"
+                                            th:onclick="|location.href='@{/lot/list/{page}(page=${currentPage + 1})}'|">
+                                        다음버튼
+                                    </button>
+                                </li>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="lot-card2 lot-checkout">
-                <div class="lot-footer">
-                    <label class="lot-price"> </label>
-                    <button class="lot-checkout-btn"> 엑셀 저장</button>
-                </div>
-            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Modal Content</p>
         </div>
     </div>
     <!-- ===============================================-->

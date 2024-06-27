@@ -324,6 +324,7 @@
 .lot-th {
     background-color: #1b1b1b;
     color: #ddd;
+    width: 50%;
 }
 
 .lot-tbody .lot-tr:hover {
@@ -331,48 +332,6 @@
     cursor: pointer;
 }
 
-/* Adjust column widths */
-.lot-th:nth-child(1),
-.lot-td:nth-child(1) {
-    width: 5%; /* Adjusted for 번호 */
-}
-
-.lot-th:nth-child(2),
-.lot-td:nth-child(2) {
-    width: 15%; /* Adjusted for 발주처 */
-}
-
-.lot-th:nth-child(3),
-.lot-td:nth-child(3) {
-    width: 15%; /* Adjusted for 제품명 */
-}
-
-.lot-th:nth-child(4),
-.lot-td:nth-child(4) {
-    width: 10%; /* Adjusted for 수량(BOX) */
-}
-
-.lot-th:nth-child(5),
-.lot-td:nth-child(5) {
-    width: 10%; /* Adjusted for 수주일 */
-}
-
-.lot-th:nth-child(6),
-.lot-td:nth-child(6) {
-    width: 10%; /* Adjusted for 예상 납기일 */
-}
-
-.lot-th:nth-child(7),
-.lot-td:nth-child(7) {
-    width: 10%; /* Adjusted for 공정 상태 */
-}
-
-.lot-th:nth-child(8),
-.lot-td:nth-child(8),
-.lot-th:nth-child(9),
-.lot-td:nth-child(9) {
-    width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
-}
 
 .lot-search-container {
     position: relative;

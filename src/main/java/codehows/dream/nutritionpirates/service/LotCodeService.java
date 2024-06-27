@@ -40,13 +40,9 @@ public class LotCodeService {
 		return WorkPlanDetailDTO.toWorkPlanDetailDTO(plan, programTimeService.getProgramTime().getCurrentProgramTime());
 	}
 
-	public List<String> getLotCode(Pageable pageable) {
+	public Page<LotCode> getLotCode(Pageable pageable) {
 		Page<LotCode> a8code = lotCodeRepository.findByLotCodeContaining("A8", "B7", pageable);
-		List<String> list = new ArrayList<>();
-		a8code.forEach(
-			e->list.add(e.getLotCode())
-		);
-		return list;
+		return a8code;
 	}
 
 }
