@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -68,7 +69,7 @@ public class RawRegisterController {
 
     /*입출고관리 페이징 연결*/
     //페이징 기능
-    @GetMapping("/rawstock/{page}")
+  /*  @GetMapping("/rawstock/{page}")
     public String getRawStockList(@PathVariable(name = "page") Optional<Integer> page, @PageableDefault(page=0,size = 10,sort = "id",
             direction = Sort.Direction.DESC) Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
@@ -76,6 +77,35 @@ public class RawRegisterController {
             model.addAttribute("list", rawOrderInsertService.getRawStockList(pageable));
             return "rawmng";
         } catch (Exception e) {
+            log.error(e.getMessage());
+            return "error";
+        }
+    }*/
+
+    @GetMapping("/rawstock/{page}")
+    public String getRawStockList(
+            @PathVariable(name = "page") Optional<Integer> page,
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        // 페이지 번호를 설정합니다. 페이지 번호가 제공되지 않은 경우 기본값 0을 사용합니다.
+        int currentPage = page.orElse(0);
+
+        // 페이지 번호를 기반으로 Pageable 객체를 생성합니다.
+        pageable = PageRequest.of(currentPage, 10, Sort.by("id").descending());
+
+        try {
+            // 서비스 메서드를 호출하여 데이터를 가져옵니다.
+            Page<RawsListDTO> rawStockPage = rawOrderInsertService.getRawStockList(pageable);
+
+            // 모델에 데이터를 추가합니다.
+            model.addAttribute("list", rawStockPage.getContent());
+            model.addAttribute("currentPage", currentPage);
+            model.addAttribute("totalPages", rawStockPage.getTotalPages());
+
+            return "rawmng";
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그를 기록하고 에러 페이지를 반환합니다.
             log.error(e.getMessage());
             return "error";
         }

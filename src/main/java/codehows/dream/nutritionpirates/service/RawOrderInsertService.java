@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -296,7 +298,42 @@ public class RawOrderInsertService {
 
 
     // 재고현황 테이블
-    public List<RawsListDTO> getRawStockList(Pageable pageable) {
+    public Page<RawsListDTO> getRawStockList(Pageable pageable) {
+        Page<Raws> pages = rawRepository.findAll(pageable);
+
+        List<RawsListDTO> list = pages.stream().map(e -> {
+            // 입고대기 - 주문일, 입고 - 입고일 , 출고 - 출고일 날짜 선택
+            Date selectDate;
+            switch (e.getStatus()) {
+                case WAITING:
+                    selectDate = new Date(e.getOrderDate().getTime());
+                    break;
+                case IMPORT:
+                    selectDate = e.getImportDate();
+                    break;
+                case EXPORT:
+                    selectDate = e.getExportDate();
+                    break;
+                default:
+                    selectDate = new Date(e.getOrderDate().getTime());
+            }
+
+            return RawsListDTO.builder()
+                    .rawsCode(e.getRawsCode())
+                    .status(e.getStatus().getValue())
+                    .product(e.getProduct().getValue())
+                    .Date(selectDate)
+                    .quantity(e.getQuantity())
+                    .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
+                    .build();
+        }).collect(Collectors.toList());
+
+        // Page 객체를 반환하기 위해, List를 Page로 변환
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
+    }
+
+    // 재고현황 테이블
+    /*public List<RawsListDTO> getRawStockList(Pageable pageable) {
 
         List<RawsListDTO> list = new ArrayList<>();
 
@@ -336,7 +373,7 @@ public class RawOrderInsertService {
         System.out.println("Total pages: " + totalPages);
 
         return list;
-    }
+    }*/
 
 
     // 입고된 총 양만 list에 담아서 보여주기

@@ -32,20 +32,29 @@ public class TestController {
     public String getLot(){
         return "LOT";
     }
+
     @GetMapping(value = "/systemtime")
     public String index1() {
         return "systemtime";
     }
 
-    @GetMapping(value = "/sengsanPlan")
-    public String inasdas(){
-        return "SengSan_Plan";
+    @GetMapping(value = "/stockcheck")
+    public String index3() {
+        return "stockCheck";
     }
 
+    @GetMapping(value = "/stockcs")
+    public String index2() {
+        return "stockCS";
+    }
 
-    @GetMapping(value = "/sengsancheck")
-    public String sengsancheck(){
+    @GetMapping(value = {"/sengsan","/sengsanCheck","/sengsancheck"})
+    public String getSengsanCheck(){
         return "SengSan_check";
+    }
+    @GetMapping(value = {"plan","/sengsanPlan","/sengsanplan"})
+    public String getSengsanPlan(){
+        return "SengSan_Plan";
     }
 
     @GetMapping(value = "/orderermng")
