@@ -15,6 +15,7 @@ import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
 
 public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
+
 	List<WorkPlan> findAllByProcessPlanId(Long id);
 
 	List<WorkPlan> findByFacility(Facility facility);
