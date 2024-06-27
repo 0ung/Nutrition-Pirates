@@ -71,4 +71,15 @@ public class TestController {
     public String index31() {
         return "rawcs";
     }
+
+    @GetMapping(value = "/productionamount")
+    public String index66() {
+        return "productionamount";
+    }
+
+    @GetMapping(value = "/productionvolume")
+    public String index55() {
+        return "productionVolume";
+    }
+
 }

@@ -79,16 +79,18 @@
                                         labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
                                         datasets: [
                                             {
+                                                label: '재고(BOX)',
+                                                data: [2000, 500, 1500, 1000],
+                                                borderWidth: 1,
+                                            },
+                                            {
                                                 type: 'line',
                                                 label: '안전 재고량 적정선',
                                                 data: [1000, 1000, 1000, 1000],
                                                 borderWidth: 1,
-                                            },
-                                            {
-                                                label: '재고(BOX)',
-                                                data: [2000, 500, 1500, 1000],
-                                                borderWidth: 1,
-                                            }],
+                                            }
+
+                                        ],
 
 
                                     },

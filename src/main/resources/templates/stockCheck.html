@@ -34,6 +34,10 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        function downloadExcel(event) {
+            event.preventDefault(); // 폼 제출 기본 동작을 막음
+            window.location.href = '/stock/history';
+        }
     </script>
 </th:block>
 
@@ -104,7 +108,7 @@
                         <div class="empty-container">
                             <div id="button-container">
                                 <form>
-                                    <button class="jw-button" style="width: 100px;" onclick="">엑셀 다운</button>
+                                    <button class="jw-button" onclick="downloadExcel(event)">엑셀 다운</button>
                                 </form>
                             </div>
                         </div>
