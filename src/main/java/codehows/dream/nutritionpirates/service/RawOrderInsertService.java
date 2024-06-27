@@ -263,6 +263,37 @@ public class RawOrderInsertService {
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
+    // 발주등록이후 테이블
+     /*public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
+
+        List<RawOrderListDTO> list = new ArrayList<>();
+
+        Page<Raws> pages = rawRepository.findAll(pageable);
+
+//       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//
+//        pages.forEach((e) -> {
+//            String formattedDate = null;
+//            if(e.getOrderDate() != null) {
+//                //LocalDateTime localDateTime = LocalDateTime.parse(e.getOrderDate());
+//                formattedDate = localDateTime.format(formatter);
+//            }
+//
+//            list.add(
+//                    RawOrderListDTO.builder()
+//                            .rawsCode(e.getRawsCode())
+//                            .product(e.getProduct().getValue())
+//                            .quantity(e.getQuantity())
+//                            .status(e.getStatus().getValue())
+//                            .orderDate(formattedDate)
+//                            .importDate(e.getImportDate())
+//                            .build()
+//            )
+//
+//        });
+
+    }*/
+
 
     // 재고현황 테이블
     public List<RawsListDTO> getRawStockList(Pageable pageable) {
@@ -333,7 +364,7 @@ public class RawOrderInsertService {
         return list;
     }
 
-    // 재고현황에서 엑셀 파일로 다운로드
+    // 원자재현황에서 엑설 파일로 다운로드
     @Transactional
     public Workbook getHistory() {
         List<Raws> list = rawRepository.findAll();
@@ -545,6 +576,7 @@ public class RawOrderInsertService {
             totalBOM.setPlum(totalBOM.getPlum() + bomDTO.getPlum());
             totalBOM.setHoney(totalBOM.getHoney() + bomDTO.getHoney());
             totalBOM.setPaper(totalBOM.getPaper() + bomDTO.getPaper());
+            totalBOM.setCollagen(totalBOM.getCollagen() + bomDTO.getCollagen());
             totalBOM.setBox(totalBOM.getBox() + bomDTO.getBox());
         }
         return totalBOM;
