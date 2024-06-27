@@ -81,6 +81,30 @@ public class RawRegisterController {
             return "error";
         }
     }*/
+    @GetMapping("/raworder/{page}")
+    public String getRawOrderList(
+            @PathVariable(name = "page") Optional<Integer> page,
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        int currentPage = page.orElse(0);
+
+        pageable = PageRequest.of(currentPage, 10, Sort.by("id").descending());
+
+        try {
+            Page<RawOrderListDTO> orderPage = rawOrderInsertService.getRawOrderList(pageable);
+
+            model.addAttribute("list", orderPage.getContent());
+            model.addAttribute("currentPage", currentPage);
+            model.addAttribute("totalPages", orderPage.getTotalPages());
+
+           return "orderermng";
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그를 기록하고 에러 페이지를 반환합니다.
+            log.error(e.getMessage());
+            return "error";
+        }
+    }
 
     @GetMapping("/rawstock/{page}")
     public String getRawStockList(

@@ -269,7 +269,46 @@ public class RawOrderInsertService {
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
-    // 발주등록이후 테이블
+    // 발주 등록 이후 테이블 - pageable로 변환
+    public Page<RawOrderListDTO> getRawOrderList(Pageable pageable) {
+
+        Page<Raws> pages = rawRepository.findAll(pageable);
+
+        List<RawOrderListDTO> list = pages.stream()
+                .filter(e -> e.getStatus() != Status.EXPORT) // EXPORT 상태 필터링
+                .map(e -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                    String formattedOrder = null;
+                    String formattedImport = null;
+
+                    if (e.getOrderDate() != null) {
+                        Timestamp timestamp = e.getOrderDate();
+                        LocalDateTime localDateTime = timestamp.toLocalDateTime();
+                        formattedOrder = localDateTime.format(formatter);
+                    }
+
+                    if (e.getImportDate() != null) {
+                        Timestamp timestamp = e.getImportDate();
+                        LocalDateTime localDateTime = timestamp.toLocalDateTime();
+                        formattedImport = localDateTime.format(formatter);
+                    }
+
+                    return RawOrderListDTO.builder()
+                            .rawsCode(e.getRawsCode())
+                            .product(e.getProduct().getValue())
+                            .quantity(e.getQuantity())
+                            .status(e.getStatus().getValue())
+                            .orderDate(formattedOrder)
+                            .importDate(formattedImport)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
+    }
+
+    /*// 발주등록이후 테이블
     public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
         List<RawOrderListDTO> list = new ArrayList<>();
@@ -307,7 +346,10 @@ public class RawOrderInsertService {
             }
         });
         return list;
-    }
+    }*/
+
+
+
     // 발주현황에서 엑설 파일로 다운로드
     @Transactional
     public Workbook getHistoryRaw() {
@@ -316,7 +358,8 @@ public class RawOrderInsertService {
         Pageable pageable = Pageable.unpaged();
 
         // getRawOrderList메서드로 호출하여 RawOrderListDTO 리스트 가져오기
-        List<RawOrderListDTO> list = getRawOrderList(pageable);
+        Page<RawOrderListDTO> page = getRawOrderList(pageable);
+        List<RawOrderListDTO> list = page.getContent();
 
         Workbook workbook = new XSSFWorkbook();
 
