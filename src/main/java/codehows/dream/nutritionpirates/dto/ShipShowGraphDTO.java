@@ -1,16 +1,16 @@
 package codehows.dream.nutritionpirates.dto;
 
-import lombok.NoArgsConstructor;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Builder;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class StockGraphDTO {
+public class ShipShowGraphDTO {
 
     private String product;
     private int quantity;

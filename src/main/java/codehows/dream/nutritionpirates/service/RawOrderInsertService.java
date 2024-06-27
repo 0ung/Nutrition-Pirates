@@ -13,6 +13,7 @@ import codehows.dream.nutritionpirates.repository.RawRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,11 +244,14 @@ public class RawOrderInsertService {
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-        Date importDate = new Date(timestamp.getTime());
+        //Date importDate = new Date(timestamp.getTime());
 
         // deadLine 계산
         LocalDateTime deadLineDateTime = timestamp.toLocalDateTime().plusDays(14);
         Timestamp deadLineTimestamp = Timestamp.valueOf(deadLineDateTime);
+
+        //importDate 를 Timestamp로 설정
+        Timestamp importDate = timestamp;
 
         raw.rawImport(importDate, Status.IMPORT, deadLineTimestamp);
         rawRepository.save(raw);
@@ -263,36 +267,85 @@ public class RawOrderInsertService {
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
+
     // 발주등록이후 테이블
-     /*public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
+    public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
         List<RawOrderListDTO> list = new ArrayList<>();
 
         Page<Raws> pages = rawRepository.findAll(pageable);
 
-//       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-//
-//        pages.forEach((e) -> {
-//            String formattedDate = null;
-//            if(e.getOrderDate() != null) {
-//                //LocalDateTime localDateTime = LocalDateTime.parse(e.getOrderDate());
-//                formattedDate = localDateTime.format(formatter);
-//            }
-//
-//            list.add(
-//                    RawOrderListDTO.builder()
-//                            .rawsCode(e.getRawsCode())
-//                            .product(e.getProduct().getValue())
-//                            .quantity(e.getQuantity())
-//                            .status(e.getStatus().getValue())
-//                            .orderDate(formattedDate)
-//                            .importDate(e.getImportDate())
-//                            .build()
-//            )
-//
-//        });
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    }*/
+        pages.forEach((e) -> {
+
+            // status가 export 인지 확인하고 먼저 걸러내기
+            if (e.getStatus() != Status.EXPORT) {
+                String formattedorder = null;
+                String formattedimport = null;
+                if (e.getOrderDate() != null) {
+                    Timestamp timestamp = e.getOrderDate();
+                    LocalDateTime localDateTime = timestamp.toLocalDateTime();
+                    formattedorder = localDateTime.format(formatter);
+                }
+                if (e.getImportDate() != null) {
+                    Timestamp timestamp = e.getImportDate();
+                    LocalDateTime localDateTime = timestamp.toLocalDateTime();
+                    formattedimport = localDateTime.format(formatter);
+                }
+
+                list.add(RawOrderListDTO.builder()
+                        .rawsCode(e.getRawsCode())
+                        .product(e.getProduct().getValue())
+                        .quantity(e.getQuantity())
+                        .status(e.getStatus().getValue())
+                        .orderDate(formattedorder)
+                        .importDate(formattedimport)
+                        .build()
+                );
+            }
+        });
+        return list;
+    }
+    // 발주현황에서 엑설 파일로 다운로드
+    @Transactional
+    public Workbook getHistoryRaw() {
+
+        // Pageable을 사용하지 않고 모든 데이터를 가져오기 위해 임의의 Pageable 생성
+        Pageable pageable = Pageable.unpaged();
+
+        // getRawOrderList메서드로 호출하여 RawOrderListDTO 리스트 가져오기
+        List<RawOrderListDTO> list = getRawOrderList(pageable);
+
+        Workbook workbook = new XSSFWorkbook();
+
+        // 엑셀 아래 시트 이름 설정
+        Sheet sheet = workbook.createSheet(LocalDate.now() + " 원자재 입고 내역");
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        String[] headers = new String[]{"원자재제품코드", "원자재명", "수량", "입고상태", "주문일자", "입고일자"};
+
+        for (int i = 0; i < headers.length; i++) {
+            headerRow.createCell(i).setCellValue(headers[i]);
+        }
+
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // Fill data rows
+        for (int i = 1; i < list.size() + 1; i++) {
+            Row row = sheet.createRow(i);
+            RawOrderListDTO data = list.get(i - 1);
+
+            row.createCell(0).setCellValue(data.getRawsCode());
+            row.createCell(1).setCellValue(data.getProduct());
+            row.createCell(2).setCellValue(data.getQuantity());
+            row.createCell(3).setCellValue(data.getStatus());
+            row.createCell(4).setCellValue(data.getOrderDate());
+            row.createCell(5).setCellValue(data.getImportDate());
+        }
+        return workbook;
+    }
+
 
 
     // 재고현황 테이블
@@ -313,7 +366,7 @@ public class RawOrderInsertService {
                     selectDate = new Date(e.getOrderDate().getTime());
                     break;
                 case IMPORT:
-                    selectDate = e.getImportDate();
+                    selectDate = new Date(e.getImportDate().getTime());
                     break;
                 case EXPORT:
                     selectDate = e.getExportDate();
@@ -474,7 +527,7 @@ public class RawOrderInsertService {
             list.add(RawPeriodDTO.builder()
                     .rawsCode(e.getRawsCode())
                     .product(e.getProduct().getValue())
-                    .importDate(e.getImportDate())
+                    .importDate(new Date(e.getImportDate().getTime()))
                     .deadLine(new Date(e.getDeadLine().getTime()))
                     .quantity(e.getQuantity())
                     .build());
