@@ -4,284 +4,246 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default}">
 
-<head>
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>뉴트리션 해적선</title>
-    <!-- ===============================================-->
-    <!--        Favicons-->
-    <!-- ===============================================-->
-    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.ico">
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link href="../static/css/style.css" type="text/css" rel="stylesheet" id="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
-          rel="stylesheet">
-    <link href="../static/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
-    <link href="../static/css/user-rtl.css" type="text/css" rel="stylesheet" id="user-style-rtl">
-    <link href="../static/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
-    <link href="../static/css/suzu.css" type="text/css" rel="stylesheet" id="suzu.css">
-    <link href="../static/css/suzu_check.css" type="text/css" rel="stylesheet" id="suzu_check">
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <link th:href="@{/css/main.css}" type="text/css" rel="stylesheet" id="main.css"/>
+</th:block>
 
 
-    <!-- chart.js 설치 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
-</head>
-
-<body>
 
 
-<!-- ===============================================-->
-<!--    Main Content-->
-<!-- ===============================================-->
+<div layout:fragment="content">
+    <div class="main-content">
+        <div class="main-container2">
+            <div class="main-card2 main-cart">
+                <div class="main-title_form mt-5 mb-5 main-centered"><h1 class="east-sea-dokdo-regular main-title">뉴트리션 해적단 MES 시스템</h1></div>
 
-<div layout:fragment="Content" class="container" style="margin-left: 0">
-    <main class="main" id="top">
-        <!--------------------->
-        <!----  Main Start ---->
-        <!--------------------->
-
-
-        <div class="content">
-            <div class="container">
-                <div class="card2 cart">
-                    <label class="title_form centered mt-5  mb-5">
-                        <h1>뉴트리션 해적단 MES 시스템</h1>
-                    </label>
-
-                    <div class="row m-5">
-                        <!--  일일 생산량 -->
-                        <div class="col">
-                            <h3>일일생산량</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-                                <canvas id="myChart"></canvas>
-                            </div>
-
-                        </div>
-                        <!--  월간 생산량 -->
-                        <div class="col">
-                            <h3>월간 생산량</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-                                <canvas id="myChart2"></canvas>
-                            </div>
+                <div class="row m-5">
+                    <!--  일일 생산량 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">일일생산량</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <canvas id="myChart"></canvas>
                         </div>
                     </div>
-                    <div class="row m-5">
-                        <!--  모든 설비 진행 현황 -->
-                        <div class="col">
-                            <h3>모든 설비 진행 현황</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-                                <canvas id="myChart3"></canvas>
-                            </div>
-
+                    <!--  월간 생산량 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">월간 생산량</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <canvas id="myChart2"></canvas>
                         </div>
-                        <!--  생산 완료 예정 -->
-                        <div class="col">
-                            <h3>생산 완료 예정</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-
-                                <div class="col  m-lg-5">
-                                <table>
+                    </div>
+                </div>
+                <div class="row m-5">
+                    <!--  모든 설비 진행 현황 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">모든 설비 진행 현황</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <canvas id="myChart3"></canvas>
+                        </div>
+                    </div>
+                    <!--  생산 완료 예정 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">생산 완료 예정</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <div class="col m-lg-5">
+                                <table class="main-table">
                                     <thead>
-                                    <tr>
-                                        <th>수주번호</th>
-                                        <th>공정</th>
-                                        <th>완제품 생산량</th>
+                                    <tr class="main-tr">
+                                        <th class="main-th">수주번호</th>
+                                        <th class="main-th">공정</th>
+                                        <th class="main-th">완제품 생산량</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A3</td>
-                                        <td>80</td>
+                                    <tbody class="main-tbody">
+                                    <tr class="main-tr">
+                                        <td class="main-td">1</td>
+                                        <td class="main-td">A3</td>
+                                        <td class="main-td">80</td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>A8</td>
-                                        <td>200</td>
+                                    <tr class="main-tr">
+                                        <td class="main-td">2</td>
+                                        <td class="main-td">A8</td>
+                                        <td class="main-td">200</td>
                                     </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>A1</td>
-                                        <td>50</td>
+                                    <tr class="main-tr">
+                                        <td class="main-td">3</td>
+                                        <td class="main-td">A1</td>
+                                        <td class="main-td">50</td>
                                     </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>A5</td>
-                                        <td>120</td>
+                                    <tr class="main-tr">
+                                        <td class="main-td">4</td>
+                                        <td class="main-td">A5</td>
+                                        <td class="main-td">120</td>
                                     </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>A2</td>
-                                        <td>90</td>
+                                    <tr class="main-tr">
+                                        <td class="main-td">5</td>
+                                        <td class="main-td">A2</td>
+                                        <td class="main-td">90</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    </div>
-                    <div class="row m-5">
-                        <!--  일일 제공 현황 및 공정별 CAPA -->
-                        <div class="col">
-                            <h3> 일일 제공 현황 및 공정별 CAPA </h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-                                <div class="col">
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <th>번호</th>
-                                            <th>발주처</th>
-                                            <th>제품명</th>
-                                            <th>수량</th>
-                                            <th>수주일</th>
-                                            <th>예상납기일</th>
-                                            <th>공정상태</th>
-                                            <th>긴급여부</th>
-                                            <th>출하상태</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>ABC Corp</td>
-                                            <td>Widget A</td>
-                                            <td>100</td>
-                                            <td>2024-06-01</td>
-                                            <td>2024-06-10</td>
-                                            <td>생산중</td>
-                                            <td>아니오</td>
-                                            <td>대기중</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>XYZ Ltd</td>
-                                            <td>Gadget B</td>
-                                            <td>200</td>
-                                            <td>2024-06-05</td>
-                                            <td>2024-06-15</td>
-                                            <td>완료</td>
-                                            <td>예</td>
-                                            <td>출하완료</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>LMN Inc</td>
-                                            <td>Device C</td>
-                                            <td>150</td>
-                                            <td>2024-06-03</td>
-                                            <td>2024-06-12</td>
-                                            <td>준비중</td>
-                                            <td>아니오</td>
-                                            <td>대기중</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!--  완제품 재고 보유한 현황 -->
-                        <div class="col ">
-                            <h3>완제품 재고 보유한 현황</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-                                <canvas id="myChart6"></canvas>
+                </div>
+                <div class="row m-5">
+                    <!--  일일 제공 현황 및 공정별 CAPA -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">일일 제공 현황 및 공정별 CAPA</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <div class="col">
+                                <table class="main-table">
+                                    <thead>
+                                    <tr class="main-tr">
+                                        <th class="main-th">번호</th>
+                                        <th class="main-th">발주처</th>
+                                        <th class="main-th">제품명</th>
+                                        <th class="main-th">수량</th>
+                                        <th class="main-th">수주일</th>
+                                        <th class="main-th">예상납기일</th>
+                                        <th class="main-th">공정상태</th>
+                                        <th class="main-th">긴급여부</th>
+                                        <th class="main-th">출하상태</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="main-tbody">
+                                    <tr class="main-tr">
+                                        <td class="main-td">1</td>
+                                        <td class="main-td">ABC Corp</td>
+                                        <td class="main-td">Widget A</td>
+                                        <td class="main-td">100</td>
+                                        <td class="main-td">2024-06-01</td>
+                                        <td class="main-td">2024-06-10</td>
+                                        <td class="main-td">생산중</td>
+                                        <td class="main-td">아니오</td>
+                                        <td class="main-td">대기중</td>
+                                    </tr>
+                                    <tr class="main-tr">
+                                        <td class="main-td">2</td>
+                                        <td class="main-td">XYZ Ltd</td>
+                                        <td class="main-td">Gadget B</td>
+                                        <td class="main-td">200</td>
+                                        <td class="main-td">2024-06-05</td>
+                                        <td class="main-td">2024-06-15</td>
+                                        <td class="main-td">완료</td>
+                                        <td class="main-td">예</td>
+                                        <td class="main-td">출하완료</td>
+                                    </tr>
+                                    <tr class="main-tr">
+                                        <td class="main-td">3</td>
+                                        <td class="main-td">LMN Inc</td>
+                                        <td class="main-td">Device C</td>
+                                        <td class="main-td">150</td>
+                                        <td class="main-td">2024-06-03</td>
+                                        <td class="main-td">2024-06-12</td>
+                                        <td class="main-td">준비중</td>
+                                        <td class="main-td">아니오</td>
+                                        <td class="main-td">대기중</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                    <div class="row m-5 ">
-                        <!--  원자재 보유 현황 -->
-                        <div class="col">
-                            <h3>원자재 보유 현황</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-                                <canvas id="myChart7"></canvas>
-                            </div>
-
+                    <!--  완제품 재고 보유 현황 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">완제품 재고 보유 현황</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <canvas id="myChart6"></canvas>
                         </div>
-                        <!--  원자재 발주 현황 -->
-                        <div class="col ">
-                            <h3>원자재 발주 현황</h3>
-                            <div style="  display: flex; justify-content: center; align-items: center;">
-
-                                <div class="col">
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <th>번호</th>
-                                            <th>발주처</th>
-                                            <th>제품명</th>
-                                            <th>수량</th>
-                                            <th>수주일</th>
-                                            <th>예상납기일</th>
-                                            <th>공정상태</th>
-                                            <th>긴급여부</th>
-                                            <th>출하상태</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>ABC Corp</td>
-                                            <td>Widget A</td>
-                                            <td>100</td>
-                                            <td>2024-06-01</td>
-                                            <td>2024-06-10</td>
-                                            <td>생산중</td>
-                                            <td>아니오</td>
-                                            <td>대기중</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>XYZ Ltd</td>
-                                            <td>Gadget B</td>
-                                            <td>200</td>
-                                            <td>2024-06-05</td>
-                                            <td>2024-06-15</td>
-                                            <td>완료</td>
-                                            <td>예</td>
-                                            <td>출하완료</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>LMN Inc</td>
-                                            <td>Device C</td>
-                                            <td>150</td>
-                                            <td>2024-06-03</td>
-                                            <td>2024-06-12</td>
-                                            <td>준비중</td>
-                                            <td>아니오</td>
-                                            <td>대기중</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                    </div>
+                </div>
+                <div class="row m-5">
+                    <!--  원자재 보유 현황 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">원자재 보유 현황</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <canvas id="myChart7"></canvas>
+                        </div>
+                    </div>
+                    <!--  원자재 발주 현황 -->
+                    <div class="col">
+                        <h3 class="east-sea-dokdo-regular  sub-title">원자재 발주 현황</h3>
+                        <div style="  display: flex; justify-content: center; align-items: center;">
+                            <div class="col">
+                                <table class="main-table">
+                                    <thead>
+                                    <tr class="main-tr">
+                                        <th class="main-th">번호</th>
+                                        <th class="main-th">발주처</th>
+                                        <th class="main-th">제품명</th>
+                                        <th class="main-th">수량</th>
+                                        <th class="main-th">수주일</th>
+                                        <th class="main-th">예상납기일</th>
+                                        <th class="main-th">공정상태</th>
+                                        <th class="main-th">긴급여부</th>
+                                        <th class="main-th">출하상태</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="main-tbody">
+                                    <tr class="main-tr">
+                                        <td class="main-td">1</td>
+                                        <td class="main-td">ABC Corp</td>
+                                        <td class="main-td">Widget A</td>
+                                        <td class="main-td">100</td>
+                                        <td class="main-td">2024-06-01</td>
+                                        <td class="main-td">2024-06-10</td>
+                                        <td class="main-td">생산중</td>
+                                        <td class="main-td">아니오</td>
+                                        <td class="main-td">대기중</td>
+                                    </tr>
+                                    <tr class="main-tr">
+                                        <td class="main-td">2</td>
+                                        <td class="main-td">XYZ Ltd</td>
+                                        <td class="main-td">Gadget B</td>
+                                        <td class="main-td">200</td>
+                                        <td class="main-td">2024-06-05</td>
+                                        <td class="main-td">2024-06-15</td>
+                                        <td class="main-td">완료</td>
+                                        <td class="main-td">예</td>
+                                        <td class="main-td">출하완료</td>
+                                    </tr>
+                                    <tr class="main-tr">
+                                        <td class="main-td">3</td>
+                                        <td class="main-td">LMN Inc</td>
+                                        <td class="main-td">Device C</td>
+                                        <td class="main-td">150</td>
+                                        <td class="main-td">2024-06-03</td>
+                                        <td class="main-td">2024-06-12</td>
+                                        <td class="main-td">준비중</td>
+                                        <td class="main-td">아니오</td>
+                                        <td class="main-td">대기중</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card2 checkout">
-                </div>
-
+            </div>
+            <div class="main-card2 main-checkout">
             </div>
         </div>
-    </main>
-    <!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
+    </div>
+</div>
 
 
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
+
+<!-- ===============================================-->
+<!--    JavaScripts-->
+<!-- ===============================================-->
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet"> <!--   title   -->
+
+
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -577,19 +539,5 @@
         });
 
     </script>
-
-
-    <script src="../static/js/popper/popper.min.js"></script>
-    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
-    <script src="../static/js/anchorjs/anchor.min.js"></script>
-    <script src="../static/js/is/is.min.js"></script>
-    <script src="../static/js/fontawesome/all.min.js"></script>
-    <script src="../static/js/lodash/lodash.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-    <script src="../static/js/list.js/list.min.js"></script>
-    <script src="../static/js/feather-icons/feather.min.js"></script>
-    <script src="../static/js/dayjs/dayjs.min.js"></script>
-    <script src="../static/js/phoenix.js"></script>
-</div>
-</body>
+</th:block>
 </html>

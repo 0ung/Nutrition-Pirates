@@ -25,19 +25,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <script>
+    var cabageJuice = 1500;
+    var blackGarlicJuice = 2000;
+    var PomegranateStick = 2500;
+    var plumStick = 3000;
+    var box = [cabageJuice, blackGarlicJuice, PomegranateStick,plumStick];
+    var highest = Math.max(...box) + 1000;
+
+
     document.addEventListener('DOMContentLoaded', function () {
-        const labels = ['양배추즙','흑마늘즙','석류스틱','매실스틱'];
         const data = {
-            labels: labels,
+            labels: ['양배추즙','흑마늘즙','석류스틱','매실스틱'],
             datasets: [
                 {
-                    label: '양',
-                    data: [500, 1000, 1500, 2000 , 3000],
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderWidth: 2,
-                    borderRadius: Number.MAX_VALUE,
-                    borderSkipped: false,
+                    // label: '양배추즙',
+                    data: [cabageJuice, blackGarlicJuice, PomegranateStick, plumStick , highest],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderRadius: 10,
                 }
             ]
         };
@@ -46,14 +55,15 @@
             type: 'bar',
             data: data,
             options: {
+                indexAxis: 'y',
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'top',
+                        position: 'hidden',
                     },
                     title: {
                         display: true,
-                        text: '현재 재고 현황'
+                        text: '현재 재고 현황',
                     }
                 }
             },
