@@ -1,6 +1,7 @@
 package codehows.dream.nutritionpirates.controller;
 
 import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
 import codehows.dream.nutritionpirates.service.StockService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,18 +29,16 @@ public class StockController {
 
     private final StockService stockService;  // StockService 의존성 주입을 위한 필드
 
-    /*
-    @GetMapping("/{page}")
-    public ResponseEntity<List<StockShowDTO>> getStocks(Pageable pageable) {
-        List<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
+    /*@GetMapping("/{page}")
+    public ResponseEntity<Page<StockShowDTO>> getStocks(Pageable pageable) {
+        Page<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
         return ResponseEntity.ok(stockShowDTOList);  // 조회된 데이터와 HTTP 상태 코드를 응답으로 반환
     }*/
 
-
     // 페이지네이션을 적용하여 재고 목록을 조회하는 메서드
-    @GetMapping("/{page}")
+    @GetMapping("/list/{page}")
     public String getStocks(
-            @PathVariable(name = "page")Optional<Integer> page,
+            @PathVariable(name = "page") Optional<Integer> page,
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
 
@@ -56,8 +55,10 @@ public class StockController {
             model.addAttribute("totalPages", rawStockPage.getTotalPages());
 
             return "stockCheck";
+
+
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             return "error";
         }
     }

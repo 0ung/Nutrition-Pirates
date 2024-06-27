@@ -118,13 +118,15 @@ public class StockService {
                     .quantity(e.getQuantity())
                     .createDate(e.getCreateDate())
                     .exportDate(e.getExportDate())
-                    .isExport(e.getExportDate() == null ? false : true)
+                    //.isExport(e.getExportDate() == null ? false : true)
+                    .isExport(e.getExportDate() != null)
                     .build()
 
         ).collect(Collectors.toList());
 
         // Page 객체를 반환하기 위해 List를 Page 로 변환
         return new PageImpl<>(list, pageable, pages.getTotalElements());
+
     }
 
     public void releaseStock(Long id) {
