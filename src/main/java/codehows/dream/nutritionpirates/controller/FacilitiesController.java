@@ -26,10 +26,12 @@ public class FacilitiesController {
 	}
 
 	@GetMapping("/status")
-	public void getFacilityStatus(Model model) {
+	public String  getFacilityStatus(Model model) {
 		List<FacilityStatusDTO> list = facilityService.getFacilityStatus();
 		System.out.println(Arrays.toString(list.toArray()));
 		model.addAttribute("list", list);
+
+		return "/productionamount";
 	}
 
 	@GetMapping("/daily")
@@ -42,5 +44,10 @@ public class FacilitiesController {
 	public void getFacilityMonthly(Model model){
 		List<FacilityOutPutDTO> list = facilityService.getMonthlyOutPut();
 		model.addAttribute("list", list);
+	}
+
+	@GetMapping("/test1")
+	public String productionVolume(){
+		return "/productionVolume";
 	}
 }

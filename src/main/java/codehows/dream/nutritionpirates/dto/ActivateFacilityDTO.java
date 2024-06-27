@@ -2,7 +2,6 @@ package codehows.dream.nutritionpirates.dto;
 
 import java.util.List;
 
-import codehows.dream.nutritionpirates.entity.WorkPlan;
 import lombok.Getter;
 import lombok.Setter;
 

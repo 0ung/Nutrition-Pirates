@@ -1,10 +1,14 @@
 package codehows.dream.nutritionpirates.dto;
 
+import java.sql.Timestamp;
+
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;
-import lombok.*;
-
-import java.sql.Timestamp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

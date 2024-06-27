@@ -1,13 +1,8 @@
 package codehows.dream.nutritionpirates.controller;
 
+import java.util.List;
 
-import codehows.dream.nutritionpirates.dto.StockShowDTO;
-import codehows.dream.nutritionpirates.service.StockService;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-import java.util.Optional;
+import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.service.StockService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
 @RequestMapping("/stock")
