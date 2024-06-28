@@ -294,6 +294,120 @@
 
 
 
+.lot-single-search {
+    margin-bottom: auto;
+    margin-top: auto;
+    height: 40px;
+    background-color: #fafafa;
+    border-radius: 30px;
+}
+.lot-search-area {
+    display: flex;
+    justify-content: center;
+}
+.lot-c-height {
+    height: 100%;
+}
+.lot-custom-input {
+    border: 0;
+    outline: 0;
+    width: 500px;
+    line-height: 40px;
+    transition: width 10.4s linear;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    padding-left: 10px;
+}
+.lot-input::placeholder {
+    color: #262626;
+    font-size: 20px;
+}
+.lot-single-search:hover>.lot-icon-area {
+    background: lightgreen;
+    color: #262626;
+}
+.lot-icon-area {
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    text-decoration: none;
+    color: #262626;
+}
+
+.lot-tr:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.pagination-container {
+    text-align: center;
+    margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+}
+
+.pagination-list {
+    list-style-type: none;
+    padding: 0;
+    display: inline-block;
+}
+
+.pagination-list li {
+    display: inline;
+    margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+}
+
+.pagination-link {
+    display: inline-block;
+    padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+}
+
+.pagination-link.active {
+    color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+    font-weight: bold;
+}
+
+/* Modal Styles */
+.lot2-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.lot2-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    width: 30%;
+    padding: 20px;
+    border: 1px solid #888;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 /*suzu check */
 /*suzu check */
@@ -324,6 +438,7 @@
 .lot-th {
     background-color: #1b1b1b;
     color: #ddd;
+    width: 50%;
 }
 
 .lot-tbody .lot-tr:hover {
@@ -331,48 +446,6 @@
     cursor: pointer;
 }
 
-/* Adjust column widths */
-.lot-th:nth-child(1),
-.lot-td:nth-child(1) {
-    width: 5%; /* Adjusted for 번호 */
-}
-
-.lot-th:nth-child(2),
-.lot-td:nth-child(2) {
-    width: 15%; /* Adjusted for 발주처 */
-}
-
-.lot-th:nth-child(3),
-.lot-td:nth-child(3) {
-    width: 15%; /* Adjusted for 제품명 */
-}
-
-.lot-th:nth-child(4),
-.lot-td:nth-child(4) {
-    width: 10%; /* Adjusted for 수량(BOX) */
-}
-
-.lot-th:nth-child(5),
-.lot-td:nth-child(5) {
-    width: 10%; /* Adjusted for 수주일 */
-}
-
-.lot-th:nth-child(6),
-.lot-td:nth-child(6) {
-    width: 10%; /* Adjusted for 예상 납기일 */
-}
-
-.lot-th:nth-child(7),
-.lot-td:nth-child(7) {
-    width: 10%; /* Adjusted for 공정 상태 */
-}
-
-.lot-th:nth-child(8),
-.lot-td:nth-child(8),
-.lot-th:nth-child(9),
-.lot-td:nth-child(9) {
-    width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
-}
 
 .lot-search-container {
     position: relative;

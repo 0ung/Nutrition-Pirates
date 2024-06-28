@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class TestController {
     @GetMapping(value = "/")
     public String index() {
-        return "test";
+        return "main";
     }
 
-    @GetMapping(value = {"/chulha", "/ChulHa","/Chulha"})
+    @GetMapping(value = {"/chulha", "/ChulHa","/stock/shipment/0"})
     public String getChulHa(){
         return "ChulHa";
     }

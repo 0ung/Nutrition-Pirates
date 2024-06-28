@@ -1,0 +1,242 @@
+
+.main-content {
+    margin-top: 5%; /* Adjust top margin as needed */
+    display: flex;
+}
+
+@media (max-width: 1320px) {
+    .main-content {
+        margin-left: 50px; /* Adjust left margin for smaller screens */
+    }
+}
+
+.main-container2 {
+    width: 100%; /* Ensure full width */
+    max-width: 1200px; /* Adjust max-width as needed */
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0;
+    justify-content: center;
+
+    @media (max-width: 1260px) {
+        margin-left: 300px;
+    }
+    @media (min-width: 1321px) {
+        margin-left: 450px ;
+    }
+}
+
+.main-card2 {
+    width: 1500px;
+    background: rgb(255, 250, 235);
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+
+}
+
+.main-title{
+    font-size: 80px;
+}
+
+/*main-title*/
+.east-sea-dokdo-regular {
+    font-family: "East Sea Dokdo", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.sub-title{
+    font-size: 50px;
+}
+
+.main-title_form {
+    width: 100%;
+    height: 70px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20px;
+    border-bottom: 1px solid rgba(16, 86, 82, .75);
+    font-weight: 700;
+    font-size: 20px;
+    color: #000000;
+}
+
+/* Cart */
+.main-cart {
+    border-radius: 19px 19px 0px 0px;
+}
+
+.main-cart .main-steps {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.main-cart .main-steps .main-step {
+    display: grid;
+    gap: 10px;
+}
+
+.main-cart .main-steps .main-step span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.main-cart .main-steps .main-step p {
+    font-size: 11px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Promo */
+.main-promo main-form {
+    display: grid;
+    grid-template-columns: 1fr ;
+    gap: 10px;
+    padding: 0px;
+}
+
+
+.main-promo main-form main-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 18px;
+    gap: 10px;
+    width: 100%;
+    height: 36px;
+    background: rgba(16, 86, 82, .75);
+    box-shadow: 0px 0.5px 0.5px #F3D2C9, 0px 1px 0.5px rgba(239, 239, 239, 0.5);
+    border-radius: 5px;
+    border: 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    color: #000000;
+}
+
+/* Checkout */
+.main-payments .main-details {
+    display: grid;
+    grid-template-columns: 10fr 1fr;
+    padding: 0px;
+    gap: 5px;
+}
+
+.main-payments .main-details span:nth-child(odd) {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000000;
+    margin: auto auto auto 0;
+}
+
+.main-payments .main-details span:nth-child(even) {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin: auto 0 auto auto;
+}
+
+.main-checkout .main-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Changed from space-between to flex-end */
+    padding: 10px 10px 10px 20px;
+    background-color: rgba(16, 86, 82, .5);
+}
+
+.main-checkout .main-checkout-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 36px;
+    background: rgba(16, 86, 82, .55);
+    box-shadow: 0px 0.5px 0.5px rgba(16, 86, 82, .75), 0px 1px 0.5px rgba(16, 86, 82, .75);
+    border-radius: 7px;
+    border: 1px solid rgb(16, 86, 82);
+    color: #000000;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+.main-centered {
+    display: flex; /* Flexbox container */
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+.main-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem auto;
+    background-color: white;
+}
+
+.main-th, .main-td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.main-th {
+    background-color: #1b1b1b;
+    color: #ddd;
+}
+
+.main-tbody .main-tr:hover {
+    background-color: #d3d3d3;
+    cursor: pointer;
+}
+
+/* Adjust column widths */
+.main-th:nth-child(1),
+.main-td:nth-child(1) {
+    width: 5%; /* Adjusted for 번호 */
+}
+
+.main-th:nth-child(2),
+.main-td:nth-child(2) {
+    width: 15%; /* Adjusted for 발주처 */
+}
+
+.main-th:nth-child(3),
+.main-td:nth-child(3) {
+    width: 15%; /* Adjusted for 제품명 */
+}
+
+.main-th:nth-child(4),
+.main-td:nth-child(4) {
+    width: 10%; /* Adjusted for 수량(BOX) */
+}
+
+.main-th:nth-child(5),
+.main-td:nth-child(5) {
+    width: 10%; /* Adjusted for 수주일 */
+}
+
+.main-th:nth-child(6),
+.main-td:nth-child(6) {
+    width: 10%; /* Adjusted for 예상 납기일 */
+}
+
+.main-th:nth-child(7),
+.main-td:nth-child(7) {
+    width: 10%; /* Adjusted for 공정 상태 */
+}
+
+.main-th:nth-child(8),
+.main-td:nth-child(8),
+.main-th:nth-child(9),
+.main-td:nth-child(9) {
+    width: 7.5%; /* Adjusted for 긴급 여부 and 취소 여부 */
+}

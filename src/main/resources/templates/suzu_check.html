@@ -219,13 +219,17 @@
                         </li>
 
                         <!-- Page numbers -->
-                        <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+
+                        <li th:if="${totalPages == 1}">
+                            <a th:href="@{/order/{page}(page=${pageNum})}" th:text="1" class="pagination-link active"></a>
+                        </li>
+
+                        <li th:if="${totalPages > 1}"  th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
                             <a th:href="@{/order/{page}(page=${pageNum})}"
                                th:text="${pageNum + 1}"
                                th:classappend="${currentPage == pageNum ? 'active' : ''}"
                                class="pagination-link"></a>
                         </li>
-
                         <!-- Next button -->
                         <li>
                             <button th:disabled="${currentPage == totalPages - 1}"

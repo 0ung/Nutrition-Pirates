@@ -179,7 +179,7 @@ public class B4WorkPlan implements WorkPlans {
 	public int stockData(ProductName productName) {
 		List<RawShowGraphDTO> list = rawOrderInsertService.getRawStockGraph();
 		int quantity = 0;
-		if (productName == ProductName.CABBAGE_JUICE) {
+		if (productName == ProductName.POMEGRANATE_JELLY_STICK) {
 			quantity = list.stream().mapToInt(e -> {
 				if (e.getProduct().equals("포장지"))
 					return e.getQuantity();
