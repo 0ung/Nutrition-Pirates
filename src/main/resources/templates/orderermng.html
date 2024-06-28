@@ -79,16 +79,17 @@
             window.location.href = '/api/history';
         }
         //입고됨 버튼
-        function handleButtonClick(button, rawsCode) {
-            console.log('Button clicked'); // 콘솔 로그 추가
+        function handleButtonClick(button) {
+            var rawsCode = button.getAttribute('data-rawscode');
+            console.log('Button clicked for rawsCode:', rawsCode); // 콘솔 로그 추가
 
             fetch(`/api/${rawsCode}`, {
-                method : 'PUT',
-                headers : {
-                    'Content-Type' : 'application/json'
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             })
-                .then(response =>{
+                .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok' + response.statusText);
                     }
@@ -97,9 +98,10 @@
                 .then(() => {
                     button.innerHTML = '입고됨';
                     button.disabled = true;
+                    button.classList.add('jw-button-disabled'); // 예시로 버튼을 비활성화 모양으로 변경
                 })
                 .catch(error => {
-                    console.error('Error import fecthing data :', error);
+                    console.error('Error importing data:', error);
                 });
         }
 
@@ -144,71 +146,6 @@
                     alert('Error creating order: ' + error.message);
                 });
         });
-
-        /*// 발주 입고 대기 현황
-        document.addEventListener('DOMContentLoaded', function () {
-            const page = 0; // 페이지 번호를 여기에 설정
-            fetch(`/api/list/${page}`, {
-                method : 'GET',
-                headers : {
-                    'Content-Type' : 'application/json'
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const tbody = document.getElementById('import-table-body');
-                    tbody.innerHTML = ''; // 기존 내용을 비우고
-
-                    data.forEach((item) => {
-                        const row = document.createElement('tr');
-
-                        const codeCell = document.createElement('td');
-                        codeCell.textContent = item.rawsCode; // 제품코드
-                        row.appendChild(codeCell);
-
-                        const productCell = document.createElement('td');
-                        productCell.textContent = item.product; // 원자재명
-                        row.appendChild(productCell);
-
-                        const quantityCell = document.createElement('td');
-                        quantityCell.textContent = item.quantity; // 수량
-                        row.appendChild(quantityCell);
-
-                        const statusCell = document.createElement('td');
-                        statusCell.textContent = item.status; // 입고상태
-                        row.appendChild(statusCell);
-
-                        const orderDateCell = document.createElement('td');
-                        orderDateCell.textContent = item.orderDate; // 주문일자
-                        row.appendChild(orderDateCell);
-
-                        const importDateCell = document.createElement('td');
-                        importDateCell.textContent = item.importDate; // 입고일자
-                        row.appendChild(importDateCell);
-
-                        const buttonCell = document.createElement('td');
-                        const importButton = document.createElement('button');
-                        importButton.className = 'jw-button2';
-                        importButton.textContent = '입고버튼';
-                        importButton.onclick = function () {
-                            handleButtonClick(importButton, item.rawsCode);
-                        };
-                        buttonCell.appendChild(importButton);
-                        row.appendChild(buttonCell);
-
-                        tbody.appendChild(row);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching data : ', error);
-                })
-        });*/
-
 
         //자동 계산 스크립트
         document.addEventListener('DOMContentLoaded', function () {
@@ -294,10 +231,13 @@
                                     <td th:text="${raws.status}"></td>
                                     <td th:text="${raws.orderDate}"></td>
                                     <td th:text="${raws.importDate}"></td>
+                                    <td>
+                                        <button class="jw-button2" th:attr="data-rawscode=${raws.rawsCode}" onclick="handleButtonClick(this)">입고버튼</button>
+                                    </td>
                                 </tr>
                                 </tbody>
-
                             </table>
+
                             <div style="margin-left: 73%">
                                 <div class="empty-container" id = "button-container">
                                     <form>
@@ -329,27 +269,6 @@
                             </ul>
                         </nav>
                     </div>
-                    <!--<div id="pagination">
-                        <nav aria-label="...">
-                            <ul class="pagination">
-                                <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
-                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                                    th:classappend="${i} == ${currentPage} ? ' active'">
-                                    <a class="page-link" th:href="@{'/api/rawstock/' + ${i}}"
-                                       th:text="${i + 1}"></a>
-                                </li>
-                                <li class="page-item" th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
-                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>-->
                 </div>
 
                 <div class="jw-div2">
