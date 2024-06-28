@@ -1,18 +1,25 @@
 package codehows.dream.nutritionpirates.controller;
 
 import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
 import codehows.dream.nutritionpirates.service.StockService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller  // 스프링에게 이 클래스가 컨트롤러임을 알립니다.
 @RequestMapping("/stock")  // 이 컨트롤러의 모든 매핑의 기본 경로(prefix)를 지정합니다.
@@ -22,11 +29,38 @@ public class StockController {
 
     private final StockService stockService;  // StockService 의존성 주입을 위한 필드
 
-    // 페이지네이션을 적용하여 재고 목록을 조회하는 메서드
-    @GetMapping("/{page}")
-    public ResponseEntity<List<StockShowDTO>> getStocks(Pageable pageable) {
-        List<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
+    /*@GetMapping("/{page}")
+    public ResponseEntity<Page<StockShowDTO>> getStocks(Pageable pageable) {
+        Page<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
         return ResponseEntity.ok(stockShowDTOList);  // 조회된 데이터와 HTTP 상태 코드를 응답으로 반환
+    }*/
+
+    // 페이지네이션을 적용하여 재고 목록을 조회하는 메서드
+    @GetMapping("/list/{page}")
+    public String getStocks(
+            @PathVariable(name = "page") Optional<Integer> page,
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        int currentPage = page.orElse(0);
+
+        pageable = PageRequest.of(currentPage, 10, Sort.by( "id").descending());
+
+        try {
+            Page<StockShowDTO> rawStockPage = stockService.getStock(pageable);
+
+            // 모델에 데이터 담기
+            model.addAttribute("list", rawStockPage.getContent());
+            model.addAttribute("currentPage", currentPage);
+            model.addAttribute("totalPages", rawStockPage.getTotalPages());
+
+            return "stockCheck";
+
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return "error";
+        }
     }
 
     // 특정 재고를 출고하는 메서드
@@ -68,7 +102,7 @@ public class StockController {
     }
 
     // 재고 현황을 엑셀로 다운로드하는 메서드
-    @GetMapping("/history")
+   @GetMapping("/history")
     public ResponseEntity<?> getExcel(HttpServletResponse response) {
         try {
             Workbook workbook = stockService.getHistorystock();  // 엑셀 데이터 생성

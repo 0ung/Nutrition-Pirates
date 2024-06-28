@@ -73,11 +73,10 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
 
-
         /*원자재 발주 관리 입고 엑셀 다운로드*/
         function downloadExcel(event) {
             event.preventDefault(); // 폼 제출 기본 동작을 막음
-            window.location.href = '/api/rawhistory';
+            window.location.href = '/api/history';
         }
         //입고됨 버튼
         function handleButtonClick(button, rawsCode) {
@@ -146,7 +145,7 @@
                 });
         });
 
-        // 발주 입고 대기 현황
+        /*// 발주 입고 대기 현황
         document.addEventListener('DOMContentLoaded', function () {
             const page = 0; // 페이지 번호를 여기에 설정
             fetch(`/api/list/${page}`, {
@@ -208,7 +207,7 @@
                 .catch(error => {
                     console.error('Error fetching data : ', error);
                 })
-        });
+        });*/
 
 
         //자동 계산 스크립트
@@ -259,42 +258,6 @@
                     console.error('Error fetching data:', error);
                 });
         });
-
-
-        /*
-
-        fetch(url + 'api/calculate')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('네트워크 응답이 정상적이지 않습니다');
-                }
-                return response.json(); // JSON 형식으로 데이터를 파싱하여 반환
-            })
-            .then(data => {
-                // 여기서 받아온 데이터를 모델로 사용하거나 필요한 처리를 수행합니다
-                const { partnerName, product, remainingQuantity, expectedImportDate } = data;
-
-                console.log('받아온 데이터:');
-                console.log('발주처:', partnerName);
-                console.log('원자재명:', product);
-                console.log('수량:', remainingQuantity);
-                console.log('예상 납기일:', expectedImportDate);
-
-                // 예시: HTML 요소에 데이터를 채워 넣는 등의 작업을 수행할 수 있습니다
-                const tableBody = document.querySelector('#orderTable tbody');
-                const row = `
-            <tr>
-                <td>${partnerName}</td>
-                <td>${product}</td>
-                <td>${remainingQuantity}</td>
-                <td>${expectedImportDate}</td>
-            </tr>
-        `;
-                tableBody.insertAdjacentHTML('beforeend', row);
-            })
-            .catch(error => {
-                console.error('데이터를 가져오는 중 오류 발생:', error);
-            });*/
     </script>
 </th:block>
 
@@ -324,30 +287,16 @@
                                 </tr>
                                 </thead>
                                 <tbody id="import-table-body">
-                                <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
+                                <tr th:each="raws : ${list}">
+                                    <td th:text="${raws.rawsCode}"></td>
+                                    <td th:text="${raws.product}"></td>
+                                    <td th:text="${raws.quantity}"></td>
+                                    <td th:text="${raws.status}"></td>
+                                    <td th:text="${raws.orderDate}"></td>
+                                    <td th:text="${raws.importDate}"></td>
+                                </tr>
                                 </tbody>
-                                <!--<tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>A2</td>
-                                    <td>20240608A1</td>
-                                    <td>2024.06.7 13:00:05</td>
-                                    <td>2024.06.7 13:00:05</td>
-                                    <td>
-                                        <button class="jw-button2" onclick="handleButtonClick(this)">입고버튼</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>A2</td>
-                                    <td>20240608A1</td>
-                                    <td>2024.06.7 13:00:05</td>
-                                    <td>2024.06.7 13:00:05</td>
-                                    <td>
-                                        <button class="jw-button2" onclick="handleButtonClick(this)">입고버튼</button>
-                                    </td>
-                                </tr>
-                                </tbody>-->
+
                             </table>
                             <div style="margin-left: 73%">
                                 <div class="empty-container" id = "button-container">
@@ -359,10 +308,29 @@
                         </div>
                     </div>
 
-                    <!------------- 페이지네이션 -------------->
-
                     <div id="pagination">
                         <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                    th:classappend="${i} == ${currentPage} ? ' active'">
+                                    <a class="page-link" th:href="@{'/api/raworder/' + ${i}}"
+                                       th:text="${i + 1}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <!--<div id="pagination">
+                        <nav aria-label="...">
                             <ul class="pagination">
                                 <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
                                     <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
@@ -381,8 +349,7 @@
                                 </li>
                             </ul>
                         </nav>
-                    </div>
-
+                    </div>-->
                 </div>
 
                 <div class="jw-div2">
@@ -408,28 +375,6 @@
                                 <tbody id="order-table-body">
                                 <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
                                 </tbody>
-                                <!--<tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
-                                    <td>양배추</td>
-                                    <td>2000 kg</td>
-                                    <td>2024-06-19</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>벌꿀</td>
-                                    <td>10 L</td>
-                                    <td>2024-06-19</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>포장지</td>
-                                    <td>15000 ea</td>
-                                    <td>2024-06-19</td>
-                                </tr>-->
-
                             </table>
                         </div>
                         <div class="empty-container"></div>
