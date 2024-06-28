@@ -32,6 +32,7 @@
         function generateDropdownMenus(data) {
             const facilityMapping = {
                 'juiceMachine1': '포장기',
+                'weighing' : '칭량기',
                 'extractor1': '추출기',
                 'sterilizer1': '살균기',
                 'mixer': '혼합기',
@@ -39,10 +40,11 @@
                 'boxMachine': 'BOX포장기',
                 'metalDetector': '금속 검출기',
                 'washer': '세척기',
-                'stickMachine1': '막대기'
+                'stickMachine1': '막대기',
+                'freeze' : '냉각기'
             };
 
-            const order = ['washer', 'extractor1', 'mixer', 'sterilizer1', 'stickMachine1', 'juiceMachine1', 'metalDetector', 'boxMachine'];
+            const order = ['washer', 'weighing','extractor1','filter', 'sterilizer1', 'juiceMachine1', 'metalDetector','boxMachine' , 'mixer', 'freeze' , 'stickMachine1'];
 
             const container = document.querySelector('.sengsan_container');
             container.innerHTML = ''; // Clear previous content
@@ -64,14 +66,14 @@
                         const option = document.createElement('div');
                         option.classList.add('sengsan_choice');
                         option.setAttribute("data-id", item.id);
-                        // option.textContent = `${facilityMapping[facilityKey]}  ${item.id} 번`;
-                        if (processStatus === 100) {
-                            option.innerHTML = `<span style="color: red">${facilityMapping[facilityKey]} ${item.id} 번</span>`;
-                        } else if (processStatus > 0 && processStatus < 100) {
-                            option.innerHTML = `<span style="color: green">${facilityMapping[facilityKey]} ${item.id} 번</span>`;
-                        } else {
-                            option.textContent = `${facilityMapping[facilityKey]} ${item.id} 번`;
-                        }
+                        option.textContent = `${facilityMapping[facilityKey]}  ${item.id} 번`;
+                        // if (processStatus === 100) {
+                        //     option.innerHTML = `<span style="color: red">${facilityMapping[facilityKey]} ${item.id} 번</span>`;
+                        // } else if (processStatus > 0 && processStatus < 100) {
+                        //     option.innerHTML = `<span style="color: green">${facilityMapping[facilityKey]} ${item.id} 번</span>`;
+                        // } else {
+                        //     option.textContent = `${facilityMapping[facilityKey]} ${item.id} 번`;
+                        // }
                         option.onclick = () => {
                             sengsan_selectChoice(option, item.id)
                         };
@@ -210,7 +212,7 @@
                         <div class="ss-card ss-checkout">
                             <div class="ss-footer">
                                 <label class="ss-price"> </label>
-                                <button class="ss-checkout-btn" onclick="showModal()" id="startButton" disabled>공정시작</button>
+                                <button class="ss-checkout-btn" onclick="showModal()" id="startButton" >공정시작</button>
                             </div>
                         </div>
                     </div>

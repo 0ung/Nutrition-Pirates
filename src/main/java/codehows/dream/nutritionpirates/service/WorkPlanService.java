@@ -73,27 +73,27 @@ public class WorkPlanService {
 	private int totalSemiProduct = 0;
 	//즙 공정
 	private static final List<Process> juiceProcess = new ArrayList<>(
-		List.of(Process.A1,
-			Process.A2,
-			Process.A3,
-			Process.A4,
-			Process.A5,
-			Process.A6,
-			Process.A7,
-			Process.A8
-		)
+			List.of(Process.A1,
+					Process.A2,
+					Process.A3,
+					Process.A4,
+					Process.A5,
+					Process.A6,
+					Process.A7,
+					Process.A8
+			)
 	);
 	//스틱 공정
 	private static final List<Process> stickProcess = new ArrayList<>(
-		List.of(
-			Process.B1,
-			Process.B2,
-			Process.B3,
-			Process.B4,
-			Process.B5,
-			Process.B6,
-			Process.B7
-		)
+			List.of(
+					Process.B1,
+					Process.B2,
+					Process.B3,
+					Process.B4,
+					Process.B5,
+					Process.B6,
+					Process.B7
+			)
 	);
 
 	public WorkPlanDetailDTO getWorkDetail(Long id) {
@@ -114,69 +114,69 @@ public class WorkPlanService {
 		RawBOMDTO raws = calInputRaws(order);
 
 		juiceProcess.forEach(
-			(e) -> {
-				WorkPlans workPlans = WorkPlanFactoryProvider.createWorkOrder(e);
-				WorkPlan workPlan = null;
-				double localSemiProduct = 0;
+				(e) -> {
+					WorkPlans workPlans = WorkPlanFactoryProvider.createWorkOrder(e);
+					WorkPlan workPlan = null;
+					double localSemiProduct = 0;
 
-				if (e.equals(Process.A1)) {
-					if (order.getProduct() == ProductName.CABBAGE_JUICE) {
-						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getCabbage()));
-					} else if (order.getProduct() == ProductName.BLACK_GARLIC_JUICE) {
-						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getGarlic()));
-					}
-					localSemiProduct = workPlan.getSemiProduct();
-					totalSemiProduct += localSemiProduct;
-					workPlan.setProcessPlan(processPlan);
-					workPlanRepository.save(workPlan);
-				} else if (e.equals(Process.A3)) {
-					double semiCapa = totalSemiProduct;
-					totalSemiProduct = 0;
-					while (semiCapa > 0) {
-						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.EXTRACTION_ROUTING));
-						workPlan = workPlans.createWorkPlan(capa);
-						workPlan.setProcessPlan(processPlan);
-						workPlanRepository.save(workPlan);
-						semiCapa -= capa;
+					if (e.equals(Process.A1)) {
+						if (order.getProduct() == ProductName.CABBAGE_JUICE) {
+							workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getCabbage()));
+						} else if (order.getProduct() == ProductName.BLACK_GARLIC_JUICE) {
+							workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getGarlic()));
+						}
 						localSemiProduct = workPlan.getSemiProduct();
 						totalSemiProduct += localSemiProduct;
-					}
-				} else if (e.equals(Process.A4)) {
-					double semiCapa = totalSemiProduct;
-					totalSemiProduct = 0;
-					while (semiCapa > 0) {
-						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.FILTER_ROUTING));
-						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
-						semiCapa -= capa;
-						localSemiProduct = workPlan.getSemiProduct();
-						totalSemiProduct += localSemiProduct;
-					}
-				} else if (e.equals(Process.A5)) {
-					double semiCapa = totalSemiProduct;
-					totalSemiProduct = 0;
-					while (semiCapa > 0) {
-						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.STERILIZATION_ROUTING));
-						workPlan = workPlans.createWorkPlan(capa);
+					} else if (e.equals(Process.A3)) {
+						double semiCapa = totalSemiProduct;
+						totalSemiProduct = 0;
+						while (semiCapa > 0) {
+							int capa = (int)Math.ceil(Math.min(semiCapa, Routing.EXTRACTION_ROUTING));
+							workPlan = workPlans.createWorkPlan(capa);
+							workPlan.setProcessPlan(processPlan);
+							workPlanRepository.save(workPlan);
+							semiCapa -= capa;
+							localSemiProduct = workPlan.getSemiProduct();
+							totalSemiProduct += localSemiProduct;
+						}
+					} else if (e.equals(Process.A4)) {
+						double semiCapa = totalSemiProduct;
+						totalSemiProduct = 0;
+						while (semiCapa > 0) {
+							int capa = (int)Math.ceil(Math.min(semiCapa, Routing.FILTER_ROUTING));
+							workPlan = workPlans.createWorkPlan(capa);
+							workPlan.setProcessPlan(processPlan);
+							workPlanRepository.save(workPlan);
+							semiCapa -= capa;
+							localSemiProduct = workPlan.getSemiProduct();
+							totalSemiProduct += localSemiProduct;
+						}
+					} else if (e.equals(Process.A5)) {
+						double semiCapa = totalSemiProduct;
+						totalSemiProduct = 0;
+						while (semiCapa > 0) {
+							int capa = (int)Math.ceil(Math.min(semiCapa, Routing.STERILIZATION_ROUTING));
+							workPlan = workPlans.createWorkPlan(capa);
+							workPlan.setProcessPlan(processPlan);
+							workPlanRepository.save(workPlan);
+							semiCapa -= capa;
+							localSemiProduct = workPlan.getSemiProduct();
+							totalSemiProduct += localSemiProduct;
+						}
+					} else if (e.equals(Process.A6)) {
+						workPlan = workPlans.createWorkPlan((int)totalSemiProduct);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
-						semiCapa -= capa;
-						localSemiProduct = workPlan.getSemiProduct();
-						totalSemiProduct += localSemiProduct;
+						totalSemiProduct = workPlan.getSemiProduct();
+					} else {
+						workPlan = workPlans.createWorkPlan((int)totalSemiProduct);
+						workPlan.setProcessPlan(processPlan);
+						workPlanRepository.save(workPlan);
+						totalSemiProduct = workPlan.getSemiProduct();
 					}
-				} else if (e.equals(Process.A6)) {
-					workPlan = workPlans.createWorkPlan((int)totalSemiProduct);
-					workPlan.setProcessPlan(processPlan);
-					workPlanRepository.save(workPlan);
-					totalSemiProduct = workPlan.getSemiProduct();
-				} else {
-					workPlan = workPlans.createWorkPlan((int)totalSemiProduct);
-					workPlan.setProcessPlan(processPlan);
-					workPlanRepository.save(workPlan);
-					totalSemiProduct = workPlan.getSemiProduct();
 				}
-			}
 		);
 		order.updateExpectedDeliveryDate(expectDeliveryDate(processPlan));
 	}
@@ -189,52 +189,52 @@ public class WorkPlanService {
 		RawBOMDTO raws = calInputRaws(order);
 
 		stickProcess.forEach(
-			(e) -> {
-				WorkPlans workPlans = WorkPlanFactoryProvider.createWorkOrder(e);
-				WorkPlan workPlan = null;
-				double localSemiProduct = 0;
+				(e) -> {
+					WorkPlans workPlans = WorkPlanFactoryProvider.createWorkOrder(e);
+					WorkPlan workPlan = null;
+					double localSemiProduct = 0;
 
-				if (e.equals(Process.B1)) {
-					if (order.getProduct() == ProductName.POMEGRANATE_JELLY_STICK) {
-						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPomegranate()));
-					} else if (order.getProduct() == ProductName.PLUM_JELLY_STICK) {
-						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPlum()));
-					}
-					localSemiProduct = workPlan.getSemiProduct();
-					totalSemiProduct += localSemiProduct;
-					workPlan.setProcessPlan(processPlan);
-					workPlanRepository.save(workPlan);
-				} else if (e.equals(Process.B2)) {
-					double semiCapa = totalSemiProduct;
-					totalSemiProduct = 0;
-					while (semiCapa > 0) {
-						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.MIX_ROUTING));
-						workPlan = workPlans.createWorkPlan(capa);
-						workPlan.setProcessPlan(processPlan);
-						workPlanRepository.save(workPlan);
-						semiCapa -= capa;
+					if (e.equals(Process.B1)) {
+						if (order.getProduct() == ProductName.POMEGRANATE_JELLY_STICK) {
+							workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPomegranate()));
+						} else if (order.getProduct() == ProductName.PLUM_JELLY_STICK) {
+							workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPlum()));
+						}
 						localSemiProduct = workPlan.getSemiProduct();
 						totalSemiProduct += localSemiProduct;
-					}
-				} else if (e.equals(Process.B4)) {
-					double semiCapa = totalSemiProduct;
-					totalSemiProduct = 0;
-					while (semiCapa > 0) {
-						int capa = (int)Math.ceil(Math.min(semiCapa, 100));
-						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
-						semiCapa -= capa;
-						localSemiProduct = workPlan.getSemiProduct();
-						totalSemiProduct += localSemiProduct;
+					} else if (e.equals(Process.B2)) {
+						double semiCapa = totalSemiProduct;
+						totalSemiProduct = 0;
+						while (semiCapa > 0) {
+							int capa = (int)Math.ceil(Math.min(semiCapa, Routing.MIX_ROUTING));
+							workPlan = workPlans.createWorkPlan(capa);
+							workPlan.setProcessPlan(processPlan);
+							workPlanRepository.save(workPlan);
+							semiCapa -= capa;
+							localSemiProduct = workPlan.getSemiProduct();
+							totalSemiProduct += localSemiProduct;
+						}
+					} else if (e.equals(Process.B4)) {
+						double semiCapa = totalSemiProduct;
+						totalSemiProduct = 0;
+						while (semiCapa > 0) {
+							int capa = (int)Math.ceil(Math.min(semiCapa, 100));
+							workPlan = workPlans.createWorkPlan(capa);
+							workPlan.setProcessPlan(processPlan);
+							workPlanRepository.save(workPlan);
+							semiCapa -= capa;
+							localSemiProduct = workPlan.getSemiProduct();
+							totalSemiProduct += localSemiProduct;
+						}
+					} else {
+						workPlan = workPlans.createWorkPlan((int)totalSemiProduct);
+						workPlan.setProcessPlan(processPlan);
+						workPlanRepository.save(workPlan);
+						totalSemiProduct = workPlan.getSemiProduct();
 					}
-				} else {
-					workPlan = workPlans.createWorkPlan((int)totalSemiProduct);
-					workPlan.setProcessPlan(processPlan);
-					workPlanRepository.save(workPlan);
-					totalSemiProduct = workPlan.getSemiProduct();
 				}
-			}
 		);
 	}
 
@@ -286,6 +286,10 @@ public class WorkPlanService {
 				case washer -> facilityDTO.setWasher(workPlans);
 				case mixer -> facilityDTO.setMixer(workPlans);
 				case extractor1 -> facilityDTO.setExtractor1(workPlans);
+				case filter -> facilityDTO.setFilter(workPlans);
+				case freeze -> facilityDTO.setFreeze(workPlans);
+				case weighing -> facilityDTO.setWeighing(workPlans);
+
 			}
 		}
 
@@ -311,7 +315,7 @@ public class WorkPlanService {
 		}
 		List<WorkPlan> list = getFacilities(next);
 		WorkPlan nextWorkplan = workPlanRepository.findByProcessPlanIdAndProcess(
-			executedWork.getProcessPlan().getId(), next);
+				executedWork.getProcessPlan().getId(), next);
 
 		checkNextWorkPlan(nextWorkplan, list);
 
@@ -322,14 +326,14 @@ public class WorkPlanService {
 		// 설비 상태 조회
 
 		return WorkPlanDTO.builder()
-			.id(executedWork.getId())
-			.endTime(executedWork.getEndTime() != null ? executedWork.getEndTime().toString() : null)
-			.startTime(executedWork.getStartTime().toString())
-			.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLotCode() : null)
-			.facility(executedWork.getFacility())
-			.rawsCodes(executedWork.getRawsCodes())
-			.process(executedWork.getProcess())
-			.build();
+				.id(executedWork.getId())
+				.endTime(executedWork.getEndTime() != null ? executedWork.getEndTime().toString() : null)
+				.startTime(executedWork.getStartTime().toString())
+				.lotCodes(executedWork.getLotCode() != null ? executedWork.getLotCode().getLotCode() : null)
+				.facility(executedWork.getFacility())
+				.rawsCodes(executedWork.getRawsCodes())
+				.process(executedWork.getProcess())
+				.build();
 	}
 
 	public void checkNextWorkPlan(WorkPlan nextWorkplan, List<WorkPlan> list) {
@@ -389,7 +393,7 @@ public class WorkPlanService {
 	// A 공정 그룹에서 다음 공정을 확인하는 메서드
 	private Optional<Process> checkNextAProcess(Process currentProcess) {
 		Process[] aProcesses = {Process.A1, Process.A2, Process.A3, Process.A4, Process.A5, Process.A6, Process.A7,
-			Process.A8};
+				Process.A8};
 		for (int i = 0; i < aProcesses.length - 1; i++) {
 			if (aProcesses[i] == currentProcess) {
 				return Optional.of(aProcesses[i + 1]);
@@ -545,22 +549,22 @@ public class WorkPlanService {
 	public Page<WorkPlanListDTO> getWorkPlanData(Pageable pageable) {
 		Page<WorkPlan> pages = workPlanRepository.findByEndTimeExists(pageable);
 		return pages.map(e -> WorkPlanListDTO.builder()
-			.work_plan_id(e.getId())
-			.lotCode(e.getLotCode() == null ? null : e.getLotCode().getLotCode())
-			.worker(e.getWorker())
-			.process(e.getProcess())
-			.startTime(e.getStartTime().toLocalDateTime().toString())
-			.endTime(e.getEndTime().toLocalDateTime().toString())
-			.build());
+				.work_plan_id(e.getId())
+				.lotCode(e.getLotCode() == null ? null : e.getLotCode().getLotCode())
+				.worker(e.getWorker())
+				.process(e.getProcess())
+				.startTime(e.getStartTime().toLocalDateTime().toString())
+				.endTime(e.getEndTime().toLocalDateTime().toString())
+				.build());
 	}
 
 	public Workbook getHistory() {
 		List<WorkPlan> list = workPlanRepository.findByEndTimeExists();
 		String time = programTimeService.getProgramTime()
-			.getCurrentProgramTime()
-			.toLocalDateTime()
-			.toLocalDate()
-			.toString();
+				.getCurrentProgramTime()
+				.toLocalDateTime()
+				.toLocalDate()
+				.toString();
 
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet(time + "완료된 작업 지시");

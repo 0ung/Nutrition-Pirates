@@ -22,4 +22,6 @@ public class ActivateFacilityDTO {
 	private List<WorkPlanDTO> boxMachine;
 	private List<WorkPlanDTO> metalDetector;
 	private List<WorkPlanDTO> washer;
+	private List<WorkPlanDTO> freeze;
+	private List<WorkPlanDTO> weighing;
 }

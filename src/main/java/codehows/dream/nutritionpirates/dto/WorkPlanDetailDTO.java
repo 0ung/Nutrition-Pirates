@@ -24,17 +24,17 @@ public class WorkPlanDetailDTO {
 	private String processCompletionTime;
 	private String worker;
 
-	public static WorkPlanDetailDTO toWorkPlanDetailDTO(WorkPlan workPlan, Timestamp time) {
-		return WorkPlanDetailDTO.builder()
-			.processPlanId(workPlan.getProcessPlan().getId())
-			.process(workPlan.getProcess())
-			.rawsId(workPlan.getRawsCodes() == null ? "없음" : workPlan.getRawsCodes())
-			.lotCode(workPlan.getLotCode() == null ? "없음" : workPlan.getLotCode().getLotCode())
-			.processStatus(calProcess(workPlan, time))
-			.processCompletionTime(workPlan.getProcessCompletionTime().toLocalDateTime().toString())
-			.worker(workPlan.getWorker())
-			.build();
-	}
+    public static WorkPlanDetailDTO toWorkPlanDetailDTO(WorkPlan workPlan,Timestamp time) {
+        return WorkPlanDetailDTO.builder()
+                .processPlanId(workPlan.getProcessPlan().getId())
+                .process(workPlan.getProcess())
+                .rawsId(workPlan.getRawsCodes() == null ? "없음" : workPlan.getRawsCodes())
+                .lotCode(workPlan.getLotCode() ==null? "없음" : workPlan.getLotCode().getLotCode())
+                .processStatus(calProcess(workPlan,time))
+                .processCompletionTime(workPlan.getProcessCompletionTime() ==null? "없음" : workPlan.getProcessCompletionTime().toLocalDateTime().toString())
+                .worker(workPlan.getWorker())
+                .build();
+    }
 
 	public static String calProcess(WorkPlan plan, Timestamp time) {
 		if (plan.getStartTime() == null || plan.getProcessCompletionTime() == null) {

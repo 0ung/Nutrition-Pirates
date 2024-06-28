@@ -629,9 +629,37 @@ public class RawOrderInsertService {
         return notification;
     }
 
-    // 기간별 원자재 리스트 페이징 기능
-    public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
+    /*보관기한 3일 이하 원자재 List - /api/rawperiod/{page}*/
+    public Page<RawPeriodDTO> getPeriodList(Pageable pageable) {
 
+        Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
+        LocalDateTime currentDate = timestamp.toLocalDateTime();
+
+        // deadLine에서 3일내 시간범위 계산
+        LocalDateTime minDate = currentDate.minusDays(3);
+        Timestamp minTimestamp = Timestamp.valueOf(minDate);
+
+        // deadLine 이 현재시간 에서 현재시간 -3일 Data만 들고옴
+        Page<Raws> pages = rawRepository.findByStatusAndDeadlineBetween(
+                Status.IMPORT,
+                minTimestamp,
+                timestamp,
+                pageable);
+
+        List<RawPeriodDTO> list = pages.stream().map(e ->
+
+            RawPeriodDTO.builder()
+                    .rawsCode(e.getRawsCode())
+                    .product(e.getProduct().getValue())
+                    .importDate(new Date(e.getImportDate().getTime()))
+                    .deadLine(new Date(e.getDeadLine().getTime()))
+                    .quantity(e.getQuantity())
+                    .build()
+        ).collect(Collectors.toList());
+
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
+    }
+    /*public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
         // 현재 프로그램 시간을 가져옵니다.
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
         LocalDateTime currentDate = timestamp.toLocalDateTime();

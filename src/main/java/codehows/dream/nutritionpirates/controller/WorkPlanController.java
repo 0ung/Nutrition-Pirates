@@ -72,7 +72,7 @@ public class WorkPlanController {
 		Pageable pageable = PageRequest.of(currentPage, 10);
 		try {
 			Page<WorkPlanListDTO> list =  workPlanService.getWorkPlanData(pageable);
-			model.addAttribute("List", list);// Set the content, not the repository itself
+			model.addAttribute("List", list);
 			model.addAttribute("currentPage", currentPage);
 			model.addAttribute("totalPages", list.getTotalPages());
 			return "SengSan_check";
