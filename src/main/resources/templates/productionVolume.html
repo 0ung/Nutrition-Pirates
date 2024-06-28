@@ -12,9 +12,99 @@
 </th:block>
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
-    <script th:inline="javascript">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script th:inline="javascript">
+
+        const ctx = document.querySelector('#myChart').getContext('2d');
+
+        let pageData = [[${data}]];
+        let list = /*[[${list}]]*/ [];
+        let title = pageData.title;
+
+        // 장비 이름과 해당 데이터를 저장할 객체 생성
+        const dataMap = {
+            '즙포장기1': 0,
+            '즙포장기2': 0,
+            '스틱포장기1': 0,
+            '스틱포장기2': 0,
+            '추출기1': 0,
+            '추출기2': 0,
+            '살균기1': 0,
+            '살균기2': 0,
+            '혼합기': 0,
+            '여과기': 0,
+            'BOX포장기': 0,
+            '금속검출기': 0
+        };
+        console.log(list);
+        list.forEach(e => {
+            switch (e.facility) {
+                case "juiceMachine1":
+                    dataMap['즙포장기1'] += e.output;
+                    break;
+                case "juiceMachine2":
+                    dataMap['즙포장기2'] += e.output;
+                    break;
+                case "StickMachine1":
+                    dataMap['스틱포장기1'] += e.output;
+                    break;
+                case "StickMachine2":
+                    dataMap['스틱포장기2'] += e.output;
+                    break;
+                case "extractor1":
+                    dataMap['추출기1'] += e.output;
+                    break;
+                case "extractor2":
+                    dataMap['추출기2'] += e.output;
+                    break;
+                case "sterilizer1":
+                    dataMap['살균기1'] += e.output;
+                    break;
+                case "sterilizer2":
+                    dataMap['살균기2'] += e.output;
+                    break;
+                case "mixer":
+                    dataMap['혼합기'] += e.output;
+                    break;
+                case "filter":
+                    dataMap['여과기'] += e.output;
+                    break;
+                case "boxMachine":
+                    dataMap['BOX포장기'] += e.output;
+                    break;
+                case "metalDetector":
+                    dataMap['금속검출기'] += e.output;
+                    break;
+            }
+        });
+
+        // dataMap 객체의 값을 기반으로 labels와 data 배열 생성
+        const labels = Object.keys(dataMap);
+        const data = Object.values(dataMap);
+
+        // Chart.js 차트 생성
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: title,
+                        data: data,
+                        borderWidth: 1,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </th:block>
 
 
@@ -24,7 +114,7 @@
         <div class="main-container" id="main-container">
             <div id="card1">
                 <div>
-                    <label id="main-label">일/월간 생산량</label>
+                    <label id="main-label" th:text="${title}">일/월간 생산량</label>
                     <div class="container">
                         <div class="empty-container">
                             <div class="btn-group" style="margin-left: 95%; width: 160px;">
@@ -34,8 +124,8 @@
                                     생산량
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                                    <li><a class="dropdown-item" href="#">일일 생산량</a></li>
-                                    <li><a class="dropdown-item" href="#">월간 생산량</a></li>
+                                    <li><a class="dropdown-item" href="/facility/daily">일일 생산량</a></li>
+                                    <li><a class="dropdown-item" href="/facility/monthly">월간 생산량</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -45,35 +135,6 @@
                             <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
                                 <canvas id="myChart"></canvas>
                             </div>
-
-                            <!-- include Chart.js from a CDN -->
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                            <script>
-                                const ctx = document.querySelector('#myChart');
-
-                                //만들위치, 설정값객체
-                                new Chart(ctx, {
-                                    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                                    data: {
-                                        labels: ['즙포장기1', '즙포장기2', '스틱포장기1', '스틱포장기2', '추출기1', '추출기2', '살균기1', '살균기2', '혼합기', '여과기', 'BOX포장기', '금속검출기'],
-                                        datasets: [
-                                            {
-                                                label: '일일 생산량',
-                                                data: [2000, 1500, 500, 500, 100, 10000, 1500, 1500, 1500, 1500, 1500, 1500],
-                                                borderWidth: 1,
-                                            }
-                                        ]
-                                    },
-                                    options: {
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true
-                                            }
-                                        }
-                                    }
-                                });
-                            </script>
                             <div class="empty-container2"></div>
                         </div>
 
