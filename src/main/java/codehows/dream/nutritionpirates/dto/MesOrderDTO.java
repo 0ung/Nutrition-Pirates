@@ -2,7 +2,6 @@ package codehows.dream.nutritionpirates.dto;
 
 import java.sql.Date;
 
-import codehows.dream.nutritionpirates.constants.ProductName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

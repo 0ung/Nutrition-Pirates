@@ -14,6 +14,7 @@ import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.Routing;
+import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.RawShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.LotCode;
@@ -66,7 +67,11 @@ public class A1WorkPlan implements WorkPlans {
 
 		String[] rawsCodes = getRawsCodes(input, workPlan.getProcessPlan().getOrder().getProduct());
 		plan.setCapacity(calCapacity(input));
-		plan.setRawsCodes(Arrays.toString(rawsCodes));
+
+		// rawsCodes 배열을 문자열로 변환
+		String rawsCodesString = Arrays.toString(rawsCodes);
+		rawsCodesString = rawsCodesString.substring(1, rawsCodesString.length() - 1);
+		plan.setRawsCodes(rawsCodesString);
 
 		plan.setLotCode(lotCode);
 		workPlanRepository.save(plan);
@@ -169,6 +174,7 @@ public class A1WorkPlan implements WorkPlans {
 
 				// 원자재 코드 업데이트 후 저장
 				raw.setRawsCode(newCode);
+				raw.setStatus(Status.EXPORT);
 				rawRepository.save(raw);
 			}
 		}
@@ -231,6 +237,6 @@ public class A1WorkPlan implements WorkPlans {
 	}
 
 	public int calCapacity(int input) {
-		return input / Routing.WASHING_ROUTING_KG *100;
+		return input / Routing.WASHING_ROUTING_KG * 100;
 	}
 }

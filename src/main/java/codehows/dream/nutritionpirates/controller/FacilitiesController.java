@@ -1,7 +1,8 @@
 package codehows.dream.nutritionpirates.controller;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,21 +27,32 @@ public class FacilitiesController {
 	}
 
 	@GetMapping("/status")
-	public void getFacilityStatus(Model model) {
+	public String getFacilityStatus(Model model) {
 		List<FacilityStatusDTO> list = facilityService.getFacilityStatus();
-		System.out.println(Arrays.toString(list.toArray()));
 		model.addAttribute("list", list);
+
+		return "/productionamount";
 	}
 
 	@GetMapping("/daily")
-	public void getFacilityDaily(Model model) {
+	public String getFacilityDaily(Model model) {
+		Map<String, String> map = new HashMap<>();
+		map.put("title", "일일 생산량");
 		List<FacilityOutPutDTO> list = facilityService.getDailyOutPut();
 		model.addAttribute("list", list);
+		model.addAttribute("data", map);
+
+		return "/productionVolume";
 	}
 
 	@GetMapping("/monthly")
-	public void getFacilityMonthly(Model model){
+	public String getFacilityMonthly(Model model) {
+		Map<String, String> map = new HashMap<>();
+		map.put("title", "월간 생산량");
 		List<FacilityOutPutDTO> list = facilityService.getMonthlyOutPut();
 		model.addAttribute("list", list);
+		model.addAttribute("data", map);
+
+		return "/productionVolume";
 	}
 }

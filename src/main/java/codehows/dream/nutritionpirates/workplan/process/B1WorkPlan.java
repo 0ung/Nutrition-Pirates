@@ -1,7 +1,5 @@
 package codehows.dream.nutritionpirates.workplan.process;
 
-import static codehows.dream.nutritionpirates.workplan.process.CommonMethod.*;
-
 import java.sql.Timestamp;
 
 import org.springframework.stereotype.Component;

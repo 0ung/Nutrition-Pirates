@@ -46,6 +46,7 @@ public class A4WorkPlan implements WorkPlans {
 			.processCompletionTime(expectTime(input))
 			.semiProduct(process(input))
 			.facilityStatus(FacilityStatus.STANDBY)
+			.capacity(calCapacity(input))
 			.build();
 	}
 
@@ -80,7 +81,8 @@ public class A4WorkPlan implements WorkPlans {
 
 		return new LotCode(lotCode, preLotCode);
 	}
-	public int calCapacity(int input){
-		return input/Routing.FILTER_ROUTING *100;
+	public int calCapacity(int input) {
+		return (int) Math.ceil((double) input / Routing.FILTER_ROUTING * 100);
 	}
+
 }

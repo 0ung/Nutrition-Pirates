@@ -1,14 +1,8 @@
 package codehows.dream.nutritionpirates.controller;
 
-import codehows.dream.nutritionpirates.dto.StockShowDTO;
-import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
-import codehows.dream.nutritionpirates.service.StockService;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import java.util.List;
+
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.service.StockService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @Controller  // 스프링에게 이 클래스가 컨트롤러임을 알립니다.
 @RequestMapping("/stock")  // 이 컨트롤러의 모든 매핑의 기본 경로(prefix)를 지정합니다.

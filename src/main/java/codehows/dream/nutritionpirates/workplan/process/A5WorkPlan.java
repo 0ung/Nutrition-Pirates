@@ -1,10 +1,7 @@
 package codehows.dream.nutritionpirates.workplan.process;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import org.springframework.stereotype.Component;
 
@@ -43,6 +40,7 @@ public class A5WorkPlan implements WorkPlans {
 			.processCompletionTime(expectTime(input))
 			.semiProduct(input)
 			.facilityStatus(FacilityStatus.STANDBY)
+			.capacity(calCapacity(input))
 			.build();
 	}
 
@@ -62,8 +60,9 @@ public class A5WorkPlan implements WorkPlans {
 		return Timestamp.valueOf(completeTime);
 	}
 
-	public int calCapacity(int input){
-		return input/Routing.STERILIZATION_ROUTING *100;
+	public int calCapacity(int input) {
+		return (int) Math.ceil((double) input / Routing.STERILIZATION_ROUTING * 100);
 	}
+
 
 }
