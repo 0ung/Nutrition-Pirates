@@ -1,9 +1,7 @@
 package codehows.dream.nutritionpirates.controller;
 
 
-import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.*;
-import codehows.dream.nutritionpirates.entity.Raws;
 import codehows.dream.nutritionpirates.repository.OrderRepository;
 import codehows.dream.nutritionpirates.service.OrderService;
 import codehows.dream.nutritionpirates.service.RawOrderInsertService;
@@ -21,11 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -37,8 +31,6 @@ public class RawRegisterController {
     private final RawOrderInsertService rawOrderInsertService;
     private final OrderService orderService;
     private final OrderRepository orderRepository;
-
-
 
     /*원자재 발주관리 발주등록버튼 선택지 연결*/
     @PostMapping("/register")
@@ -67,64 +59,6 @@ public class RawRegisterController {
     @GetMapping("/bom")
     public ResponseEntity<?> calculateBOMs() {
         return new ResponseEntity<>(rawOrderInsertService.calculateBOMs(), HttpStatus.OK);
-    }
-
-
-    /*원자재 발주 관리 입고 테이블 */
-    @GetMapping("/list/{page}")
-    public String getRawStockList(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            Model model) {
-        // 페이지 번호를 설정합니다. 페이지 번호가 제공되지 않은 경우 기본값 0을 사용합니다.
-        int currentPage = page;
-
-        try {
-            // 서비스 메서드를 호출하여 데이터를 가져옵니다.
-            Page<RawsListDTO> rawStockPage = rawOrderInsertService.getRawStockList(pageable);
-
-            // 모델에 데이터를 추가합니다.
-            model.addAttribute("list", rawStockPage.getContent());
-            model.addAttribute("currentPage", currentPage);
-            model.addAttribute("totalPages", rawStockPage.getTotalPages());
-
-            return "orderermng";
-        } catch (Exception e) {
-            // 에러가 발생한 경우 로그를 기록하고 에러 페이지를 반환합니다.
-            log.error(e.getMessage());
-            return "error";
-        }
-    }
-    /*@GetMapping("/list/{page}")
-    public ResponseEntity<?> getRawStockList(Pageable pageable) {
-        try {
-            return new ResponseEntity<>(rawOrderInsertService.getRawOrderList(pageable), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }*/
-
-
-    /*원자재 발주 관리 입고 엑셀 다운로드*/
-    @GetMapping("/rawhistory")
-    public ResponseEntity<?> getrawExcel(HttpServletResponse response) {
-        try {
-            Workbook workbook = rawOrderInsertService.getHistoryRaw();
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
-            String fileName = "원자재 발주 현황 내역.xlsx";
-            String encodeFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
-
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-            response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodeFileName);
-
-            workbook.write(response.getOutputStream());
-            workbook.close();
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     /*발주계획서*/
@@ -164,7 +98,7 @@ public class RawRegisterController {
             model.addAttribute("currentPage", currentPage);
             model.addAttribute("totalPages", orderPage.getTotalPages());
 
-           return "orderermng";
+            return "orderermng";
         } catch (Exception e) {
             // 에러가 발생한 경우 로그를 기록하고 에러 페이지를 반환합니다.
             log.error(e.getMessage());
@@ -172,8 +106,6 @@ public class RawRegisterController {
         }
     }
 
-    
-    //3일 이하 원자재
     @GetMapping("/rawstock/{page}")
     public String getRawStockList(
             @PathVariable(name = "page") Optional<Integer> page,
@@ -195,7 +127,7 @@ public class RawRegisterController {
             model.addAttribute("currentPage", currentPage);
             model.addAttribute("totalPages", rawStockPage.getTotalPages());
 
-            return "rawcs";
+            return "rawmng";
         } catch (Exception e) {
             // 에러가 발생한 경우 로그를 기록하고 에러 페이지를 반환합니다.
             log.error(e.getMessage());
@@ -224,8 +156,7 @@ public class RawRegisterController {
         }
     }
 
-
-    /* 3일 이하 원자재 */
+    /*3일 이하 원자재*/
     @GetMapping("/rawperiod/{page}")
     public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
 
