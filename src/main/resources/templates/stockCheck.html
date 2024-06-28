@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-
+                    <div class="empty-container"></div>
                     <!-------------페이지네이션-------------->
                     <div id="pagination">
                         <nav aria-label="Page navigation">
@@ -101,8 +101,7 @@
                                     <a class="page-link" th:href="@{'/stock/list/' + ${i}}"
                                        th:text="${i + 1}"></a>
                                 </li>
-                                <li class="page-item"
-                                    th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                <li class="page-item" th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
                                     <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
