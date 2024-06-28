@@ -286,6 +286,10 @@ public class WorkPlanService {
 				case washer -> facilityDTO.setWasher(workPlans);
 				case mixer -> facilityDTO.setMixer(workPlans);
 				case extractor1 -> facilityDTO.setExtractor1(workPlans);
+				case filter -> facilityDTO.setFilter(workPlans);
+				case freeze -> facilityDTO.setFreeze(workPlans);
+				case weighing -> facilityDTO.setWeighing(workPlans);
+
 			}
 		}
 
