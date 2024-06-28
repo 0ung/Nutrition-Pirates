@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default}">
-
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -13,61 +10,62 @@
     <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
 
     <style>
-        .lot-single-search {
-            margin-bottom: auto;
-            margin-top: auto;
-            height: 40px;
-            background-color: #fafafa;
-            border-radius: 30px;
-        }
-        .lot-search-area {
-            display: flex;
-            justify-content: center;
-        }
-        .lot-c-height {
-            height: 100%;
-        }
-        .lot-custom-input {
-            border: 0;
-            outline: 0;
-            width: 500px;
-            line-height: 40px;
-            transition: width 10.4s linear;
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-            padding-left: 10px;
-        }
-        .lot-input::placeholder {
-            color: #262626;
-            font-size: 20px;
-        }
-        .lot-single-search:hover>.lot-icon-area {
-            background: lightgreen;
-            color: #262626;
-        }
-        .lot-icon-area {
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            height: 40px;
-            width: 40px;
-            float: right;
-            display: flex;
-            text-decoration: none;
-            color: #262626;
-        }
-
     </style>
-
 </th:block>
 
-
 <th:block layout:fragment="script">
-    <!-- chart.js 설치 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rows = document.querySelectorAll('.lot-tr');
+            const modal = document.getElementById("myModal");
+            const span = document.getElementsByClassName("close")[0];
+            const modalContent = document.getElementById("modal-content");
 
+            rows.forEach(row => {
+                row.addEventListener('click', () => {
+                    const lotCode = row.querySelector('.lot-td:nth-child(2)').innerText;
+                    fetch(`/lot/detail/${lotCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            modalContent.innerHTML =
+                                `<span class="close">&times;</span>
+                                <p>processPlanId: ${data.processPlanId}</p>
+                                <p>process : ${data.process}</p>
+                                <p>rawsId  : ${data.rawsId}</p>
+                                <p>lotCode : ${data.lotCode}</p>
+                                <p>processStatus: ${data.processStatus}</p>
+                                <p>processCompletionTime: ${data.processCompletionTime}</p>
+                                <p>worker: ${data.worker}</p>`;
+                            modal.style.display = "block";
 
+                            // Add event listener to the close button in the new content
+                            document.getElementsByClassName("close")[0].onclick = function () {
+                                modal.style.display = "none";
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        function getData() {
+            const lotCode =document.getElementById("search-input").value;
+            console.log(lotCode);
+            if (lotCode !== '') {
+                window.location.href = "/lot/prev/"+lotCode;
+            }
+        }
+    </script>
 </th:block>
 
 <!-- ===============================================-->
@@ -90,74 +88,76 @@
                         <div class="wrapper lot-c-height">
                             <div class="lot-search-area lot-c-height">
                                 <div class="lot-single-search">
-                                    <input class="lot-custom-input" name="" placeholder="put your 'lot' number here ..." type="text"> <a class="lot-icon-area" href="#"><i class="fa fa-search"></i></a>
+                                    <form id="search-form">
+                                        <input class="lot-custom-input" name="" id="search-input"
+                                               placeholder="put your 'lot' number here ..." type="text">
+                                        <button type="button" class="lot-icon-area" onclick="getData()"><i class="fa fa-search"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col">
 
-                        <h1> </h1>
+                        <h1></h1>
                         <table class="lot-table">
                             <thead>
                             <tr class="lot-tr">
                                 <th class="lot-th">번호</th>
-                                <th class="lot-th">발주처</th>
-                                <th class="lot-th">제품명</th>
-                                <th class="lot-th">수량</th>
-                                <th class="lot-th">수주일</th>
-                                <th class="lot-th">예상납기일</th>
-                                <th class="lot-th">공정상태</th>
-                                <th class="lot-th">긴급여부</th>
-                                <th class="lot-th">출하상태</th>
+                                <th class="lot-th">LOT</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="lot-tr">
-                                <td class="lot-td">1</td>
-                                <td class="lot-td">ABC Corp</td>
-                                <td class="lot-td">Widget A</td>
-                                <td class="lot-td">100</td>
-                                <td class="lot-td">2024-06-01</td>
-                                <td class="lot-td">2024-06-10</td>
-                                <td class="lot-td">생산중</td>
-                                <td class="lot-td">아니오</td>
-                                <td class="lot-td">대기중</td>
+                            <tr th:each="lot, iterStat : ${list}" class="lot-tr">
+                                <td class="lot-td" th:text="${iterStat.index + 1}">1</td>
+                                <td class="lot-td" th:text="${lot}">20240608A8</td>
                             </tr>
                             <tr class="lot-tr">
-                                <td class="lot-td">2</td>
-                                <td class="lot-td">XYZ Ltd</td>
-                                <td class="lot-td">Gadget B</td>
-                                <td class="lot-td">200</td>
-                                <td class="lot-td">2024-06-05</td>
-                                <td class="lot-td">2024-06-15</td>
-                                <td class="lot-td">완료</td>
-                                <td class="lot-td">예</td>
-                                <td class="lot-td">출하완료</td>
-                            </tr>
-                            <tr class="lot-tr">
-                                <td class="lot-td">3</td>
-                                <td class="lot-td">LMN Inc</td>
-                                <td class="lot-td">Device C</td>
-                                <td class="lot-td">150</td>
-                                <td class="lot-td">2024-06-03</td>
-                                <td class="lot-td">2024-06-12</td>
-                                <td class="lot-td">준비중</td>
-                                <td class="lot-td">아니오</td>
-                                <td class="lot-td">대기중</td>
+                                <td class="lot-td"> 10</td>
+                                <td class="lot-td"> 20240608A8</td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="lot-centered"> [1] [2] [3] [4] [5]</div>
+                        <div class="pagination-container">
+                            <div class="pagination-list lot-centered">
+                                <!-- Previous button -->
+<!--                                    <li>-->
+<!--                                        <button th:disabled="${currentPage == 0}"-->
+<!--                                                th:onclick="|location.href='@{/lot/list/{page}(page=${currentPage - 1})}'|">-->
+<!--                                            이전버튼-->
+<!--                                        </button>-->
+<!--                                    </li>-->
+<!--                                    &lt;!&ndash; Page numbers &ndash;&gt;-->
+<!--                                    <li th:if="${totalPages == 1}">-->
+<!--                                        <a th:href="@{/lot/list/0}" th:text="1" class="pagination-link active"></a>-->
+<!--                                    </li>-->
+<!--                                    <li th:if="${totalPages > 1}" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">-->
+<!--                                        <a th:href="@{/lot/list/{page}(page=${pageNum})}"-->
+<!--                                           th:text="${pageNum + 1}"-->
+<!--                                           th:classappend="${currentPage == pageNum ? 'active' : ''}"-->
+<!--                                           class="pagination-link"></a>-->
+<!--                                    </li>-->
+<!--                                    &lt;!&ndash; Next button &ndash;&gt;-->
+<!--                                    <li>-->
+<!--                                        <button th:disabled="${currentPage >= totalPages - 1}"-->
+<!--                                                th:onclick="|location.href='@{/lot/list/{page}(page=${currentPage + 1})}'|">-->
+<!--                                            다음버튼-->
+<!--                                        </button>-->
+<!--                                    </li>-->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="lot-card2 lot-checkout">
-                <div class="lot-footer">
-                    <label class="lot-price"> </label>
-                    <button class="lot-checkout-btn"> 엑셀 저장</button>
-                </div>
-            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="lot2-modal">
+        <div class="lot2-modal-content" id="modal-content">
+            <span class="close">&times;</span>
+            <p>Modal Content</p>
         </div>
     </div>
     <!-- ===============================================-->

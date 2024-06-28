@@ -5,16 +5,19 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,7 @@ import codehows.dream.nutritionpirates.constants.ProductName;
 import codehows.dream.nutritionpirates.dto.ShipmentListDTO;
 import codehows.dream.nutritionpirates.dto.StockGraphDTO;
 import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.dto.ShipShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.Order;
 import codehows.dream.nutritionpirates.entity.ProcessPlan;
 import codehows.dream.nutritionpirates.entity.Stock;
@@ -83,7 +87,7 @@ public class StockService {
 
 
     // isExport 가 1(true) 이면 출고 0 (false) 이면 입고
-    public List<StockShowDTO> getStock(Pageable pageable) {
+    /*public List<StockShowDTO> getStock(Pageable pageable) {
         Page<Stock> stocks = stockRepository.findAll(pageable);
         List<StockShowDTO> stockShowDTOList = new ArrayList<>();
 
@@ -100,7 +104,7 @@ public class StockService {
             );
         });
         return stockShowDTOList;
-    }
+    }*/
 
     public void releaseStock(Long id) {
         Stock stock = stockRepository.findById(id).orElse(null);
@@ -156,7 +160,6 @@ public class StockService {
         });
         return list;
     }
-
     // 출하 DTO 만들기
     public List<ShipmentListDTO> getShip(Pageable pageable) {
         Page<Order> orders = orderRepository.findAll(pageable);
@@ -165,12 +168,16 @@ public class StockService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         orders.forEach((e) -> {
-
-            //expectedDeliveryDate를 formatter넣어서 String 반환
+            // Format expectedDeliveryDate if it's not null
             String formattedDate = null;
             if (e.getExpectedDeliveryDate() != null) {
-                LocalDateTime localDateTime = LocalDateTime.parse(e.getExpectedDeliveryDate());
-                formattedDate = localDateTime.format(formatter);
+                try {
+                    LocalDateTime localDateTime = LocalDateTime.parse(e.getExpectedDeliveryDate());
+                    formattedDate = localDateTime.format(formatter);
+                } catch (DateTimeParseException ex) {
+                    // Handle parsing exception if the format is incorrect
+                    log.error("Error parsing expectedDeliveryDate: " + e.getExpectedDeliveryDate(), ex);
+                }
             }
 
             Process process = getProcess(e.getId());
@@ -180,16 +187,17 @@ public class StockService {
                             .product(e.getProduct().getValue())
                             .quantity(e.getQuantity())
                             .orderDate(e.getOrderDate())
-                            .expectedDeliveryDate(formattedDate)
+                            .expectedDeliveryDate(formattedDate) // Assign formattedDate here
                             .process(process)
                             .urgency(e.isUrgency())
                             .build()
-
             );
         });
+
         return shipmentListDTOList;
     }
-    /* process 공정찾는 메서드*/
+
+    //* process 공정찾는 메서드*/
     public Process getProcess(Long orderId) {
         //1. processPlan 찾고
         //2. workplan을 찾고
@@ -199,6 +207,9 @@ public class StockService {
 
         for (WorkPlan workPlan1 : workPlan) {
             if (workPlan1.getFacilityStatus() == FacilityStatus.WORKING) {
+                return workPlan1.getProcess();
+            }
+            if (workPlan1.getFacilityStatus() == FacilityStatus.STANDBY && workPlan1.getProcess() == Process.A8 && workPlan1.getRawsCodes() != null) {
                 return workPlan1.getProcess();
             }
         }
@@ -213,7 +224,8 @@ public class StockService {
         Pageable pageable = Pageable.unpaged();
 
         // getStock메서드를 호출하여 StockShowDTO 리스트 가져오기
-        List<StockShowDTO> list = getStock(pageable);
+        Page<StockShowDTO> page = getStock(pageable);
+        List<StockShowDTO> list = page.getContent();
 
         Workbook workbook = new XSSFWorkbook();
 
@@ -241,4 +253,97 @@ public class StockService {
 
         return workbook;
     }
+    public Long getTotalPages(){
+        long cnt = stockRepository.count();
+
+        if(cnt == 0){
+            throw new RuntimeException();
+        }
+        long result = cnt / 10;
+        long remain = cnt % 10;
+
+        if(remain > 0 ){
+            return result + 1;
+        }
+        return result;
+    }
+
+
+    // 출하현황 엑셀파일 다운로드
+    @Transactional
+    public Workbook getHistroyship() {
+
+        // Pageable을 사용하지 않고 모든 데이터를 가져오기 위해 임의의 Pageable 생성
+        Pageable pageable = Pageable.unpaged();
+
+        // getStock메서드를 호출하여 StockShowDTO 리스트 가져오기
+        List<ShipmentListDTO> page = getShip(pageable);
+        //List<ShipmentListDTO> list = page.getContent();
+
+        Workbook workbook = new XSSFWorkbook();
+
+        // 엑셀 아래 시트 이름 설정
+        Sheet sheet = workbook.createSheet(LocalDate.now() + "재고 내역");
+
+        Row headerRow = sheet.createRow(0);
+        String[] headers = new String[]{"발주처", "완제품명", "수량", "주문 날짜", "출고 날짜", "예상납기일", "공정상태", "긴급여부","출하상태"};
+
+        for (int i = 0; i < headers.length; i++) {
+            headerRow.createCell(i).setCellValue(headers[i]);
+        }
+
+        for (int i = 1; i < page.size() + 1; i++) {
+            Row row = sheet.createRow(i);
+            ShipmentListDTO data = page.get(i - 1);
+
+            row.createCell(0).setCellValue(data.getOrderName());
+            row.createCell(1).setCellValue(data.getProduct());
+            row.createCell(2).setCellValue(data.getQuantity());
+            row.createCell(3).setCellValue(data.getOrderDate());
+            row.createCell(4).setCellValue(data.getShippingDate());
+            row.createCell(5).setCellValue(data.getExpectedDeliveryDate());
+            row.createCell(6).setCellValue(data.getProcess().toString());
+            row.createCell(7).setCellValue(data.isUrgency());
+            row.createCell(8).setCellValue(data.isShipping());
+        }
+
+        return workbook;
+    }
+
+    // 재고 현황 테이블 - /api/stock/{page}
+    public Page<StockShowDTO> getStock(Pageable pageable) {
+        Page<Stock> pages = stockRepository.findAll(pageable);
+
+        List<StockShowDTO> list = pages.stream().map(e ->
+
+            StockShowDTO.builder()
+                    .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
+                    .lotCode(e.getWorkPlan().getLotCode().getLotCode())
+                    .quantity(e.getQuantity())
+                    .createDate(e.getCreateDate())
+                    .exportDate(e.getExportDate())
+                    //.isExport(e.getExportDate() == null ? false : true)
+                    .isExport(e.getExportDate() != null)
+                    .build()
+
+        ).collect(Collectors.toList());
+
+        // Page 객체를 반환하기 위해 List를 Page 로 변환
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
+
+    }
+
+    // 출하 그래프
+    /*public List<ShipShowGraphDTO> getShipGraph() {
+
+        Map<String, Integer> shipQuantityMap = new HashMap<>();
+        for (ProductName productName : ProductName.values()) {
+            shipQuantityMap.put(productName.getValue(), 0); // 기본값은 0으로 설정
+        }
+        List<Stock> shipList = stockRepository.findAll();
+
+        for (Stock stock : shipList) {
+            if(stock.)
+        }
+    }*/
 }

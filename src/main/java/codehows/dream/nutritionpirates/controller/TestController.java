@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class TestController {
     @GetMapping(value = "/")
     public String index() {
-        return "test";
+        return "main";
     }
 
-    @GetMapping(value = {"/chulha", "/ChulHa","/Chulha"})
+    @GetMapping(value = {"/chulha", "/ChulHa","/stock/shipment/0"})
     public String getChulHa(){
         return "ChulHa";
     }
@@ -32,20 +32,29 @@ public class TestController {
     public String getLot(){
         return "LOT";
     }
+
     @GetMapping(value = "/systemtime")
     public String index1() {
         return "systemtime";
     }
 
-    @GetMapping(value = "/sengsanPlan")
-    public String inasdas(){
-        return "SengSan_Plan";
+    @GetMapping(value = "/stockcheck")
+    public String index3() {
+        return "stockCheck";
     }
 
+    @GetMapping(value = "/stockcs")
+    public String index2() {
+        return "stockCS";
+    }
 
-    @GetMapping(value = "/sengsancheck")
-    public String sengsancheck(){
+    @GetMapping(value = {"/sengsan","/sengsanCheck","/sengsancheck"})
+    public String getSengsanCheck(){
         return "SengSan_check";
+    }
+    @GetMapping(value = {"plan","/sengsanPlan","/sengsanplan"})
+    public String getSengsanPlan(){
+        return "SengSan_Plan";
     }
 
     @GetMapping(value = "/orderermng")
@@ -62,4 +71,15 @@ public class TestController {
     public String index31() {
         return "rawcs";
     }
+
+    @GetMapping(value = "/productionamount")
+    public String index66() {
+        return "productionamount";
+    }
+
+    @GetMapping(value = "/productionvolume")
+    public String index55() {
+        return "productionVolume";
+    }
+
 }

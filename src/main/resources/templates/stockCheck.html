@@ -34,21 +34,29 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        function downloadExcel(event) {
+            event.preventDefault(); // 폼 제출 기본 동작을 막음
+            window.location.href = '/stock/history';
+        }
     </script>
 </th:block>
 
-
 <div layout:fragment="content">
-
     <div id="main-content">
         <div class="main-container" id="main-container">
             <div id="card1">
                 <div>
                     <label id="main-label">재고 조회
                         <span style="margin-left: 75%; width: 150px">
-                                       <input type="text" id="search" placeholder="Search..."/>
-                                </span>
+                            <input type="text" id="search" placeholder="Search..."/>
+                        </span>
                     </label>
+                    <div id="button-container">
+                        <form>
+                            <button class="jw-button" onclick="downloadExcel(event)">엑셀 다운</button>
+                        </form>
+                    </div>
+
                     <div class="empty-container"></div>
                     <div class="container">
 
@@ -56,7 +64,7 @@
                             <table class="jw-table">
                                 <thead>
                                 <tr>
-                                    <th scope="col">상품코드</th>
+                                    <th scope="col">완제품명</th>
                                     <th scope="col">LOT번호</th>
                                     <th scope="col">수량</th>
                                     <th scope="col">생산 날짜</th>
@@ -64,78 +72,45 @@
                                     <th scope="col">입/출고 유무</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>석류젤리스틱</td>
-                                    <td>300</td>
-                                    <td>2024-06-10</td>
-                                    <td>2024-06-20</td>
-                                    <td>출고</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>매실젤리스틱</td>
-                                    <td>100</td>
-                                    <td>2024-06-12</td>
-                                    <td>2024-06-14</td>
-                                    <td>출고</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>흑마늘즙</td>
-                                    <td>100</td>
-                                    <td>2024-06-19</td>
-                                    <td></td>
-                                    <td>입고</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>양배추즙</td>
-                                    <td>50</td>
-                                    <td>2024-06-19</td>
-                                    <td></td>
-                                    <td>입고</td>
+                                <tbody id="stock-records">
+                                <tr th:each="stock : ${list}">
+                                    <td th:text="${stock.product}"></td>
+                                    <td th:text="${stock.lotCode}"></td>
+                                    <td th:text="${stock.quantity}"></td>
+                                    <td th:text="${stock.createDate}"></td>
+                                    <td th:text="${stock.exportDate}"></td>
+                                    <td th:text="${stock.isExport}"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-
-                        <div class="empty-container">
-                            <div id="button-container">
-                                <form>
-                                    <button class="jw-button" style="width: 100px;" onclick="">엑셀 다운</button>
-                                </form>
-                            </div>
-                        </div>
-
                     </div>
 
-
-                    <!-------------
-                ---------------
-                ---------------
-                페이지네이션
-                ---------------
-                ---------------
-                -------------->
-
-
+                    <div class="empty-container"></div>
+                    <!-------------페이지네이션-------------->
                     <div id="pagination">
-                        <nav aria-label="...">
+                        <nav aria-label="Page navigation">
                             <ul class="pagination">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                <li class="page-item" th:disabled="${currentPage == 0}">
+                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">&raquo;</a>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                    th:classappend="${i} == ${currentPage} ? ' active'">
+                                    <a class="page-link" th:href="@{'/stock/list/' + ${i}}"
+                                       th:text="${i + 1}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
                     </div>
+
+
                 </div>
             </div>
         </div>
