@@ -10,7 +10,7 @@ public class TestController {
         return "main";
     }
 
-    @GetMapping(value = {"/chulha", "/ChulHa","/Chulha"})
+    @GetMapping(value = {"/chulha", "/ChulHa","/stock/shipment/0"})
     public String getChulHa(){
         return "ChulHa";
     }

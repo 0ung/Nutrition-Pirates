@@ -14,67 +14,132 @@
           rel="stylesheet">
     <link th:href="@{/css/chulha.css}" type="text/css" rel="stylesheet" id="chulha.css">
 
+    <style>
 
 
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
+
+    </style>
 </th:block>
-
 
 <th:block layout:fragment="script">
     <!-- chart.js 설치 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<script>
-    var cabageJuice = 1500;
-    var blackGarlicJuice = 2000;
-    var PomegranateStick = 2500;
-    var plumStick = 3000;
-    var box = [cabageJuice, blackGarlicJuice, PomegranateStick,plumStick];
-    var highest = Math.max(...box) + 1000;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/stock/graphimport')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.product);
+                    const quantities = data.map(item => item.quantity);
+                    const highest = Math.max(...quantities) + 1000;
 
+                    quantities.push(highest);
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const data = {
-            labels: ['양배추즙','흑마늘즙','석류스틱','매실스틱'],
-            datasets: [
-                {
-                    // label: '양배추즙',
-                    data: [cabageJuice, blackGarlicJuice, PomegranateStick, plumStick , highest],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(153, 102, 255, 0.5)'
-                    ],
-                    borderRadius: 10,
-                }
-            ]
-        };
+                    const chartData = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: quantities,
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.5)',
+                                    'rgba(75, 192, 192, 0.5)',
+                                    'rgba(255, 206, 86, 0.5)',
+                                    'rgba(153, 102, 255, 0.5)'
+                                ],
+                                borderRadius: 10,
+                            }
+                        ]
+                    };
 
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'hidden',
-                    },
-                    title: {
-                        display: true,
-                        text: '현재 재고 현황',
+                    const config = {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: '현재 재고 현황',
+                                }
+                            }
+                        },
+                    };
+
+                    const myChart = new Chart(
+                        document.getElementById('myChart'),
+                        config
+                    );
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    </script>
+
+    <script>
+        function downloadExcel() {
+            fetch('/stock/shipHistory', {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                }
-            },
-        };
-
-        const myChart = new Chart(
-            document.getElementById('myChart'),
-            config
-        );
-    });
-</script>
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = '출하 현황 내역.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel:', error);
+                    // Handle error as needed
+                });
+        }
+    </script>
 </th:block>
 
 <!-- ===============================================-->
@@ -82,32 +147,29 @@
 <!-- ===============================================-->
 
 <div layout:fragment="content">
-        <!--------------------->
-        <!----  Main Start ---->
-        <!--------------------->
-        <div class="ch-content">
-            <div class="ch-container2">
-                <div class="ch-card2 ch-cart">
-                    <label class="ch-title_form">
-                        출하현황
-                    </label>
+    <!--------------------->
+    <!----  Main Start ---->
+    <!--------------------->
+    <div class="ch-content">
+        <div class="ch-container2">
+            <div class="ch-card2 ch-cart">
+                <label class="ch-title_form">
+                    출하현황
+                </label>
 
-                    <div class="row m-5">
+                <div class="row m-5">
                     <div class="col">
                         <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
-                        <div style="  display: flex; justify-content: center; align-items: center;">
+                        <div style="display: flex; justify-content: center; align-items: center;">
                             <!-- 차트 그릴 위치 지정 canvas webGL(그래픽엔진) 사용 -->
-                                <canvas id="myChart"></canvas>
+                            <canvas id="myChart"></canvas>
                         </div>
-
                     </div>
                     <div class="col">
-
-                        <h1 > </h1>
+                        <h1></h1>
                         <table class="ch-table">
                             <thead>
                             <tr class="ch-tr">
-                                <th class="ch-th">번호</th>
                                 <th class="ch-th">발주처</th>
                                 <th class="ch-th">제품명</th>
                                 <th class="ch-th">수량</th>
@@ -119,53 +181,48 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="ch-tr">
-                                <td class="ch-td">1</td>
-                                <td class="ch-td">ABC Corp</td>
-                                <td class="ch-td">Widget A</td>
-                                <td class="ch-td">100</td>
-                                <td class="ch-td">2024-06-01</td>
-                                <td class="ch-td">2024-06-10</td>
-                                <td class="ch-td">생산중</td>
-                                <td class="ch-td">아니오</td>
-                                <td class="ch-td">대기중</td>
-                            </tr>
-                            <tr class="ch-tr">
-                                <td class="ch-td">2</td>
-                                <td class="ch-td">XYZ Ltd</td>
-                                <td class="ch-td">Gadget B</td>
-                                <td class="ch-td">200</td>
-                                <td class="ch-td">2024-06-05</td>
-                                <td class="ch-td">2024-06-15</td>
-                                <td class="ch-td">완료</td>
-                                <td class="ch-td">예</td>
-                                <td class="ch-td">출하완료</td>
-                            </tr>
-                            <tr class="ch-tr">
-                                <td class="ch-td">3</td>
-                                <td class="ch-td">LMN Inc</td>
-                                <td class="ch-td">Device C</td>
-                                <td class="ch-td">150</td>
-                                <td class="ch-td">2024-06-03</td>
-                                <td class="ch-td">2024-06-12</td>
-                                <td class="ch-td">준비중</td>
-                                <td class="ch-td">아니오</td>
-                                <td class="ch-td">대기중</td>
+                            <tr th:each="shipment : ${shipments}">
+                                <td class="ch-td" th:text="${shipment.orderName}">Orderer Name</td>
+                                <td class="ch-td" th:text="${shipment.product}">Product Name</td>
+                                <td class="ch-td" th:text="${shipment.quantity}">Quantity</td>
+                                <td class="ch-td" th:text="${shipment.orderDate}">Order Date</td>
+                                <td class="ch-td" th:text="${shipment.expectedDeliveryDate}">Expected Delivery Date</td>
+                                <td class="ch-td" th:text="${shipment.process}">Process</td>
+                                <td class="ch-td" th:text="${shipment.urgency} ? 'Yes' : 'No'">Urgency</td>
+                                <td class="ch-td" th:text="${shipment.isShipping} ? 'Shipped' : 'Pending'">Shipping Status</td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="ch-centered"> [1] [2] [3] [4] [5]</div>
-                    </div>
-                    </div>
-                </div>
-                <div class="ch-card2 ch-checkout">
-                    <div class="ch-footer">
-                        <label class="ch-price"> </label>
-                        <button class="ch-checkout-btn"> 엑셀 저장</button>
+                        <div class="pagination-container">
+                            <ul class="pagination-list lot-centered">
+                                <li th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                                    <a th:href="@{/stock/shipment/{page}(page=${currentPage != null ? currentPage - 1 : 0})}" aria-label="Previous" class="pagination-link">
+                                        <span aria-hidden="true">이전버튼</span>
+                                    </a>
+                                </li>
+                                <li th:each="pageNum : ${totalPages != null ? #numbers.sequence(0, totalPages - 1) : 0}"
+                                    th:classappend="${pageNum == currentPage} ? 'active' : ''">
+                                    <a th:href="@{/stock/shipment/{page}(page=${pageNum})}" th:text="${pageNum + 1}" class="pagination-link">1</a>
+                                </li>
+                                <li th:classappend="${currentPage != null && currentPage >= totalPages - 1} ? 'disabled' : ''">
+                                    <a th:href="@{/stock/shipment/{page}(page=${currentPage != null ? currentPage + 1 : 0})}" aria-label="Next" class="pagination-link">
+                                        <span aria-hidden="true">다음버튼</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
             </div>
+            <div class="ch-card2 ch-checkout">
+                <div class="ch-footer">
+                    <label class="ch-price"></label>
+                    <button class="ch-checkout-btn" onclick="downloadExcel()"> 엑셀 저장</button>
+                </div>
+            </div>
         </div>
+    </div>
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import codehows.dream.nutritionpirates.dto.WorkPlanDetailDTO;
 import codehows.dream.nutritionpirates.service.LotCodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,34 +26,21 @@ import lombok.RequiredArgsConstructor;
 public class LotCodeController {
 
 	private final LotCodeService lotCodeService;
+
 	@GetMapping("/prev/{lotCode}") //검색
-	public void getPrevLotCode(@PathVariable(name = "lotCode") String lotCode, Model model) {
+	public String getPrevLotCode(@PathVariable(name = "lotCode") String lotCode, Model model) {
 		List<String> list = lotCodeService.getPrevLotcode(lotCode, new ArrayList<>());
 		model.addAttribute("list", list);
+		return "LOT";
 	}
+
+
 
 	@GetMapping("/detail/{lotCode}") //클릭시 디테일
-	public void getDetail(@PathVariable(name = "lotCode") String lotCode, Model model) {
-		WorkPlanDetailDTO workPlanDetailDTO = lotCodeService.getLotCodeData(lotCode);
-		model.addAttribute("DTO", workPlanDetailDTO);
+	@ResponseBody
+	public WorkPlanDetailDTO getDetail(@PathVariable(name = "lotCode") String lotCode) {
+		return lotCodeService.getLotCodeData(lotCode);
 	}
-
-//	@GetMapping("/list/{page}")
-//	public String getList(@PathVariable(name = "page") Optional<Integer> page, Model model) {
-//		int currentPage = page.orElse(0);
-//		Pageable pageable = PageRequest.of(currentPage, 10);
-//		Page<LotCode> list = lotCodeService.getLotCode(pageable);
-//		List<String> result = new ArrayList<>();
-//		list.forEach(
-//				e->result.add(e.getLotCode())
-//		);
-//		model.addAttribute("List",result);
-//		model.addAttribute("currentPage", currentPage);
-//		model.addAttribute("totalPages",list.getTotalPages());
-//		return "LOT";
-//	}
-
-
 
 	@GetMapping("/list/{page}")
 	public String getList(@PathVariable(name = "page") Optional<Integer> page, Model model) {
