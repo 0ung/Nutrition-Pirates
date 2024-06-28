@@ -121,9 +121,9 @@ public class WorkPlanService {
 
 				if (e.equals(Process.A1)) {
 					if (order.getProduct() == ProductName.CABBAGE_JUICE) {
-						workPlan = workPlans.createWorkPlan((int) Math.ceil(raws.getCabbage()));
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getCabbage()));
 					} else if (order.getProduct() == ProductName.BLACK_GARLIC_JUICE) {
-						workPlan = workPlans.createWorkPlan((int) Math.ceil(raws.getGarlic()));
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getGarlic()));
 					}
 					localSemiProduct = workPlan.getSemiProduct();
 					totalSemiProduct += localSemiProduct;
@@ -133,7 +133,7 @@ public class WorkPlanService {
 					double semiCapa = totalSemiProduct;
 					totalSemiProduct = 0;
 					while (semiCapa > 0) {
-						int capa = (int) Math.ceil(Math.min(semiCapa, Routing.EXTRACTION_ROUTING));
+						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.EXTRACTION_ROUTING));
 						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
@@ -145,7 +145,7 @@ public class WorkPlanService {
 					double semiCapa = totalSemiProduct;
 					totalSemiProduct = 0;
 					while (semiCapa > 0) {
-						int capa = (int) Math.ceil(Math.min(semiCapa, Routing.FILTER_ROUTING));
+						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.FILTER_ROUTING));
 						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
@@ -157,7 +157,7 @@ public class WorkPlanService {
 					double semiCapa = totalSemiProduct;
 					totalSemiProduct = 0;
 					while (semiCapa > 0) {
-						int capa = (int) Math.ceil(Math.min(semiCapa, Routing.STERILIZATION_ROUTING));
+						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.STERILIZATION_ROUTING));
 						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
@@ -188,7 +188,6 @@ public class WorkPlanService {
 		}
 		RawBOMDTO raws = calInputRaws(order);
 
-
 		stickProcess.forEach(
 			(e) -> {
 				WorkPlans workPlans = WorkPlanFactoryProvider.createWorkOrder(e);
@@ -197,9 +196,9 @@ public class WorkPlanService {
 
 				if (e.equals(Process.B1)) {
 					if (order.getProduct() == ProductName.POMEGRANATE_JELLY_STICK) {
-						workPlan = workPlans.createWorkPlan((int) Math.ceil(raws.getPomegranate()));
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPomegranate()));
 					} else if (order.getProduct() == ProductName.PLUM_JELLY_STICK) {
-						workPlan = workPlans.createWorkPlan((int) Math.ceil(raws.getPlum()));
+						workPlan = workPlans.createWorkPlan((int)Math.ceil(raws.getPlum()));
 					}
 					localSemiProduct = workPlan.getSemiProduct();
 					totalSemiProduct += localSemiProduct;
@@ -209,7 +208,7 @@ public class WorkPlanService {
 					double semiCapa = totalSemiProduct;
 					totalSemiProduct = 0;
 					while (semiCapa > 0) {
-						int capa = (int) Math.ceil(Math.min(semiCapa, Routing.MIX_ROUTING));
+						int capa = (int)Math.ceil(Math.min(semiCapa, Routing.MIX_ROUTING));
 						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
@@ -221,7 +220,7 @@ public class WorkPlanService {
 					double semiCapa = totalSemiProduct;
 					totalSemiProduct = 0;
 					while (semiCapa > 0) {
-						int capa = (int) Math.ceil(Math.min(semiCapa, 100));
+						int capa = (int)Math.ceil(Math.min(semiCapa, 100));
 						workPlan = workPlans.createWorkPlan(capa);
 						workPlan.setProcessPlan(processPlan);
 						workPlanRepository.save(workPlan);
@@ -238,7 +237,6 @@ public class WorkPlanService {
 			}
 		);
 	}
-
 
 	public String expectDeliveryDate(ProcessPlan processPlan) {
 		List<WorkPlan> list = workPlanRepository.findAllByProcessPlanId(processPlan.getId());

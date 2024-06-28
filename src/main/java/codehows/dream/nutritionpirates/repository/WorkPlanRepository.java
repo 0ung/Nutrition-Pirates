@@ -36,5 +36,6 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 
 	@Query("SELECT w FROM WorkPlan w WHERE w.lotCode.id = :lotCodeId")
 	WorkPlan findByLotCodeId(@Param("lotCodeId") String lotCodeId);
-	// List<WorkPlan> findByEndTimeEmptyAndFacilityStatus(FacilityStatus facilityStatus);
+
+	List<WorkPlan> findByEndTimeIsNullAndFacilityStatusAndFacility(FacilityStatus facilityStatus, Facility facility);
 }
