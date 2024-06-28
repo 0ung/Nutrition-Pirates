@@ -158,6 +158,32 @@ public class RawRegisterController {
 
     /*3일 이하 원자재*/
     @GetMapping("/rawperiod/{page}")
+    public String getPeriodList(
+            @PathVariable(name = "page") Optional<Integer> page,
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        int currentPage = page.orElse(0);
+
+        pageable = PageRequest.of(currentPage, 10, Sort.by("id").descending());
+
+        try{
+            Page<RawPeriodDTO> pages = rawOrderInsertService.getPeriodList(pageable);
+
+            // 모델에 데이터를 추가합니다.
+            model.addAttribute("list", pages.getContent());
+            model.addAttribute("currentPage", currentPage);
+            model.addAttribute("totalPages", pages.getTotalPages());
+
+            return "rawcs";
+
+        } catch (Exception e) {
+            // 에러가 발생한 경우 로그를 기록하고 에러 페이지를 반환합니다.
+            log.error(e.getMessage());
+            return "error";
+        }
+    }
+    /*@GetMapping("/rawperiod/{page}")
     public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
@@ -168,7 +194,7 @@ public class RawRegisterController {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
     @GetMapping("/history")
     public ResponseEntity<?> getExcel(HttpServletResponse response) {

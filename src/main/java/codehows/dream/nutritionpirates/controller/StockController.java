@@ -123,4 +123,26 @@ public class StockController {
         }
     }
 
+    // 출고 현황을 엑셀로 다운로드하는 메서드
+    @GetMapping("/shipHistory")
+    public ResponseEntity<?> getExcelShip(HttpServletResponse response) {
+        try {
+            Workbook workbook = stockService.getHistroyship();  // 엑셀 데이터 생성
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+            String fileName = "출하 현황 내역.xlsx";
+            String encodeFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodeFileName);
+
+            workbook.write(response.getOutputStream());  // 엑셀 파일을 HTTP 응답으로 전송
+            workbook.close();
+            return new ResponseEntity<>(HttpStatus.OK);  // 처리 성공시 OK 응답 반환
+        } catch (Exception e) {
+            log.error(e.getMessage());  // 로그에 에러 메시지 기록
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // 예외 발생 시 BAD_REQUEST 반환
+        }
+    }
+
 }
