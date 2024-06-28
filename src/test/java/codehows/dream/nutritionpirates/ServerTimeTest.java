@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import codehows.dream.nutritionpirates.controller.TimeController;
-import codehows.dream.nutritionpirates.entity.ProgramTime;
 import codehows.dream.nutritionpirates.service.ProgramTimeService;
 
 @WebMvcTest

@@ -20,11 +20,7 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 
 	List<WorkPlan> findByFacility(Facility facility);
 
-	List<WorkPlan> findByFacilityAndActivateFalse(Facility facility);
-
 	WorkPlan findByProcessPlanIdAndFacility(Long processPlanId, Facility facility);
-
-	List<WorkPlan> findByFacilityStatus(FacilityStatus facilityStatus);
 
 	WorkPlan findByFacilityStatusAndFacility(FacilityStatus facilityStatus, Facility facility);
 
@@ -41,4 +37,5 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 	@Query("SELECT w FROM WorkPlan w WHERE w.lotCode.id = :lotCodeId")
 	WorkPlan findByLotCodeId(@Param("lotCodeId") String lotCodeId);
 
+	List<WorkPlan> findByEndTimeIsNullAndFacilityStatusAndFacility(FacilityStatus facilityStatus, Facility facility);
 }

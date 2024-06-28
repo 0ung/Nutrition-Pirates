@@ -57,8 +57,9 @@ public class B3WorkPlan implements WorkPlans {
 		return Timestamp.valueOf(completeTime);
 	}
 
-	public int calCapacity(int input){
-		return input/Routing.STERILIZATION_ROUTING *100;
+	public int calCapacity(int input) {
+		return (int) Math.ceil((double) input / Routing.STERILIZATION_ROUTING * 100);
 	}
+
 
 }

@@ -64,6 +64,12 @@
             padding: 10px 0;
         }
 
+        .jw-button2.disabled {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+
     </style>
     <link th:href="@{/css/jw.css}" type="text/css" rel="stylesheet" id="jw.css"/>
     <link th:href="@{/css/niceForm.css}" type="text/css" rel="stylesheet" id="niceForm.css"/>
@@ -78,27 +84,29 @@
             event.preventDefault(); // 폼 제출 기본 동작을 막음
             window.location.href = '/api/history';
         }
-        //입고됨 버튼
+
+        // 입고됨 버튼
         function handleButtonClick(button) {
             var rawsCode = button.getAttribute('data-rawscode');
             console.log('Button clicked for rawsCode:', rawsCode); // 콘솔 로그 추가
+
+            // 버튼이 비활성화된 경우 처리
+            if (button.disabled) {
+                return; // 이미 비활성화된 버튼이므로 더 이상의 처리를 하지 않음
+            }
 
             fetch(`/api/${rawsCode}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
+
                 }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok' + response.statusText);
-                    }
-                    return response.json();
-                })
                 .then(() => {
                     button.innerHTML = '입고됨';
                     button.disabled = true;
-                    button.classList.add('jw-button-disabled'); // 예시로 버튼을 비활성화 모양으로 변경
+                    button.classList.add('disabled'); // 버튼을 비활성화된 모양으로 변경하는 클래스 추가
+                    window.location.href = '/api/raworder/0'
                 })
                 .catch(error => {
                     console.error('Error importing data:', error);
@@ -135,6 +143,8 @@
                         document.getElementById("partner_select").value = "";
                         document.getElementById("product_select").value = "";
                         document.getElementById("form_quantity").value = "";
+
+                        window.location.href = '/api/raworder/0'
                     } else {
                         return response.json().then(data => {
                             alert('발주 주문 error : ' + (data.message || response.statusText));
@@ -231,15 +241,21 @@
                                     <td th:text="${raws.status}"></td>
                                     <td th:text="${raws.orderDate}"></td>
                                     <td th:text="${raws.importDate}"></td>
-                                    <td>
-                                        <button class="jw-button2" th:attr="data-rawscode=${raws.rawsCode}" onclick="handleButtonClick(this)">입고버튼</button>
+                                    <td th:if="${raws.importDate == null}">
+                                        <button class="jw-button2"
+                                                th:attr="data-rawscode=${raws.rawsCode}"
+                                                onclick="handleButtonClick(this)">입고버튼
+                                        </button>
+                                    </td>
+                                    <td th:if="${raws.importDate != null}">
+                                        <button class="jw-button2 disabled">입고됨</button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
 
                             <div style="margin-left: 73%">
-                                <div class="empty-container" id = "button-container">
+                                <div class="empty-container" id="button-container">
                                     <form>
                                         <button class="jw-button" onclick="downloadExcel(event)">엑셀 다운</button>
                                     </form>
@@ -248,7 +264,7 @@
                         </div>
                     </div>
 
-                    <div id="pagination">
+                    <div class="jw-pagination" th:if="${totalPages > 1}">
                         <nav aria-label="Page navigation">
                             <ul class="pagination">
                                 <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
@@ -261,7 +277,28 @@
                                     <a class="page-link" th:href="@{'/api/raworder/' + ${i}}"
                                        th:text="${i + 1}"></a>
                                 </li>
-                                <li class="page-item" th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                <li class="page-item"
+                                    th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="jw-pagination" th:if="${totalPages <= 1}">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" th:href="@{'/api/raworder/' + ${i}}">1</a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
                                     <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
@@ -303,7 +340,6 @@
                     <!--모달창-->
                     <div class="modal" id="orderermng" tabindex="-1">
                         <div class="modal-dialog">
-
                             <div class="modal-content"
                                  style="background-color: transparent; border-color: transparent; padding: 10px; color:rgba(6, 59, 56, 0.75);">
                                 <div class="chart-card" style="padding: 20px;">
@@ -313,7 +349,6 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-
                                         <div class="nice-form-group">
                                             <label>거래처</label>
                                             <select id="partner_select">
@@ -322,7 +357,6 @@
                                                 <option>OO포장</option>
                                             </select>
                                         </div>
-
                                         <div class="nice-form-group">
                                             <label>제품명</label>
                                             <select id="product_select">
@@ -336,14 +370,15 @@
                                                 <option value="BOX">BOX</option>
                                             </select>
                                         </div>
-
                                         <div class="nice-form-group">
                                             <label>수량</label>
                                             <input type="number" placeholder="수량을 입력해주세요" id="form_quantity"/>
                                         </div>
-
                                         <div class="modal-footer" style="margin-top: 20px;">
-                                            <button type="button" class="btn btn-primary" id="form_save">저장</button>
+                                            <!-- 저장 버튼 클릭 시 form_save 함수 실행 -->
+                                            <button type="button" class="btn btn-primary" id="form_save"
+                                                    data-bs-dismiss="modal">저장
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

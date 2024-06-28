@@ -15,18 +15,6 @@ import codehows.dream.nutritionpirates.workplan.WorkPlanDuration;
 @Component
 public class CommonMethod {
 
-	private final WorkPlanDuration workPlanDuration = new WorkPlanDuration();
-
-	public static String getString(double time) {
-		int hours = (int)time; // 시간 부분
-		int minutes = (int)Math.ceil((time - hours) * 60); // 올림 처리한 분 부분
-		if (minutes == 60) {
-			hours += 1;
-			minutes = 0;
-		}
-		return hours + "시 " + minutes + "분";
-	}
-
 	public static WorkPlan setTime(WorkPlan plan, Timestamp time, Timestamp processComplete) {
 
 		if (plan.getStartTime() == null) {

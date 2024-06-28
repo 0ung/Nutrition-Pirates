@@ -1,15 +1,13 @@
 package codehows.dream.nutritionpirates.dto;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import codehows.dream.nutritionpirates.entity.Raws;
-
-import java.sql.Date;
-import java.sql.Timestamp;
 
 @NoArgsConstructor
 @Getter

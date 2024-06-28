@@ -1,11 +1,9 @@
 package codehows.dream.nutritionpirates.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import codehows.dream.nutritionpirates.dto.ShipmentListDTO;
-import codehows.dream.nutritionpirates.dto.StockShowDTO;
-import codehows.dream.nutritionpirates.service.StockService;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,16 +14,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
-import java.util.Optional;
-@Controller
-@RequestMapping("/stock")
-@RequiredArgsConstructor
-@Log4j2
+import org.springframework.web.bind.annotation.*;
+
+import codehows.dream.nutritionpirates.dto.StockShowDTO;
+import codehows.dream.nutritionpirates.service.StockService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
+@Controller  // 스프링에게 이 클래스가 컨트롤러임을 알립니다.
+@RequestMapping("/stock")  // 이 컨트롤러의 모든 매핑의 기본 경로(prefix)를 지정합니다.
+@RequiredArgsConstructor  // 생성자 주입을 위한 롬복 어노테이션입니다.
+@Log4j2  // Log4j2 로깅을 위한 롬복 어노테이션입니다.
 public class StockController {
 
     private final StockService stockService;  // StockService 의존성 주입을 위한 필드
