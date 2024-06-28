@@ -145,6 +145,7 @@
                     alert('Error creating order: ' + error.message);
                 });
         });
+
         // 발주 입고 대기 현황
         document.addEventListener('DOMContentLoaded', function () {
             const page = 0; // 페이지 번호를 여기에 설정
@@ -358,21 +359,25 @@
                         </div>
                     </div>
 
-                    <!-- 페이징 부분 -->
+                    <!------------- 페이지네이션 -------------->
+
                     <div id="pagination">
                         <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <li th:class="${page.number == 0} ? 'page-item disabled' : 'page-item'">
-                                    <a class="page-link" th:href="@{/orders(page=0)}">첫 페이지로</a>
+                            <ul class="pagination">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
                                 </li>
-                                <li th:class="${page.number == 0} ? 'page-item disabled' : 'page-item'">
-                                    <a class="page-link" th:href="@{/orders(page=${page.number - 1})}">이전</a>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                    th:classappend="${i} == ${currentPage} ? ' active'">
+                                    <a class="page-link" th:href="@{'/api/rawstock/' + ${i}}"
+                                       th:text="${i + 1}"></a>
                                 </li>
-                                <li th:class="${page.number + 1 == page.totalPages} ? 'page-item disabled' : 'page-item'">
-                                    <a class="page-link" th:href="@{/orders(page=${page.number + 1})}">다음</a>
-                                </li>
-                                <li th:class="${page.number + 1 == page.totalPages} ? 'page-item disabled' : 'page-item'">
-                                    <a class="page-link" th:href="@{/orders(page=${page.totalPages - 1})}">마지막 페이지로</a>
+                                <li class="page-item" th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
