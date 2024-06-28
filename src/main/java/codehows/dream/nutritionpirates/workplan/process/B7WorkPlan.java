@@ -14,6 +14,7 @@ import codehows.dream.nutritionpirates.constants.FacilityStatus;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.constants.RawProductName;
 import codehows.dream.nutritionpirates.constants.Routing;
+import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.RawShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.LotCode;
@@ -75,7 +76,9 @@ public class B7WorkPlan implements WorkPlans {
 
 		plan.setLotCode(lotCode);
 		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
-		plan.setRawsCodes(Arrays.toString(rawsCodes));
+		String rawsCodesString = Arrays.toString(rawsCodes);
+		rawsCodesString = rawsCodesString.substring(1, rawsCodesString.length() - 1);
+		plan.setRawsCodes(rawsCodesString);
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -172,6 +175,7 @@ public class B7WorkPlan implements WorkPlans {
 
 				// 원자재 코드 업데이트 후 저장
 				raw.setRawsCode(newCode);
+				raw.setStatus(Status.EXPORT);
 				rawRepository.save(raw);
 			}
 		}

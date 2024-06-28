@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -84,21 +83,6 @@ public class OrderService {
 		processPlanService.createProcessPlan(order);
 	}
 
-	private ProductName getProductName(String product) {
-		switch (product) {
-			case "양배추즙":
-				return ProductName.CABBAGE_JUICE;
-			case "흑마늘즙":
-				return ProductName.BLACK_GARLIC_JUICE;
-			case "매실스틱":
-				return ProductName.PLUM_JELLY_STICK;
-			case "석류스틱":
-				return ProductName.POMEGRANATE_JELLY_STICK;
-			default:
-				return null;
-		}
-	}
-
 	public void readExcel(MultipartFile excel) {
 		try {
 			// Directly create Workbook from MultipartFile input stream
@@ -155,25 +139,6 @@ public class OrderService {
 		};
 	}
 
-//	public List<MesOrderDTO> getOrderList(Pageable pageable) {
-//		List<MesOrderDTO> list = new ArrayList<>();
-//		Page<Order> pages = orderRepository.findAll(pageable);
-//
-//		pages.forEach((e) -> {
-//			Orderer orderer = ordererRepository.findById(e.getOrderer().getId()).orElse(null);
-//			list.add(MesOrderDTO.builder()
-//					.orderId(e.getId())
-//					.ordererName(orderer.getName())
-//					.orderDate(e.getOrderDate())
-//					.expectedDeliveryDate(e.getExpectedDeliveryDate())
-//					.product(e.getProduct().getValue())
-//					.quantity(e.getQuantity())
-//					.urgency(e.isUrgency())
-//					.visible(e.isInvisible())
-//					.build());
-//		});
-//		return list;
-//	}
 public Page<MesOrderDTO> getOrderList(Pageable pageable) {
 	Page<Order> pages = orderRepository.findAll(pageable);
 	return pages.map(e -> {

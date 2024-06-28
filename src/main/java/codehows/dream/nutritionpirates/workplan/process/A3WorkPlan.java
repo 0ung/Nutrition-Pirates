@@ -29,7 +29,6 @@ public class A3WorkPlan implements WorkPlans {
 		if (plan.getEndTime() != null) {
 			plan.setFacilityStatus(FacilityStatus.AFTER_TREATMENT);
 		}
-		plan.setCapacity(calCapacity(workPlan.getSemiProduct()));
 		workPlanRepository.save(plan);
 		return workPlan;
 	}
@@ -42,6 +41,7 @@ public class A3WorkPlan implements WorkPlans {
 			.process(Process.A3)
 			.processCompletionTime(expectTime(input))
 			.semiProduct(process(input))
+			.capacity(calCapacity(input))
 			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
 	}
@@ -67,6 +67,6 @@ public class A3WorkPlan implements WorkPlans {
 	}
 
 	public int calCapacity(int input) {
-		return input / Routing.EXTRACTION_ROUTING*100;
+		return (int) Math.ceil((double) input / Routing.EXTRACTION_ROUTING * 100);
 	}
 }
