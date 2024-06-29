@@ -116,6 +116,54 @@
                                         })
                                         .catch(err => console.error('데이터 가져오기 오류:', err));
                                 });
+
+                                async function sendTime(hours) {
+                                    const url = `/time/${hours}`;
+
+                                    try {
+                                        // PATCH 요청을 보내고 응답을 확인
+                                        const response = await fetch(url, {
+                                            method: 'PATCH',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            }
+                                        });
+
+                                        if (!response.ok) {
+                                            throw new Error('네트워크 오류 : error');
+                                        }
+
+                                        // 시스템 시간 데이터를 직접 가져오는 방식으로 수정
+                                        // const systemTimeElement = document.getElementById('system-time');
+                                        // const currentSystemTimeResponse = await fetch('/time');
+                                        // console.log(currentSystemTimeResponse);
+                                        fetch('/time')
+                                            .then(res => res.json())
+                                            .then(res => {
+                                                const systemTimeElement = document.getElementById('system-time');
+                                                systemTimeElement.innerText = res.formattedCurrentProgramTime;
+                                            })
+                                            .catch(err => console.error('데이터를 가져오지 못했습니다'));
+                                        // const currentSystemTime = await currentSystemTimeResponse.formattedCurrentProgramTime;
+                                        // systemTimeElement.innerText = currentSystemTime;
+
+
+                                    } catch (error) {
+                                        console.error('에러 발생:', error);
+                                        // 에러 처리 (옵셔널)
+                                    }
+                                }
+
+                                // 페이지 로드 시 초기 시스템 시간을 가져와서 표시
+                                window.addEventListener('DOMContentLoaded', async () => {
+                                    fetch('/time')
+                                        .then(res => res.json())
+                                        .then(res => {
+                                            const systemTimeElement = document.getElementById('system-time');
+                                            systemTimeElement.innerText = res.formattedCurrentProgramTime;
+                                        })
+                                        .catch(err => console.error('Failed to fetch initial system time'));
+                                });
                             </script>
                         </div>
                     </div>
@@ -125,8 +173,7 @@
                 <div class="jw-div2">
                     <label class="main-label">현재 재고 출고 현황
                         <span style="margin-left: auto; width: 150px">
-                            <label class="jw-timeline">2024-06-19T12:45</label>
-                            </span>
+                            <span class="jw-timeline">Loading...</span> <!-- 시스템 시간을 표시할 곳 --></span>
                     </label>
                     <div class="group">
                         <div class="chart2">
