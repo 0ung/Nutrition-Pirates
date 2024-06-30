@@ -6,15 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import codehows.dream.nutritionpirates.constants.*;
+import codehows.dream.nutritionpirates.constants.Process;
 import org.springframework.stereotype.Component;
 
-import codehows.dream.nutritionpirates.constants.Facility;
-import codehows.dream.nutritionpirates.constants.FacilityStatus;
-import codehows.dream.nutritionpirates.constants.Process;
-import codehows.dream.nutritionpirates.constants.ProductName;
-import codehows.dream.nutritionpirates.constants.RawProductName;
-import codehows.dream.nutritionpirates.constants.Routing;
-import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.RawBOMDTO;
 import codehows.dream.nutritionpirates.dto.RawShowGraphDTO;
 import codehows.dream.nutritionpirates.entity.LotCode;
@@ -175,6 +170,7 @@ public class A1WorkPlan implements WorkPlans {
 				// 원자재 코드 업데이트 후 저장
 				raw.setRawsCode(newCode);
 				raw.setStatus(Status.EXPORT);
+				raw.setRawsReason(RawsReason.PROCESS_INPUT);
 				rawRepository.save(raw);
 			}
 		}

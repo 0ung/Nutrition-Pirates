@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import codehows.dream.nutritionpirates.dto.ShipmentListDTO;
+import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,9 +64,10 @@ public class StockController {
         }
     }
 
-    /* 출하 현황 조회 */
+    //* 출하 현황 조회
     @GetMapping("/shipment/{page}")
-    public String getShipmentPage(@PathVariable("page") int page, Model model) {
+    public String getShipmentPage(
+            @PathVariable("page") int page, Model model) {
         try {
             List<ShipmentListDTO> shipments = stockService.getShip(PageRequest.of(page, 10)); // Adjust page size as needed
             model.addAttribute("shipments", shipments);
@@ -134,7 +136,7 @@ public class StockController {
 
         int currentPage = page.orElse(0);
 
-        pageable = PageRequest.of(currentPage, 10, Sort.by( "id").descending());
+        pageable = PageRequest.of(currentPage, 10, Sort.by("id").descending());
 
         try {
             Page<StockShowDTO> rawStockPage = stockService.getStock(pageable);
@@ -152,4 +154,27 @@ public class StockController {
             return "error";
         }
     }
+    /*출하 현황 조회
+    @GetMapping("/shipment/{page}")
+    public String getShipmentPage(
+            @PathVariable(name = "page") Optional<Integer> page,
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        int currentPage = page.orElse(0);
+
+        pageable = PageRequest.of(currentPage, 10, Sort.by("id").descending());
+        try {
+            Page<ShipmentListDTO> shipments = stockService.getShip(pageable); // Adjust page size as needed
+            model.addAttribute("shipments", shipments.getContent());
+            model.addAttribute("totalPages", shipments.getTotalPages());
+            model.addAttribute("currentPage" , page);
+
+            return "ChulHa"; // Corresponds to shipment.html
+        } catch (Exception e) {
+            log.error("Error fetching shipment data: " + e.getMessage());
+            return "error"; // Handle error page
+        }
+    }*/
+
 }

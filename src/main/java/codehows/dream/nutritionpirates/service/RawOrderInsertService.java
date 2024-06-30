@@ -15,9 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import codehows.dream.nutritionpirates.dto.*;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -271,7 +269,9 @@ public class RawOrderInsertService {
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-        Date exportDate = new Date(timestamp.getTime());
+
+        Timestamp exportDate = timestamp;
+        //Date exportDate = new Date(timestamp.getTime());
 
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
@@ -279,10 +279,10 @@ public class RawOrderInsertService {
     // 발주 등록 이후 테이블 - pageable로 변환
     public Page<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
-        Page<Raws> pages = rawRepository.findAll(pageable);
+        Page<Raws> pages = rawRepository.findByStatusNot(Status.EXPORT, pageable);
 
         List<RawOrderListDTO> list = pages.stream()
-                .filter(e -> e.getStatus() != Status.EXPORT) // EXPORT 상태 필터링
+                //.filter(e -> e.getStatus() != Status.EXPORT) // EXPORT 상태 필터링
                 .map(e -> {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -407,19 +407,31 @@ public class RawOrderInsertService {
         // 각 원자재의 상태에 따라 DTO로 변환하여 리스트 생성
         List<RawsListDTO> list = pages.stream().map(e -> {
             // 상태에 따라 적절한 날짜 선택
-            Date selectDate;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+            String selectDate = null;
             switch (e.getStatus()) {
                 case WAITING:
-                    selectDate = new Date(e.getOrderDate().getTime());  // 주문일 선택
+                    if (e.getOrderDate() != null) {
+                        LocalDateTime orderDate = e.getOrderDate().toLocalDateTime();
+                        selectDate = orderDate.format(formatter); // 주문일 선택
+                    }
                     break;
                 case IMPORT:
-                    selectDate = new Date(e.getImportDate().getTime()); // 입고일 선택
-                    break;
+                    if (e.getImportDate() != null) {
+                        LocalDateTime importDate = e.getImportDate().toLocalDateTime();
+                        selectDate = importDate.format(formatter); // 입고일 선택
+                    }
                 case EXPORT:
-                    selectDate = e.getExportDate();                     // 출고일 선택
-                    break;
+                    if (e.getExportDate() != null) {
+                        LocalDateTime exportDate = e.getExportDate().toLocalDateTime();
+                        selectDate = exportDate.format(formatter); // 출고일 선택
+                    }
                 default:
-                    selectDate = new Date(e.getOrderDate().getTime());  // 기본적으로 주문일 선택
+                    if (e.getOrderDate() != null) {
+                        LocalDateTime defaultDate = e.getOrderDate().toLocalDateTime();
+                        selectDate = defaultDate.format(formatter); // 기본적으로 주문일 선택
+                    }
             }
 
             // RawsListDTO 객체 생성
@@ -542,9 +554,8 @@ public class RawOrderInsertService {
     }
 
     // 원자재현황에서 엑설 파일로 다운로드
-    @Transactional
     public Workbook getHistory() {
-        List<Raws> list = rawRepository.findAll();
+        List<Raws> rawsList = rawRepository.findAll();
         Workbook workbook = new XSSFWorkbook();
 
         // Create a sheet with a name
@@ -552,25 +563,39 @@ public class RawOrderInsertService {
 
         // Create header row
         Row headerRow = sheet.createRow(0);
-        String[] headers = new String[]{"원자재제품코드", "원자재명", "상태(입고,출고,입고대기)", "주문일자", "입고일자", "출고일자"
-                , "수량", "사유"};
+        String[] headers = new String[]{"원자재제품코드", "원자재명", "상태(입고,출고,입고대기)", "주문일자", "입고일자", "출고일자", "수량", "사유"};
 
         for (int i = 0; i < headers.length; i++) {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
 
-        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // Create a date format
+        CreationHelper creationHelper = workbook.getCreationHelper();
+        CellStyle dateCellStyle = workbook.createCellStyle();
+        dateCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("yyyy-MM-dd HH:mm"));
+
         // Fill data rows
-        for (int i = 1; i < list.size() + 1; i++) {
+        for (int i = 1; i < rawsList.size() + 1; i++) {
             Row row = sheet.createRow(i);
-            Raws data = list.get(i - 1);
-            //Raws raws = rawOrderInsertRepository.findByRawsCode(data.getRawsCode()).orElse(null);
+            Raws data = rawsList.get(i - 1);
+
             row.createCell(0).setCellValue(data.getRawsCode());
             row.createCell(1).setCellValue(data.getProduct().getValue());
             row.createCell(2).setCellValue(data.getStatus().getValue());
-            row.createCell(3).setCellValue(data.getOrderDate());
-            row.createCell(4).setCellValue(data.getImportDate());
-            row.createCell(5).setCellValue(data.getExportDate());
+
+            // Set dates with the proper format
+            Cell orderDateCell = row.createCell(3);
+            orderDateCell.setCellValue(data.getOrderDate());
+            orderDateCell.setCellStyle(dateCellStyle);
+
+            Cell importDateCell = row.createCell(4);
+            importDateCell.setCellValue(data.getImportDate());
+            importDateCell.setCellStyle(dateCellStyle);
+
+            Cell exportDateCell = row.createCell(5);
+            exportDateCell.setCellValue(data.getExportDate());
+            exportDateCell.setCellStyle(dateCellStyle);
+
             row.createCell(6).setCellValue(data.getQuantity());
             if (data.getRawsReason() != null) {
                 row.createCell(7).setCellValue(data.getRawsReason().getValue());

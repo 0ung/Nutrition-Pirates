@@ -57,7 +57,7 @@ public class Raws {
 	private Timestamp importDate;
 
 	//출고
-	private Date exportDate;
+	private Timestamp exportDate;
 
 	//사유
 	@Enumerated(EnumType.STRING)
@@ -78,7 +78,7 @@ public class Raws {
 		this.deadLine = deadLine;
 	}
 
-	public void rawExport(Date exportDate, Status status, RawsReason rawsReason) {
+	public void rawExport(Timestamp exportDate, Status status, RawsReason rawsReason) {
 		/*this.exportDate = Date.valueOf(LocalDate.now());
 		this.status = status.EXPORT;
 		this.rawsReason = rawsReason.DISPOSE;*/
