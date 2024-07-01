@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+    </style>
+    <link th:href="@{/css/jw.css}" type="text/css" rel="stylesheet" id="jw.css"/>
+</th:block>
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script th:inline="javascript">
+
+        const ctx = document.querySelector('#myChart').getContext('2d');
+
+        let pageData = [[${data}]];
+        let list = /*[[${list}]]*/ [];
+        let title = pageData.title;
+
+        // 장비 이름과 해당 데이터를 저장할 객체 생성
+        const dataMap = {
+            '즙포장기1': 0,
+            '즙포장기2': 0,
+            '스틱포장기1': 0,
+            '스틱포장기2': 0,
+            '추출기1': 0,
+            '추출기2': 0,
+            '살균기1': 0,
+            '살균기2': 0,
+            '혼합기': 0,
+            '여과기': 0,
+            'BOX포장기': 0,
+            '금속검출기': 0
+        };
+        console.log(list);
+        list.forEach(e => {
+            switch (e.facility) {
+                case "juiceMachine1":
+                    dataMap['즙포장기1'] += e.output;
+                    break;
+                case "juiceMachine2":
+                    dataMap['즙포장기2'] += e.output;
+                    break;
+                case "StickMachine1":
+                    dataMap['스틱포장기1'] += e.output;
+                    break;
+                case "StickMachine2":
+                    dataMap['스틱포장기2'] += e.output;
+                    break;
+                case "extractor1":
+                    dataMap['추출기1'] += e.output;
+                    break;
+                case "extractor2":
+                    dataMap['추출기2'] += e.output;
+                    break;
+                case "sterilizer1":
+                    dataMap['살균기1'] += e.output;
+                    break;
+                case "sterilizer2":
+                    dataMap['살균기2'] += e.output;
+                    break;
+                case "mixer":
+                    dataMap['혼합기'] += e.output;
+                    break;
+                case "filter":
+                    dataMap['여과기'] += e.output;
+                    break;
+                case "boxMachine":
+                    dataMap['BOX포장기'] += e.output;
+                    break;
+                case "metalDetector":
+                    dataMap['금속검출기'] += e.output;
+                    break;
+            }
+        });
+
+        // dataMap 객체의 값을 기반으로 labels와 data 배열 생성
+        const labels = Object.keys(dataMap);
+        const data = Object.values(dataMap);
+
+        // Chart.js 차트 생성
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: title,
+                        data: data,
+                        borderWidth: 1,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
+
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <div id="card1">
+                <div>
+                    <label id="main-label" th:text="${title}">일/월간 생산량</label>
+                    <div class="container">
+                        <div class="empty-container">
+                            <div class="btn-group" style="margin-left: 95%; width: 160px;">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton2"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        style="font-size:15px; padding: 10px;">
+                                    생산량
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                    <li><a class="dropdown-item" href="/facility/daily">일일 생산량</a></li>
+                                    <li><a class="dropdown-item" href="/facility/monthly">월간 생산량</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="container1" style="padding:20px;">
+                            <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                            <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                            <div class="empty-container2"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .jw-row {
+            width: 1500px;
+            height: 100%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .jw-div1 {
+            padding: 10px;
+            background: rgb(255, 250, 235);
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 30px; /* 모서리를 둥글게 함 */
+            width: 49.5%;
+            height: 110%;
+            float: left;
+
+        }
+
+        .jw-div2 {
+            padding: 10px;
+            background: rgb(255, 250, 235);
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 30px; /* 모서리를 둥글게 함 */
+            width: 49.5%;
+            height: 110%;
+            float: right;
+
+        }
+    </style>
+    <link th:href="@{/css/jw.css}" type="text/css" rel="stylesheet" id="jw.css"/>
+</th:block>
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        async function sendTime(hours) {
+            const url = `/time/${hours}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('네트워크 오류 : error');
+                }
+
+                fetch('/time')
+                    .then(res => res.json())
+                    .then(data => {
+                        const systemTimeElement1 = document.getElementById('jw-time-1');
+                        const systemTimeElement2 = document.getElementById('jw-time-2');
+                        systemTimeElement1.innerText = data.formattedCurrentProgramTime;
+                        systemTimeElement2.innerText = data.formattedCurrentProgramTime;
+                    })
+                    .catch(err => console.error('데이터를 가져오지 못했습니다:', err));
+            } catch (error) {
+                console.error('에러 발생:', error);
+            }
+        }
+
+        // 페이지 로드 시 초기 시스템 시간을 가져와서 표시
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/time')
+                .then(res => res.json())
+                .then(data => {
+                    const systemTimeElement1 = document.getElementById('jw-time-1');
+                    const systemTimeElement2 = document.getElementById('jw-time-2');
+                    systemTimeElement1.innerText = data.formattedCurrentProgramTime;
+                    systemTimeElement2.innerText = data.formattedCurrentProgramTime;
+                })
+                .catch(err => console.error('초기 시스템 시간을 가져오지 못했습니다:', err));
+        });
+    </script>
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"/>
+</th:block>
+
+
+<div layout:fragment="content">
+
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <label class="jw-titleLabel">재고 현황</label>
+            <div class="jw-row">
+                <div class="jw-div1">
+                    <label class="main-label">현재 재고 입고 현황
+                        <div class="jw-timeline" style="margin-left: auto; width: 150px; float: right;">
+                            <span id="jw-time-1">Loading...</span> <!-- 시스템 시간을 표시할 곳 -->
+                        </div>
+                    </label>
+                    <div class="group">
+                        <div class="chart1">
+                            <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                            <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                                <canvas id="myChart1"></canvas>
+                            </div>
+
+                            <!-- include Chart.js from a CDN -->
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+
+                                    // Fetch API를 사용하여 데이터를 가져오기
+                                    fetch('/stock/graphimport')
+                                        .then(res => {
+                                            if (!res.ok) {
+                                                throw new Error('네트워크 응답이 올바르지 않습니다.');
+                                            }
+                                            return res.json();
+                                        })
+                                        .then(data => {
+                                            console.log(data); // 데이터 전체를 콘솔에 출력
+
+                                            // 차트를 업데이트
+                                            const ctx = document.getElementById('myChart1').getContext('2d');
+                                            const labels = data.map(item => item.product);
+                                            const quantities = data.map(item => item.quantity);
+
+                                            new Chart(ctx, {
+                                                type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [
+                                                        {
+                                                            type: 'line',
+                                                            label: '안전 재고량 적정선',
+                                                            data: [300, 300, 300, 300],
+                                                            borderWidth: 1,
+                                                        },
+                                                        {
+                                                            label: '현재 보유량',
+                                                            data: quantities,
+                                                            borderWidth: 1,
+                                                        }]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        })
+                                        .catch(err => console.error('데이터 가져오기 오류:', err));
+                                });
+
+
+                            </script>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="jw-div2">
+                    <label class="main-label">현재 재고 출고 현황
+                        <div class="jw-timeline" style="margin-left: auto; width: 150px; float: right;">
+                            <span id="jw-time-2">Loading...</span> <!-- 시스템 시간을 표시할 곳 -->
+                        </div>
+                    </label>
+                    <div class="group">
+                        <div class="chart2">
+                            <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                            <div style="width:auto;height:auto;border:none; display: flex; justify-content: center; align-items: center;">
+                                <canvas id="myChart2"></canvas>
+                            </div>
+
+                            <!-- include Chart.js from a CDN -->
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+
+                                    // Fetch API를 사용하여 데이터를 가져오기
+                                    fetch('/stock/graphexport')
+                                        .then(res => {
+                                            if (!res.ok) {
+                                                throw new Error('네트워크 응답이 올바르지 않습니다.');
+                                            }
+                                            return res.json();
+                                        })
+                                        .then(data => {
+                                            console.log(data); // 데이터 전체를 콘솔에 출력
+
+                                            // 차트를 업데이트
+                                            const ctx = document.getElementById('myChart2').getContext('2d');
+                                            const labels = data.map(item => item.product);
+                                            const quantities = data.map(item => item.quantity);
+
+                                            new Chart(ctx, {
+                                                type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [
+                                                        {
+                                                            label: '현재 보유량',
+                                                            data: quantities,
+                                                            borderWidth: 1,
+                                                        }
+                                                    ]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            ticks: {
+                                                                stepSize: 100, // 기본 단위를 100으로 설정
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        })
+                                        .catch(err => console.error('데이터 가져오기 오류:', err));
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

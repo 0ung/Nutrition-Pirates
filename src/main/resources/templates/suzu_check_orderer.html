@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<th:block layout:fragment="script">
+</th:block>
+
+<th:block layout:fragment="css">
+    <link th:href="@{/css/suzu.css}" type="text/css" rel="stylesheet" id="suzu.css"/>
+
+    <style>
+        /* 주문 목록 테이블 행에 마우스를 올렸을 때 배경색 변경 */
+        #ordersTable tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        #ordersTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #ordersTable th {
+            background-color: #999999;
+        }
+
+        #ordersTable th, #ordersTable td {
+            border: 1px solid #ddd;
+            padding: 10px; /* 패딩을 10px로 변경 */
+            text-align: center; /* 텍스트 가운데 정렬 유지 */
+        }
+
+        .cancel-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px; /* 패딩을 좀 더 크게 조정 */
+            cursor: pointer;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
+    </style>
+
+</th:block>
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<div layout:fragment="content">
+    <!--------------------->
+    <!----  Main Start ---->
+    <!--------------------->
+
+
+    <div class="gy-content2">
+        <div class="gy-container2">
+            <div class="gy-card2 gy-cart">
+                <label class="gy-title_form">발주처 조회
+                    <span style="margin-left: 75%">
+                <input type="text" id="search-input" class="gy-search-input" placeholder="Search..." />
+                    </span>
+                </label>
+
+                <div class="gy-steps">
+                    <table id="ordersTable" class="gy-table">
+                        <thead class="gy-th">
+                        <tr class="gy-tr">
+                            <th class="gy-th">번호</th>
+                            <th class="gy-th">발주처</th>
+                            <th class="gy-th">전화번호</th>
+                        </tr>
+                        </thead>
+                        <tbody class="gy-tbody">
+                        <!-- 주문 목록을 동적으로 생성 -->
+                        <tr th:each="order : ${dto2}">
+                            <td th:text="${order.id}">1</td>
+                            <td th:text="${order.name}">Orderer A</td>
+                            <td th:text="${order.phoneNumber}">010-1111-2222</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <div class="pagination-container">
+                    <ul class="pagination-list">
+                        <!-- Previous button -->
+                        <li>
+                            <button th:disabled="${currentPage == 0}"
+                                    th:onclick="|location.href='@{/order/orderer/{page}(page=${currentPage - 1})}'|">
+                                이전버튼
+                            </button>
+                        </li>
+                        <!-- Page numbers -->
+                        <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a th:href="@{/order/orderer/{page}(page=${pageNum})}"
+                               th:text="${pageNum + 1}"
+                               th:classappend="${currentPage == pageNum ? 'active' : ''}"
+                               class="pagination-link"></a>
+                        </li>
+                        <!-- Next button -->
+                        <li>
+                            <button th:disabled="${currentPage == totalPages - 1}"
+                                    th:onclick="|location.href='@{/order/orderer/{page}(page=${currentPage + 1})}'|">
+                                다음버튼
+                            </button>
+                        </li>
+                    </ul>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+</div>
+</html>

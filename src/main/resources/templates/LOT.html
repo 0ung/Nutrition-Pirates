@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <link th:href="@{/css/lot.css}" type="text/css" rel="stylesheet" id="lot.css">
+
+    <!-- search 스타일  -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+    <style>
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rows = document.querySelectorAll('.lot-tr');
+            const modal = document.getElementById("myModal");
+            const span = document.getElementsByClassName("close")[0];
+            const modalContent = document.getElementById("modal-content");
+
+            rows.forEach(row => {
+                row.addEventListener('click', () => {
+                    const lotCode = row.querySelector('.lot-td:nth-child(2)').innerText;
+                    fetch(`/lot/detail/${lotCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            modalContent.innerHTML =
+                                `<span class="close">&times;</span>
+                                <p>processPlanId: ${data.processPlanId}</p>
+                                <p>process : ${data.process}</p>
+                                <p>rawsId  : ${data.rawsId}</p>
+                                <p>lotCode : ${data.lotCode}</p>
+                                <p>processStatus: ${data.processStatus}</p>
+                                <p>processCompletionTime: ${data.processCompletionTime}</p>
+                                <p>worker: ${data.worker}</p>`;
+                            modal.style.display = "block";
+
+                            // Add event listener to the close button in the new content
+                            document.getElementsByClassName("close")[0].onclick = function () {
+                                modal.style.display = "none";
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        function getData() {
+            const lotCode =document.getElementById("search-input").value;
+            console.log(lotCode);
+            if (lotCode !== '') {
+                window.location.href = "/lot/prev/"+lotCode;
+            }
+        }
+    </script>
+</th:block>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+
+<div layout:fragment="content">
+    <!--------------------->
+    <!----  Main Start ---->
+    <!--------------------->
+    <div class="lot-content">
+        <div class="lot-container2">
+            <div class="lot-card2 lot-cart">
+                <label class="lot-title_form">
+                    LOT 관리
+                </label>
+
+                <div class="col m-5">
+                    <div class="row lot-centered">
+                        <div class="wrapper lot-c-height">
+                            <div class="lot-search-area lot-c-height">
+                                <div class="lot-single-search">
+                                    <form id="search-form">
+                                        <input class="lot-custom-input" name="" id="search-input"
+                                               placeholder="put your 'lot' number here ..." type="text">
+                                        <button type="button" class="lot-icon-area" onclick="getData()"><i class="fa fa-search"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <h1></h1>
+                        <table class="lot-table">
+                            <thead>
+                            <tr class="lot-tr">
+                                <th class="lot-th">번호</th>
+                                <th class="lot-th">LOT</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="lot, iterStat : ${list}" class="lot-tr">
+                                <td class="lot-td" th:text="${iterStat.index + 1}">1</td>
+                                <td class="lot-td" th:text="${lot}">20240608A8</td>
+                            </tr>
+                            <tr class="lot-tr">
+                                <td class="lot-td"> 10</td>
+                                <td class="lot-td"> 20240608A8</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination-container">
+                            <div class="pagination-list lot-centered">
+                                <!-- Previous button -->
+<!--                                    <li>-->
+<!--                                        <button th:disabled="${currentPage == 0}"-->
+<!--                                                th:onclick="|location.href='@{/lot/list/{page}(page=${currentPage - 1})}'|">-->
+<!--                                            이전버튼-->
+<!--                                        </button>-->
+<!--                                    </li>-->
+<!--                                    &lt;!&ndash; Page numbers &ndash;&gt;-->
+<!--                                    <li th:if="${totalPages == 1}">-->
+<!--                                        <a th:href="@{/lot/list/0}" th:text="1" class="pagination-link active"></a>-->
+<!--                                    </li>-->
+<!--                                    <li th:if="${totalPages > 1}" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">-->
+<!--                                        <a th:href="@{/lot/list/{page}(page=${pageNum})}"-->
+<!--                                           th:text="${pageNum + 1}"-->
+<!--                                           th:classappend="${currentPage == pageNum ? 'active' : ''}"-->
+<!--                                           class="pagination-link"></a>-->
+<!--                                    </li>-->
+<!--                                    &lt;!&ndash; Next button &ndash;&gt;-->
+<!--                                    <li>-->
+<!--                                        <button th:disabled="${currentPage >= totalPages - 1}"-->
+<!--                                                th:onclick="|location.href='@{/lot/list/{page}(page=${currentPage + 1})}'|">-->
+<!--                                            다음버튼-->
+<!--                                        </button>-->
+<!--                                    </li>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="lot2-modal">
+        <div class="lot2-modal-content" id="modal-content">
+            <span class="close">&times;</span>
+            <p>Modal Content</p>
+        </div>
+    </div>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+</div>
+</html>

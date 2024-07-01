@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <link th:href="@{/css/sengsan.css}" type="text/css" rel="stylesheet" id="sengsan.css">
+    <style>
+
+        /* 주문 목록 테이블 행에 마우스를 올렸을 때 배경색 변경 */
+        #ordersTable tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Add or modify this section in sengsan.css */
+        #ordersTable {
+            width: 100%;
+            border-collapse: collapse;
+            padding: 20px; /* Keep the padding as needed */
+        }
+
+        #ordersTable th {
+            background-color: #999999;
+        }
+
+        #ordersTable th,
+        #ordersTable td {
+            border: 1px solid #ddd;
+            padding: 10px; /* Ensure padding is applied uniformly */
+            text-align: center;
+        }
+
+
+        .ss-container {
+            padding: 20px; /* 원하는 여백 크기로 조정 */
+        }
+
+        .ss-search-input {
+            position: relative;
+            width: 230px;
+            height: 40px;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: linear-gradient(to right, #d9d9d9, #f8f8f8);
+            font-size: 16px;
+            color: #555;
+            outline: none;
+            transition: box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease,
+            border-color 0.3s ease, transform 0.3s ease;
+            transform-style: preserve-3d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow for a realistic feel */
+        }
+
+        .ss-search-input:focus,
+        .ss-search-input:not(:placeholder-shown) {
+            border-color: #4caf50;
+            background: linear-gradient(to right, #c2f0c2, #f0f0f0);
+            transform: rotateX(20deg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on focus */
+        }
+
+        .ss-search-input:focus + .ss-label ,
+        .ss-search-input:not(:placeholder-shown) + .ss-label  {
+            transform: translateY(-120%) scale(0.8);
+            font-size: 12px;
+            color: #4caf50;
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
+        }
+
+        .ss-search-input:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.2) inset; /* Improved box-shadow on hover */
+            background: linear-gradient(to right, #e6e6e6, #f9f9f9);
+            border-color: #999;
+        }
+
+
+        .ss-search-input:not(:focus):not(:placeholder-shown)   {
+            opacity: 1;
+        }
+
+
+        .ss-search-input:focus   {
+            opacity: 1;
+        }
+
+
+
+        .ss-search-input:focus  {
+            color: #4caf50;
+            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.6));
+        }
+
+        @keyframes inputPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .ss-search-input:focus {
+            animation: inputPulse 0.5s ease;
+        }
+
+
+        .gy-steps{
+            flex-direction: column;
+            padding: 20px;
+            gap: 10px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 11px;
+        }
+
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
+    </style>
+
+</th:block>
+
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function nextStep() {
+            alert('다음 단계로 진행합니다.');
+            closeModal(); // 다음 버튼 클릭 시 모달 창 닫기
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+
+
+        function SengSandownloadExcel() {
+            fetch('/workplan/history', {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = '작업지시 조회 내역.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel:', error);
+                });
+        }
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
+    <!--------------------->
+    <!----  Main Start ---->
+    <!--------------------->
+
+
+    <div class="ss-content">
+        <div class="ss-container">
+            <div class="ss-card2 ss-cart">
+                <label class="ss-title_form">작업지시 조회
+                    <span style="margin-left: 75%">
+                <input type="text" id="search-input" class="ss-search-input" placeholder="Search..."/>
+                    </span>
+                </label>
+
+                <div class="gy-steps">
+                    <table id="ordersTable" class="gy-table">
+                        <thead>
+                        <tr class="gy-tr">
+                            <th>작업 ID</th>
+                            <th>공정</th>
+                            <th>LOT</th>
+                            <th>시작 시간</th>
+                            <th>종료 시간</th>
+                            <th>작업자</th>
+                        </tr>
+                        </thead>
+                        <tbody class="gy-tbody">
+                        <!-- Iterate over each work plan and display -->
+                        <tr th:each="workPlan : ${List}">
+                            <td th:text="${workPlan.work_plan_id}">작업id</td>
+                            <td th:text="${workPlan.process}">공정</td>
+                            <td th:text="${workPlan.lotCode}">LOT 코드</td>
+                            <td th:text="${workPlan.startTime}">시작시간</td>
+                            <td th:text="${workPlan.endTime}">종료시간</td>
+                            <td th:text="${workPlan.worker}">작업자</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="pagination-container">
+                <ul class="pagination-list">
+                    <!-- Previous button -->
+                    <li>
+                        <button th:disabled="${currentPage == 0}"
+                                th:onclick="|location.href='@{/workplan/list/{page}(page=${currentPage - 1})}'|">
+                            이전버튼
+                        </button>
+                    </li>
+                    <!-- Page numbers -->
+                    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:href="@{/workplan/list/{page}(page=${pageNum})}"
+                           th:text="${pageNum + 1}"
+                           th:classappend="${currentPage == pageNum ? 'active' : ''}"
+                           class="pagination-link"></a>
+                    </li>
+                    <!-- Next button -->
+                    <li>
+                        <button th:disabled="${currentPage == totalPages - 1}"
+                                th:onclick="|location.href='@{/workplan/list/{page}(page=${currentPage + 1})}'|">
+                            다음버튼
+                        </button>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            <div class="ss-card2 ss-checkout">
+                <div class="ss-footer">
+                    <label class="ss-price"> </label>
+                    <button class="ss-checkout-btn" onclick="SengSandownloadExcel()"> 엑셀 저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        /* .jw-row {
+           width: 100%;
+           height: 100%;
+       }*/
+
+        /* .div1, .div2 {
+             width: 50%;
+             height: 100%;
+         }
+
+         .div1 {
+             float: left;
+             margin-left: 0; !* 불필요한 마진 제거 *!
+         }
+
+         .div2 {
+             float: right;
+             margin-right: 0; !* 불필요한 마진 제거 *!
+         }*/
+
+        .div1 {
+            width: 50%;
+            float: left;
+            padding: 20px; /* 내부 공간 추가 */
+            border: #1b1b1b solid 1px;
+        }
+
+        .div2 {
+            width: 50%;
+            float: right;
+            padding: 20px; /* 내부 공간 추가 */
+            border: #1b1b1b solid 1px;
+        }
+
+    </style>
+    <link href="../static/css/jw.css" type="text/css" rel="stylesheet" id="jw.css"/>
+    <link href="../static/css/niceForm.css" type="text/css" rel="stylesheet" id="niceForm.css"/>
+</th:block>
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
+    <div id="main-content">
+        <div class="main-container" id="main-container">
+            <div id="card1">
+                <div class="jw-row">
+                    <div class="div1">
+                        <p>div1입니다</p>
+                    </div>
+                    <div class="div2">
+                        <p>div2입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+    <link th:href="@{/css/chulha.css}" type="text/css" rel="stylesheet" id="chulha.css">
+
+    <style>
+
+
+        .pagination-container {
+            text-align: center;
+            margin-top: 30px; /* 위쪽 마진을 30px로 변경 */
+        }
+
+        .pagination-list {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .pagination-list li {
+            display: inline;
+            margin-right: 8px; /* 오른쪽 마진을 8px로 변경 */
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 14px; /* 패딩을 좀 더 크게 조정 */
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination-link.active {
+            color: blue; /* 활성 링크의 색상을 파란색으로 변경 */
+            font-weight: bold;
+        }
+
+
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/stock/graphimport')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.product);
+                    const quantities = data.map(item => item.quantity);
+                    const highest = Math.max(...quantities) + 1000;
+
+                    quantities.push(highest);
+
+                    const chartData = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: quantities,
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.5)',
+                                    'rgba(75, 192, 192, 0.5)',
+                                    'rgba(255, 206, 86, 0.5)',
+                                    'rgba(153, 102, 255, 0.5)'
+                                ],
+                                borderRadius: 10,
+                            }
+                        ]
+                    };
+
+                    const config = {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: '현재 재고 현황',
+                                }
+                            }
+                        },
+                    };
+
+                    const myChart = new Chart(
+                        document.getElementById('myChart'),
+                        config
+                    );
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    </script>
+
+    <script>
+        function downloadExcel() {
+            fetch('/stock/shipHistory', {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = '출하 현황 내역.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel:', error);
+                    // Handle error as needed
+                });
+        }
+
+        // 출하 버튼
+        function handleButtonClick(button) {
+            let id = button.getAttribute('data-id');
+            let iterIndex = button.getAttribute('data-index');
+            let orderId = document.getElementById("orderID" + iterIndex);
+
+            // 버튼이 비활성화된 경우 처리
+            if (button.disabled) {
+                return; // 이미 비활성화된 버튼이므로 더 이상의 처리를 하지 않음
+            }
+
+            fetch(`/api/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+
+                }
+            })
+                .then(() => {
+                    window.location.href = '/stock/shipment/0'
+                })
+                .catch(error => {
+                    console.error('Error importing data:', error);
+                });
+        }
+    </script>
+</th:block>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+
+<div layout:fragment="content">
+    <!--------------------->
+    <!----  Main Start ---->
+    <!--------------------->
+    <div class="ch-content">
+        <div class="ch-container2">
+            <div class="ch-card2 ch-cart">
+                <label class="ch-title_form">
+                    출하현황
+                </label>
+
+                <div class="row m-5">
+                    <div class="col">
+                        <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐 -->
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <!-- 차트 그릴 위치 지정 canvas webGL(그래픽엔진) 사용 -->
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h1></h1>
+                        <table class="ch-table">
+                            <thead>
+                            <tr class="ch-tr">
+                                <th class="ch-th">발주처</th>
+                                <th class="ch-th">제품명</th>
+                                <th class="ch-th">수량</th>
+                                <th class="ch-th">생산날짜</th>
+                                <th class="ch-th">예상납기일 / 납기일</th>
+                                <th class="ch-th">공정상태</th>
+                                <th class="ch-th">긴급여부</th>
+                                <th class="ch-th">출하버튼</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="shipment, iterStat : ${shipments}">
+                                <input id="orderID[[${iterStat.index}]]" type="hidden" th:value="${shipment.orderId}">
+                                <td class="ch-td" th:text="${shipment.orderName}">Orderer Name</td>
+                                <td class="ch-td" th:text="${shipment.product}">Product Name</td>
+                                <td class="ch-td" th:text="${shipment.quantity}">Quantity</td>
+                                <td class="ch-td" th:text="${shipment.orderDate}">Order Date</td>
+                                <td class="ch-td" th:text="${shipment.expectedDeliveryDate}">Expected Delivery Date</td>
+                                <td class="ch-td" th:text="${shipment.process}">Process</td>
+                                <td class="ch-td" th:text="${shipment.urgency} ? 'Yes' : 'No'">Urgency</td>
+                                <td th:if="shipment.isShipping">
+                                    <button class="jw-button2"
+                                            th:attr="data-id=${shipment.id}"
+                                            th:if="${shipment.possibilityShipping}"
+                                            onclick="handleButtonClick(this)">출하버튼
+                                    </button>
+                                    <button class="jw-button2"
+                                            th:attr="data-id=${shipment.id}"
+                                            th:unless="${shipment.possibilityShipping}"
+                                            onclick="handleButtonClick(this)"
+                                            disabled>출하버튼
+                                    </button>
+                                </td>
+                                <td th:unless="shipment.isShipping">
+                                    <button class="jw-button2"
+                                            th:attr="data-id=${shipment.id}"
+                                            disabled>출하됨
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="jw-pagination" th:if="${totalPages > 1}">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="justify-content: center">
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                        <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                        th:classappend="${i} == ${currentPage} ? ' active'">
+                                        <a class="page-link" th:href="@{'/stock/shipment/' + ${i}}"
+                                           th:text="${i + 1}"></a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                        <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="jw-pagination" th:if="${totalPages <= 1}">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="justify-content: center">
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                        <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" th:href="@{'/stock/shipment/' + ${i}}">1</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                        <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="ch-card2 ch-checkout">
+                <div class="ch-footer">
+                    <label class="ch-price"></label>
+                    <button class="ch-checkout-btn" onclick="downloadExcel()"> 엑셀 저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+</div>
+</html>
