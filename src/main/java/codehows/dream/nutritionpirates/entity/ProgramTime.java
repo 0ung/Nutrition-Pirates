@@ -42,6 +42,11 @@ public class ProgramTime {
 		return dateFormat.format(currentProgramTime);
 	}
 
+	public String getFormattedCurrentYYYYProgramTime() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormat.format(currentProgramTime);
+	}
+
 	public ProgramTime() {
 		this.currentProgramTime = Timestamp.valueOf(LocalDateTime.now());
 	}

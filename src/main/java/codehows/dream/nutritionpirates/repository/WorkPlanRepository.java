@@ -38,4 +38,11 @@ public interface WorkPlanRepository extends JpaRepository<WorkPlan, Long> {
 	WorkPlan findByLotCodeId(@Param("lotCodeId") String lotCodeId);
 
 	List<WorkPlan> findByEndTimeIsNullAndFacilityStatusAndFacility(FacilityStatus facilityStatus, Facility facility);
+
+	Page<WorkPlan> findByProcessInAndActivateTrue(List<String> processes, Pageable pageable);
+
+	@Query(value = "SELECT * FROM work_plan wp WHERE DATE_FORMAT(wp.start_time, '%Y-%m-%d') LIKE CONCAT(:startTime, '%') AND wp.facility_status = :facilityStatus", nativeQuery = true)
+	Page<WorkPlan> findByStartTimeAndFacilityStatus(@Param("startTime") String startTime,
+		@Param("facilityStatus") String facilityStatus, Pageable pageable);
+
 }
