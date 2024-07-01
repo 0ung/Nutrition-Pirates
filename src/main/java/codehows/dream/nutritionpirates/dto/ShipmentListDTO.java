@@ -16,14 +16,17 @@ import lombok.Setter;
 @Builder
 public class ShipmentListDTO {
 
+    private Long id;
+    private Long orderId;
     private String orderName;
     private String product;
     private int quantity;
     private Date orderDate;
-    //private Date shippingDate;
+    private Date exportDate;
     private String expectedDeliveryDate;
     private Process process;
     private boolean urgency;
     private boolean isShipping;
+    private boolean possibilityShipping;
 
 }

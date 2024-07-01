@@ -13,11 +13,6 @@ import lombok.Setter;
 @Builder
 public class RawOrderPlanDTO {
 
-    /*private String partner;
-    private RawProductName product;
-    private double quantity;
-    private Timestamp expectedImportDate;*/
-
     private String partnerName;
     private String product; // 한글 제품명
     private double remainingQuantity;

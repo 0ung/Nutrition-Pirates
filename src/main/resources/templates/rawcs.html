@@ -28,6 +28,7 @@
             background-color: #c3dfd2;
             border-color: #ccc;
         }
+
         #pagination {
             bottom: 0;
             text-align: center; /* 가운데 정렬 */
@@ -88,6 +89,34 @@
                 .catch(err => console.error('데이터 가져오기 오류:', err));
         });
 
+        // 폐기됨 버튼
+        function handleButtonClick(button) {
+            var rawsCode = button.getAttribute('data-rawscode');
+            console.log('Button clicked for rawsCode:', rawsCode); // 콘솔 로그 추가
+
+            // 버튼이 비활성화된 경우 처리
+            if (button.disabled) {
+                return; // 이미 비활성화된 버튼이므로 더 이상의 처리를 하지 않음
+            }
+
+            fetch(`/api/${rawsCode}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+
+                }
+            })
+                .then(() => {
+                    button.innerHTML = '폐기됨';
+                    button.disabled = true;
+                    button.classList.add('disabled'); // 버튼을 비활성화된 모양으로 변경하는 클래스 추가
+                    window.location.href = '/api/rawperiod/0'
+                })
+                .catch(error => {
+                    console.error('Error importing data:', error);
+                });
+        }
+
 
     </script>
     <!-- Chart.js 라이브러리 추가 -->
@@ -120,6 +149,7 @@
                             <th scpoe="col">입고일자</th>
                             <th scope="col">사용기한</th>
                             <th scope="col">수량</th>
+                            <th scope="col">폐기버튼</th>
                         </tr>
                         </thead>
                         <tbody id="period-records">
@@ -129,6 +159,12 @@
                             <td th:text="${raws.importDate}"></td>
                             <td th:text="${raws.deadLine}"></td>
                             <td th:text="${raws.quantity}"></td>
+                            <td>
+                                <button class="jw-button2"
+                                        th:attr="data-rawscode=${raws.rawsCode}"
+                                        onclick="handleButtonClick(this)">폐기버튼
+                                </button>
+                            </td>
                         </tr>
                         </tbody>
 

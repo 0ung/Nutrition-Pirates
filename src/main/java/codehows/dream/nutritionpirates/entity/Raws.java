@@ -72,16 +72,12 @@ public class Raws {
 	private Status status;
 
 	public void rawImport(Timestamp importDate, Status status, Timestamp deadLine) {
-
 		this.importDate = importDate;
 		this.status = status;
 		this.deadLine = deadLine;
 	}
 
 	public void rawExport(Timestamp exportDate, Status status, RawsReason rawsReason) {
-		/*this.exportDate = Date.valueOf(LocalDate.now());
-		this.status = status.EXPORT;
-		this.rawsReason = rawsReason.DISPOSE;*/
 		this.exportDate = exportDate;
 		this.status = status;
 		this.rawsReason = rawsReason;

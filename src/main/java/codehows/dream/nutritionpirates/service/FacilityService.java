@@ -76,8 +76,8 @@ public class FacilityService {
 			} else {
 				facilityStatusDTO.setFacility(e);
 				facilityStatusDTO.setFacilityStatus(FacilityStatus.STANDBY);
-
 			}
+			facilityStatusDTO.setFacility(e);
 			list.add(facilityStatusDTO);
 		});
 		return list;
