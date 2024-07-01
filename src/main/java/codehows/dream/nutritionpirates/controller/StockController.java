@@ -31,11 +31,11 @@ public class StockController {
 
     private final StockService stockService;  // StockService 의존성 주입을 위한 필드
 
-    /*@GetMapping("/{page}")
+    @GetMapping("/{page}")
     public ResponseEntity<Page<StockShowDTO>> getStocks(Pageable pageable) {
         Page<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
         return ResponseEntity.ok(stockShowDTOList);  // 조회된 데이터와 HTTP 상태 코드를 응답으로 반환
-    }*/
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> exportStock(@PathVariable(name = "id") Long id) {
@@ -64,22 +64,22 @@ public class StockController {
         }
     }
 
-    //* 출하 현황 조회
+    /* 출하 현황 조회
     @GetMapping("/shipment/{page}")
     public String getShipmentPage(
-            @PathVariable("page") int page, Model model) {
+            @PathVariable("page") Optional<Integer>  page, Model model) {
         try {
-            List<ShipmentListDTO> shipments = stockService.getShip(PageRequest.of(page, 10)); // Adjust page size as needed
+            List<ShipmentListDTO> shipments = stockService.getShip(PageRequest.of(page == null ? 0 : page.get(), 10)); // Adjust page size as needed
             model.addAttribute("shipments", shipments);
             model.addAttribute("totalPages",stockService.getTotalPages());
             model.addAttribute("currentPage" , page);
 
-            return "ChulHa"; // Corresponds to shipment.html
+            return "ChulHa";
         } catch (Exception e) {
             log.error("Error fetching shipment data: " + e.getMessage());
             return "error"; // Handle error page
         }
-    }
+    }*/
 
 
     /*재고 현황 엑셀 다운로드*/
@@ -154,7 +154,7 @@ public class StockController {
             return "error";
         }
     }
-    /*출하 현황 조회
+    /*출하 현황 조회*/
     @GetMapping("/shipment/{page}")
     public String getShipmentPage(
             @PathVariable(name = "page") Optional<Integer> page,
@@ -167,14 +167,14 @@ public class StockController {
         try {
             Page<ShipmentListDTO> shipments = stockService.getShip(pageable); // Adjust page size as needed
             model.addAttribute("shipments", shipments.getContent());
+            model.addAttribute("currentPage" , currentPage);
             model.addAttribute("totalPages", shipments.getTotalPages());
-            model.addAttribute("currentPage" , page);
 
             return "ChulHa"; // Corresponds to shipment.html
         } catch (Exception e) {
             log.error("Error fetching shipment data: " + e.getMessage());
-            return "error"; // Handle error page
+            return "ChulHa"; // Handle error page
         }
-    }*/
+    }
 
 }

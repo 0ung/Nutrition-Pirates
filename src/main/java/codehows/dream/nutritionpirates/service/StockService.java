@@ -161,9 +161,11 @@ public class StockService {
         return list;
     }
 
-    // 출하 DTO 만들기
+    /*// 출하 DTO 만들기
     public List<ShipmentListDTO> getShip(Pageable pageable) {
+        //List<Order> orders2 = orderRepository.findAll();
         Page<Order> orders = orderRepository.findAll(pageable);
+
         List<ShipmentListDTO> shipmentListDTOList = new ArrayList<>();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -196,7 +198,7 @@ public class StockService {
         });
 
         return shipmentListDTOList;
-    }
+    }*/
 
     //* process 공정찾는 메서드*/
     public Process getProcess(Long orderId) {
@@ -279,8 +281,8 @@ public class StockService {
         Pageable pageable = Pageable.unpaged();
 
         // getStock메서드를 호출하여 StockShowDTO 리스트 가져오기
-        List<ShipmentListDTO> page = getShip(pageable);
-        //List<ShipmentListDTO> list = page.getContent();
+        Page<ShipmentListDTO> page = getShip(pageable);
+        List<ShipmentListDTO> list = page.getContent();
 
         Workbook workbook = new XSSFWorkbook();
 
@@ -294,9 +296,9 @@ public class StockService {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
 
-        for (int i = 1; i < page.size() + 1; i++) {
+        for (int i = 1; i < list.size() + 1; i++) {
             Row row = sheet.createRow(i);
-            ShipmentListDTO data = page.get(i - 1);
+            ShipmentListDTO data = list.get(i - 1);
 
             row.createCell(0).setCellValue(data.getOrderName());
             row.createCell(1).setCellValue(data.getProduct());
@@ -335,12 +337,13 @@ public class StockService {
 
     }
 
-      /* public Page<ShipmentListDTO> getShip(Pageable pageable) {
+    /**/
+    public Page<ShipmentListDTO> getShip(Pageable pageable) {
         Page<Order> orders = orderRepository.findAll(pageable);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
         List<ShipmentListDTO> list = orders.stream().map(e -> {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
             String formattedDate = null;
 
@@ -360,6 +363,7 @@ public class StockService {
                     .product(e.getProduct().getValue())
                     .quantity(e.getQuantity())
                     .orderDate(e.getOrderDate())
+                    //.exportDate()
                     .expectedDeliveryDate(formattedDate) // Assign formattedDate here
                     .process(process)
                     .urgency(e.isUrgency())
@@ -368,5 +372,5 @@ public class StockService {
         }).collect(Collectors.toList());
 
         return new PageImpl<>(list, pageable, orders.getTotalElements());
-    }*/
+    }
 }

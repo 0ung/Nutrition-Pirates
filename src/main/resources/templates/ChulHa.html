@@ -139,6 +139,34 @@
                     // Handle error as needed
                 });
         }
+
+        // 출하 버튼
+        function handleButtonClick(button) {
+            var id = button.getAttribute('data-id');
+            console.log('Button clicked for id:', id); // 콘솔 로그 추가
+
+            // 버튼이 비활성화된 경우 처리
+            if (button.disabled) {
+                return; // 이미 비활성화된 버튼이므로 더 이상의 처리를 하지 않음
+            }
+
+            fetch(`/api/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+
+                }
+            })
+                .then(() => {
+                    button.innerHTML = '폐기됨';
+                    button.disabled = true;
+                    button.classList.add('disabled'); // 버튼을 비활성화된 모양으로 변경하는 클래스 추가
+                    window.location.href = '/stock/shipment/0'
+                })
+                .catch(error => {
+                    console.error('Error importing data:', error);
+                });
+        }
     </script>
 </th:block>
 
@@ -173,11 +201,12 @@
                                 <th class="ch-th">발주처</th>
                                 <th class="ch-th">제품명</th>
                                 <th class="ch-th">수량</th>
-                                <th class="ch-th">수주일</th>
+                                <th class="ch-th">생산날짜</th>
+                                <th class="ch-th">출고날짜</th>
                                 <th class="ch-th">예상납기일</th>
                                 <th class="ch-th">공정상태</th>
                                 <th class="ch-th">긴급여부</th>
-                                <th class="ch-th">출하상태</th>
+                                <th class="ch-th">출하버튼</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -186,30 +215,60 @@
                                 <td class="ch-td" th:text="${shipment.product}">Product Name</td>
                                 <td class="ch-td" th:text="${shipment.quantity}">Quantity</td>
                                 <td class="ch-td" th:text="${shipment.orderDate}">Order Date</td>
+                                <td class="ch-td" th:text="${shipment.exportDate}">Export Date</td>
                                 <td class="ch-td" th:text="${shipment.expectedDeliveryDate}">Expected Delivery Date</td>
                                 <td class="ch-td" th:text="${shipment.process}">Process</td>
                                 <td class="ch-td" th:text="${shipment.urgency} ? 'Yes' : 'No'">Urgency</td>
-                                <td class="ch-td" th:text="${shipment.isShipping} ? 'Shipped' : 'Pending'">Shipping Status</td>
+                                <td>
+                                    <button class="jw-button2"
+                                            th:attr="data-id=${shipment.id}"
+                                            onclick="handleButtonClick(this)">출하버튼
+                                    </button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="pagination-container">
-                            <ul class="pagination-list lot-centered">
-                                <li th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                                    <a th:href="@{/stock/shipment/{page}(page=${currentPage != null ? currentPage - 1 : 0})}" aria-label="Previous" class="pagination-link">
-                                        <span aria-hidden="true">이전버튼</span>
-                                    </a>
-                                </li>
-                                <li th:each="pageNum : ${totalPages != null ? #numbers.sequence(0, totalPages - 1) : 0}"
-                                    th:classappend="${pageNum == currentPage} ? 'active' : ''">
-                                    <a th:href="@{/stock/shipment/{page}(page=${pageNum})}" th:text="${pageNum + 1}" class="pagination-link">1</a>
-                                </li>
-                                <li th:classappend="${currentPage != null && currentPage >= totalPages - 1} ? 'disabled' : ''">
-                                    <a th:href="@{/stock/shipment/{page}(page=${currentPage != null ? currentPage + 1 : 0})}" aria-label="Next" class="pagination-link">
-                                        <span aria-hidden="true">다음버튼</span>
-                                    </a>
-                                </li>
-                            </ul>
+                        <div class="jw-pagination" th:if="${totalPages > 1}">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="justify-content: center">
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                        <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                        th:classappend="${i} == ${currentPage} ? ' active'">
+                                        <a class="page-link" th:href="@{'/stock/shipment/' + ${i}}"
+                                           th:text="${i + 1}"></a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                        <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="jw-pagination" th:if="${totalPages <= 1}">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" style="justify-content: center">
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                        <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" th:href="@{'/stock/shipment/' + ${i}}">1</a>
+                                    </li>
+                                    <li class="page-item"
+                                        th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                        <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
 
                     </div>
