@@ -19,7 +19,6 @@ public class RawOrderInsertDTO {
     private String partner;
     private Integer quantity;
     private RawProductName product;
-    //private Date orderDate;
     private Timestamp orderDate;
     private Date importDate;
     private Status status;

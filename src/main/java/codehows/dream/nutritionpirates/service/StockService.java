@@ -52,48 +52,9 @@ public class StockService {
 	private final ProcessPlanRepository processPlanRepository;
 	public int data = 0;
 
-	private String parseRawsCodes(String rawsCodes) {
-		if (rawsCodes == null) {
-			return null;
-		}
-
-		if (rawsCodes.contains("G")) {
-			return "흑마늘";
-		} else if (rawsCodes.contains("C")) {
-			return "양배추";
-		} else if (rawsCodes.contains("S")) {
-			return "석류";
-		} else if (rawsCodes.contains("P")) {
-			return "매실";
-		}
-
-		return "알 수 없음"; // 정의되지 않은 경우
-	}
-
-	// isExport 가 1(true) 이면 출고 0 (false) 이면 입고
-    /*public List<StockShowDTO> getStock(Pageable pageable) {
-        Page<Stock> stocks = stockRepository.findAll(pageable);
-        List<StockShowDTO> stockShowDTOList = new ArrayList<>();
-
-        stocks.forEach((e) -> {
-            stockShowDTOList.add(
-                    StockShowDTO.builder()
-                            .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
-                            .lotCode(e.getWorkPlan().getLotCode().getLotCode())
-                            .quantity(e.getQuantity())
-                            .createDate(e.getCreateDate())
-                            .isExport(e.getExportDate() == null ? false : true)
-                            .exportDate(e.getExportDate())
-                            .build()
-            );
-        });
-        return stockShowDTOList;
-    }*/
-
 	public void releaseStock(Long id, Long orderId) {
 		Stock stock = stockRepository.findById(id).orElse(null);
 		Order order = orderRepository.findById(orderId).orElse(null);
-
 		// 프로그램 시간설정 적용
 		Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
 		Date exportDate = new Date(timestamp.getTime());
@@ -189,7 +150,6 @@ public class StockService {
 
 		// 엑셀 아래 시트 이름 설정
 		Sheet sheet = workbook.createSheet(LocalDate.now() + "재고 내역");
-
 		Row headerRow = sheet.createRow(0);
 		String[] headers = new String[] {"완제품명", "LOT번호", "수량", "생산 날짜", "출고 날짜", "입/출고 유무"};
 

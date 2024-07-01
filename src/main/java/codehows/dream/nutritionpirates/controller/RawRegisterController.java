@@ -76,20 +76,6 @@ public class RawRegisterController {
         return new ResponseEntity<>(rawOrderInsertService.getMinus(), HttpStatus.OK);
     }
 
-    /*입출고관리 페이징 연결*/
-    //페이징 기능
-  /*  @GetMapping("/rawstock/{page}")
-    public String getRawStockList(@PathVariable(name = "page") Optional<Integer> page, @PageableDefault(page=0,size = 10,sort = "id",
-            direction = Sort.Direction.DESC) Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
-        try {
-            model.addAttribute("list", rawOrderInsertService.getRawStockList(pageable));
-            return "rawmng";
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return "error";
-        }
-    }*/
     @GetMapping("/raworder/{page}")
     public String getRawOrderList(
             @PathVariable(name = "page") Optional<Integer> page,
@@ -192,18 +178,6 @@ public class RawRegisterController {
             return "error";
         }
     }
-    /*@GetMapping("/rawperiod/{page}")
-    public ResponseEntity<?> getPeriodList(@PathVariable(name = "page") Optional<Integer> page) {
-
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
-
-        try {
-            return new ResponseEntity<>(rawOrderInsertService.getPeriodList(pageable), HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }*/
 
     @GetMapping("/history")
     public ResponseEntity<?> getExcel(HttpServletResponse response) {

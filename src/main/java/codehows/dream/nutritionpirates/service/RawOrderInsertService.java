@@ -194,8 +194,6 @@ public class RawOrderInsertService {
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
         LocalDateTime now = timestamp.toLocalDateTime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        //LocalDateTime now = LocalDateTime.now();
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String formattedDate = now.format(formatter);
 
         int quantity = rawOrderInsertDTO.getQuantity();
@@ -276,13 +274,13 @@ public class RawOrderInsertService {
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
+
     // 발주 등록 이후 테이블 - pageable로 변환
     public Page<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
         Page<Raws> pages = rawRepository.findByStatusNot(Status.EXPORT, pageable);
 
         List<RawOrderListDTO> list = pages.stream()
-                //.filter(e -> e.getStatus() != Status.EXPORT) // EXPORT 상태 필터링
                 .map(e -> {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -315,48 +313,6 @@ public class RawOrderInsertService {
         return new PageImpl<>(list, pageable, pages.getTotalElements());
     }
 
-    /*// 발주등록이후 테이블
-    public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
-
-        List<RawOrderListDTO> list = new ArrayList<>();
-
-        Page<Raws> pages = rawRepository.findAll(pageable);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        pages.forEach((e) -> {
-
-            // status가 export 인지 확인하고 먼저 걸러내기
-            if (e.getStatus() != Status.EXPORT) {
-                String formattedorder = null;
-                String formattedimport = null;
-                if (e.getOrderDate() != null) {
-                    Timestamp timestamp = e.getOrderDate();
-                    LocalDateTime localDateTime = timestamp.toLocalDateTime();
-                    formattedorder = localDateTime.format(formatter);
-                }
-                if (e.getImportDate() != null) {
-                    Timestamp timestamp = e.getImportDate();
-                    LocalDateTime localDateTime = timestamp.toLocalDateTime();
-                    formattedimport = localDateTime.format(formatter);
-                }
-
-                list.add(RawOrderListDTO.builder()
-                        .rawsCode(e.getRawsCode())
-                        .product(e.getProduct().getValue())
-                        .quantity(e.getQuantity())
-                        .status(e.getStatus().getValue())
-                        .orderDate(formattedorder)
-                        .importDate(formattedimport)
-                        .build()
-                );
-            }
-        });
-        return list;
-    }*/
-
-
-
     // 발주현황에서 엑설 파일로 다운로드
     @Transactional
     public Workbook getHistoryRaw() {
@@ -373,7 +329,6 @@ public class RawOrderInsertService {
         // 엑셀 아래 시트 이름 설정
         Sheet sheet = workbook.createSheet(LocalDate.now() + " 원자재 입고 내역");
 
-        // Create header row
         Row headerRow = sheet.createRow(0);
         String[] headers = new String[]{"원자재제품코드", "원자재명", "수량", "입고상태", "주문일자", "입고일자"};
 
@@ -381,8 +336,6 @@ public class RawOrderInsertService {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
 
-        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        // Fill data rows
         for (int i = 1; i < list.size() + 1; i++) {
             Row row = sheet.createRow(i);
             RawOrderListDTO data = list.get(i - 1);
@@ -449,85 +402,6 @@ public class RawOrderInsertService {
         return new PageImpl<>(list, pageable, pages.getTotalElements());
     }
 
-    // 재고현황 테이블
-    /*public Page<RawsListDTO> getRawStockList(Pageable pageable) {
-        Page<Raws> pages = rawRepository.findAll(pageable);
-
-        List<RawsListDTO> list = pages.stream().map(e -> {
-            // 입고대기 - 주문일, 입고 - 입고일 , 출고 - 출고일 날짜 선택
-            Date selectDate;
-            switch (e.getStatus()) {
-                case WAITING:
-                    selectDate = new Date(e.getOrderDate().getTime());
-                    break;
-                case IMPORT:
-                    selectDate = new Date(e.getImportDate().getTime());
-                    break;
-                case EXPORT:
-                    selectDate = e.getExportDate();
-                    break;
-                default:
-                    selectDate = new Date(e.getOrderDate().getTime());
-            }
-
-            return RawsListDTO.builder()
-                    .rawsCode(e.getRawsCode())
-                    .status(e.getStatus().getValue())
-                    .product(e.getProduct().getValue())
-                    .Date(selectDate)
-                    .quantity(e.getQuantity())
-                    .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
-                    .build();
-        }).collect(Collectors.toList());
-
-        // Page 객체를 반환하기 위해, List를 Page로 변환
-        return new PageImpl<>(list, pageable, pages.getTotalElements());
-    }*/
-
-    // 재고현황 테이블
-    /*public List<RawsListDTO> getRawStockList(Pageable pageable) {
-
-        List<RawsListDTO> list = new ArrayList<>();
-
-        Page<Raws> pages = rawRepository.findAll(pageable);
-        int totalPages = pages.getTotalPages();
-
-        pages.forEach((e) -> {
-
-            // 입고대기 - 주문일, 입고 - 입고일 , 출고 - 출고일 날짜 선택
-            Date selectDate;
-            switch (e.getStatus()) {
-                case WAITING:
-                    //selectDate = e.getOrderDate();
-                    selectDate = new Date(e.getOrderDate().getTime());
-                    break;
-                case IMPORT:
-                    selectDate = e.getImportDate();
-                    break;
-                case EXPORT:
-                    selectDate = e.getExportDate();
-                    break;
-                default:
-                    selectDate = new Date(e.getOrderDate().getTime());
-            }
-
-            list.add(RawsListDTO.builder()
-                    .rawsCode(e.getRawsCode())
-                    .status(e.getStatus().getValue())
-                    .product(e.getProduct().getValue())
-                    .Date(selectDate)
-                    .quantity(e.getQuantity())
-                    .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
-                    .build());
-        });
-
-        // 원하는 위치에 전체 페이지 수를 사용
-        System.out.println("Total pages: " + totalPages);
-
-        return list;
-    }*/
-
-
     // 입고된 총 양만 list에 담아서 보여주기
     public List<RawShowGraphDTO> getRawStockGraph() {
 
@@ -558,10 +432,8 @@ public class RawOrderInsertService {
         List<Raws> rawsList = rawRepository.findAll();
         Workbook workbook = new XSSFWorkbook();
 
-        // Create a sheet with a name
         Sheet sheet = workbook.createSheet(LocalDate.now() + " 주문 내역");
 
-        // Create header row
         Row headerRow = sheet.createRow(0);
         String[] headers = new String[]{"원자재제품코드", "원자재명", "상태(입고,출고,입고대기)", "주문일자", "입고일자", "출고일자", "수량", "사유"};
 
@@ -569,12 +441,10 @@ public class RawOrderInsertService {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
 
-        // Create a date format
         CreationHelper creationHelper = workbook.getCreationHelper();
         CellStyle dateCellStyle = workbook.createCellStyle();
         dateCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("yyyy-MM-dd HH:mm"));
 
-        // Fill data rows
         for (int i = 1; i < rawsList.size() + 1; i++) {
             Row row = sheet.createRow(i);
             Raws data = rawsList.get(i - 1);
@@ -684,68 +554,6 @@ public class RawOrderInsertService {
 
         return new PageImpl<>(list, pageable, pages.getTotalElements());
     }
-    /*public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
-        // 현재 프로그램 시간을 가져옵니다.
-        Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-        LocalDateTime currentDate = timestamp.toLocalDateTime();
-
-        // 현재 시간에서 3일 전 시간을 계산합니다.
-        LocalDateTime minDate = currentDate.minusDays(3);
-        Timestamp minTimestamp = Timestamp.valueOf(minDate);
-
-        // IMPORT 상태이고, deadline이 minTimestamp와 timestamp 사이인 데이터를 페이징하여 가져옵니다.
-        Page<Raws> pages = rawRepository.findByStatusAndDeadlineBetween(
-                Status.IMPORT,
-                minTimestamp,
-                timestamp,
-                pageable);
-
-        // 결과를 담을 리스트를 초기화합니다.
-        List<RawPeriodDTO> list = new ArrayList<>();
-
-        // 가져온 데이터를 RawPeriodDTO로 변환하여 리스트에 추가합니다.
-        pages.forEach((e) -> {
-            list.add(RawPeriodDTO.builder()
-                    .rawsCode(e.getRawsCode())
-                    .product(e.getProduct().getValue())
-                    .importDate(new Date(e.getImportDate().getTime()))
-                    .deadLine(new Date(e.getDeadLine().getTime()))
-                    .quantity(e.getQuantity())
-                    .build());
-        });
-
-        return list;
-    }
-
-    /*public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
-
-        Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-        LocalDateTime currentDate = timestamp.toLocalDateTime();
-
-        // deadLine에서 3일내 시간범위 계산
-        LocalDateTime minDate = currentDate.minusDays(3);
-        Timestamp minTimestamp = Timestamp.valueOf(minDate);
-
-        // deadLine 이 현재시간 에서 현재시간 -3일 Data만 들고옴
-        Page<Raws> pages = rawRepository.findByStatusAndDeadlineBetween(
-                Status.IMPORT,
-                minTimestamp,
-                timestamp,
-                pageable);
-
-        List<RawPeriodDTO> list = new ArrayList<>();
-
-        pages.forEach((e) -> {
-            list.add(RawPeriodDTO.builder()
-                    .rawsCode(e.getRawsCode())
-                    .product(e.getProduct().getValue())
-                    .importDate(new Date(e.getImportDate().getTime()))
-                    .deadLine(new Date(e.getDeadLine().getTime()))
-                    .quantity(e.getQuantity())
-                    .build());
-        });
-        return list;
-    }*/
 
     //첫번쨰 생성이 되면
     //분류
@@ -919,10 +727,6 @@ public class RawOrderInsertService {
                 result.add(new RawOrderPlanDTO(partnerName, rawProductName.getValue(), remainQuantity, formattedExpectedImportDate));
             }
         }
-
         return result;
-
-
     }
-
 }
