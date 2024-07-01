@@ -160,6 +160,7 @@ public class StockService {
         });
         return list;
     }
+
     // 출하 DTO 만들기
     public List<ShipmentListDTO> getShip(Pageable pageable) {
         Page<Order> orders = orderRepository.findAll(pageable);
@@ -253,16 +254,17 @@ public class StockService {
 
         return workbook;
     }
-    public Long getTotalPages(){
+
+    public Long getTotalPages() {
         long cnt = stockRepository.count();
 
-        if(cnt == 0){
+        if (cnt == 0) {
             throw new RuntimeException();
         }
         long result = cnt / 10;
         long remain = cnt % 10;
 
-        if(remain > 0 ){
+        if (remain > 0) {
             return result + 1;
         }
         return result;
@@ -286,7 +288,7 @@ public class StockService {
         Sheet sheet = workbook.createSheet(LocalDate.now() + "재고 내역");
 
         Row headerRow = sheet.createRow(0);
-        String[] headers = new String[]{"발주처", "완제품명", "수량", "주문 날짜", "출고 날짜", "예상납기일", "공정상태", "긴급여부","출하상태"};
+        String[] headers = new String[]{"발주처", "완제품명", "수량", "주문 날짜", "출고 날짜", "예상납기일", "공정상태", "긴급여부", "출하상태"};
 
         for (int i = 0; i < headers.length; i++) {
             headerRow.createCell(i).setCellValue(headers[i]);
@@ -300,7 +302,7 @@ public class StockService {
             row.createCell(1).setCellValue(data.getProduct());
             row.createCell(2).setCellValue(data.getQuantity());
             row.createCell(3).setCellValue(data.getOrderDate());
-            row.createCell(4).setCellValue(data.getShippingDate());
+            //row.createCell(4).setCellValue(data.getShippingDate());
             row.createCell(5).setCellValue(data.getExpectedDeliveryDate());
             row.createCell(6).setCellValue(data.getProcess().toString());
             row.createCell(7).setCellValue(data.isUrgency());
@@ -316,15 +318,15 @@ public class StockService {
 
         List<StockShowDTO> list = pages.stream().map(e ->
 
-            StockShowDTO.builder()
-                    .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
-                    .lotCode(e.getWorkPlan().getLotCode().getLotCode())
-                    .quantity(e.getQuantity())
-                    .createDate(e.getCreateDate())
-                    .exportDate(e.getExportDate())
-                    //.isExport(e.getExportDate() == null ? false : true)
-                    .isExport(e.getExportDate() != null)
-                    .build()
+                StockShowDTO.builder()
+                        .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
+                        .lotCode(e.getWorkPlan().getLotCode().getLotCode())
+                        .quantity(e.getQuantity())
+                        .createDate(e.getCreateDate())
+                        .exportDate(e.getExportDate())
+                        //.isExport(e.getExportDate() == null ? false : true)
+                        .isExport(e.getExportDate() != null)
+                        .build()
 
         ).collect(Collectors.toList());
 
@@ -333,17 +335,38 @@ public class StockService {
 
     }
 
-    // 출하 그래프
-    /*public List<ShipShowGraphDTO> getShipGraph() {
+      /* public Page<ShipmentListDTO> getShip(Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(pageable);
 
-        Map<String, Integer> shipQuantityMap = new HashMap<>();
-        for (ProductName productName : ProductName.values()) {
-            shipQuantityMap.put(productName.getValue(), 0); // 기본값은 0으로 설정
-        }
-        List<Stock> shipList = stockRepository.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        for (Stock stock : shipList) {
-            if(stock.)
-        }
+        List<ShipmentListDTO> list = orders.stream().map(e -> {
+
+            String formattedDate = null;
+
+            if (e.getExpectedDeliveryDate() != null) {
+                try {
+                    LocalDateTime localDateTime = LocalDateTime.parse(e.getExpectedDeliveryDate());
+                    formattedDate = localDateTime.format(formatter);
+                } catch (DateTimeParseException ex) {
+                    // Handle parsing exception if the format is incorrect
+                    log.error("Error parsing expectedDeliveryDate: " + e.getExpectedDeliveryDate(), ex);
+                }
+            }
+
+            Process process = getProcess(e.getId());
+            return ShipmentListDTO.builder()
+                    .orderName(e.getOrderer().getName())
+                    .product(e.getProduct().getValue())
+                    .quantity(e.getQuantity())
+                    .orderDate(e.getOrderDate())
+                    .expectedDeliveryDate(formattedDate) // Assign formattedDate here
+                    .process(process)
+                    .urgency(e.isUrgency())
+                    .build();
+
+        }).collect(Collectors.toList());
+
+        return new PageImpl<>(list, pageable, orders.getTotalElements());
     }*/
 }

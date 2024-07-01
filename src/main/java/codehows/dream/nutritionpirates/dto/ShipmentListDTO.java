@@ -20,7 +20,7 @@ public class ShipmentListDTO {
     private String product;
     private int quantity;
     private Date orderDate;
-    private Date shippingDate;
+    //private Date shippingDate;
     private String expectedDeliveryDate;
     private Process process;
     private boolean urgency;

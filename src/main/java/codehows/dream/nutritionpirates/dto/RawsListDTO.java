@@ -18,7 +18,7 @@ public class RawsListDTO {
     private String rawsCode;
     private String product;
     private String status;
-    private Date Date;
+    private String Date;
     private int quantity;
     private String rawsReason;
 
