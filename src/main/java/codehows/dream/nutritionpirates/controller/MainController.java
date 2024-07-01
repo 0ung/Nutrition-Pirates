@@ -64,4 +64,8 @@ public class MainController {
 
 		return "main";
 	}
+
+	@GetMapping("/suzu")
+	public void suzu() {
+	}
 }

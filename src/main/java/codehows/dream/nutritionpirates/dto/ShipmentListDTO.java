@@ -17,6 +17,7 @@ import lombok.Setter;
 public class ShipmentListDTO {
 
     private Long id;
+    private Long orderId;
     private String orderName;
     private String product;
     private int quantity;
@@ -26,5 +27,6 @@ public class ShipmentListDTO {
     private Process process;
     private boolean urgency;
     private boolean isShipping;
+    private boolean possibilityShipping;
 
 }

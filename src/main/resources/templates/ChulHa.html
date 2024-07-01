@@ -142,8 +142,9 @@
 
         // 출하 버튼
         function handleButtonClick(button) {
-            var id = button.getAttribute('data-id');
-            console.log('Button clicked for id:', id); // 콘솔 로그 추가
+            let id = button.getAttribute('data-id');
+            let iterIndex = button.getAttribute('data-index');
+            let orderId = document.getElementById("orderID" + iterIndex);
 
             // 버튼이 비활성화된 경우 처리
             if (button.disabled) {
@@ -158,9 +159,6 @@
                 }
             })
                 .then(() => {
-                    button.innerHTML = '폐기됨';
-                    button.disabled = true;
-                    button.classList.add('disabled'); // 버튼을 비활성화된 모양으로 변경하는 클래스 추가
                     window.location.href = '/stock/shipment/0'
                 })
                 .catch(error => {
@@ -202,27 +200,39 @@
                                 <th class="ch-th">제품명</th>
                                 <th class="ch-th">수량</th>
                                 <th class="ch-th">생산날짜</th>
-                                <th class="ch-th">출고날짜</th>
-                                <th class="ch-th">예상납기일</th>
+                                <th class="ch-th">예상납기일 / 납기일</th>
                                 <th class="ch-th">공정상태</th>
                                 <th class="ch-th">긴급여부</th>
                                 <th class="ch-th">출하버튼</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="shipment : ${shipments}">
+                            <tr th:each="shipment, iterStat : ${shipments}">
+                                <input id="orderID[[${iterStat.index}]]" type="hidden" th:value="${shipment.orderId}">
                                 <td class="ch-td" th:text="${shipment.orderName}">Orderer Name</td>
                                 <td class="ch-td" th:text="${shipment.product}">Product Name</td>
                                 <td class="ch-td" th:text="${shipment.quantity}">Quantity</td>
                                 <td class="ch-td" th:text="${shipment.orderDate}">Order Date</td>
-                                <td class="ch-td" th:text="${shipment.exportDate}">Export Date</td>
                                 <td class="ch-td" th:text="${shipment.expectedDeliveryDate}">Expected Delivery Date</td>
                                 <td class="ch-td" th:text="${shipment.process}">Process</td>
                                 <td class="ch-td" th:text="${shipment.urgency} ? 'Yes' : 'No'">Urgency</td>
-                                <td>
+                                <td th:if="shipment.isShipping">
                                     <button class="jw-button2"
                                             th:attr="data-id=${shipment.id}"
+                                            th:if="${shipment.possibilityShipping}"
                                             onclick="handleButtonClick(this)">출하버튼
+                                    </button>
+                                    <button class="jw-button2"
+                                            th:attr="data-id=${shipment.id}"
+                                            th:unless="${shipment.possibilityShipping}"
+                                            onclick="handleButtonClick(this)"
+                                            disabled>출하버튼
+                                    </button>
+                                </td>
+                                <td th:unless="shipment.isShipping">
+                                    <button class="jw-button2"
+                                            th:attr="data-id=${shipment.id}"
+                                            disabled>출하됨
                                     </button>
                                 </td>
                             </tr>
