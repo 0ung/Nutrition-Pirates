@@ -90,7 +90,7 @@ public class RawOrderInsertService {
     }
 
 
-    private Timestamp calculateExpectedImportDate(Timestamp orderDateTime, RawProductName product) {
+    public Timestamp calculateExpectedImportDate(Timestamp orderDateTime, RawProductName product) {
         LocalDateTime orderDateTimeLocal = orderDateTime.toLocalDateTime();
         LocalTime time = orderDateTimeLocal.toLocalTime();
         DayOfWeek dayOfWeek = orderDateTimeLocal.getDayOfWeek();

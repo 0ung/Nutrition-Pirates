@@ -1,13 +1,20 @@
 package codehows.dream.nutritionpirates.service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-
+import codehows.dream.nutritionpirates.constants.Process;
+import codehows.dream.nutritionpirates.constants.*;
+import codehows.dream.nutritionpirates.dto.*;
+import codehows.dream.nutritionpirates.entity.Order;
+import codehows.dream.nutritionpirates.entity.ProcessPlan;
+import codehows.dream.nutritionpirates.entity.WorkPlan;
+import codehows.dream.nutritionpirates.exception.NotFoundOrderException;
+import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
+import codehows.dream.nutritionpirates.repository.OrderRepository;
+import codehows.dream.nutritionpirates.repository.StockRepository;
+import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
+import codehows.dream.nutritionpirates.workplan.WorkPlanFactoryProvider;
+import codehows.dream.nutritionpirates.workplan.process.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,44 +25,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codehows.dream.nutritionpirates.constants.Facility;
-import codehows.dream.nutritionpirates.constants.FacilityStatus;
-import codehows.dream.nutritionpirates.constants.Process;
-import codehows.dream.nutritionpirates.constants.ProductName;
-import codehows.dream.nutritionpirates.constants.Routing;
-import codehows.dream.nutritionpirates.dto.ActivateFacilityDTO;
-import codehows.dream.nutritionpirates.dto.RawBOMDTO;
-import codehows.dream.nutritionpirates.dto.WorkPlanDTO;
-import codehows.dream.nutritionpirates.dto.WorkPlanDetailDTO;
-import codehows.dream.nutritionpirates.dto.WorkPlanListDTO;
-import codehows.dream.nutritionpirates.dto.WorkPlanMainCapaDTO;
-import codehows.dream.nutritionpirates.entity.Order;
-import codehows.dream.nutritionpirates.entity.ProcessPlan;
-import codehows.dream.nutritionpirates.entity.WorkPlan;
-import codehows.dream.nutritionpirates.exception.NotFoundOrderException;
-import codehows.dream.nutritionpirates.exception.NotFoundWorkPlanException;
-import codehows.dream.nutritionpirates.repository.OrderRepository;
-import codehows.dream.nutritionpirates.repository.StockRepository;
-import codehows.dream.nutritionpirates.repository.WorkPlanRepository;
-import codehows.dream.nutritionpirates.workplan.WorkPlanFactoryProvider;
-import codehows.dream.nutritionpirates.workplan.process.A1WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A2WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A3WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A4WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A5WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A6WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A7WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.A8WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B1WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B2WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B3WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B4WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B5WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B6WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.B7WorkPlan;
-import codehows.dream.nutritionpirates.workplan.process.WorkPlans;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -179,7 +155,8 @@ public class WorkPlanService {
 				}
 			}
 		);
-		order.updateExpectedDeliveryDate(expectDeliveryDate(processPlan));
+		//발주 시간도 추가
+		order.updateExpectedDeliveryDate(expectDeliveryDate(processPlan, order));
 	}
 
 	public void createStickProcessPlan(ProcessPlan processPlan) {
@@ -239,20 +216,54 @@ public class WorkPlanService {
 		);
 	}
 
-	public String expectDeliveryDate(ProcessPlan processPlan) {
-		List<WorkPlan> list = workPlanRepository.findAllByProcessPlanId(processPlan.getId());
-		long deliveryTimeMinutes = list.stream().mapToLong(workPlan -> {
-			if (workPlan.getProcessCompletionTime() == null) {
-				return 0;
-			}
-			Timestamp timestamp = workPlan.getProcessCompletionTime();
+	public String expectDeliveryDate(ProcessPlan processPlan, Order order) {
+		// 1. Calculate the expected import date based on the product and order time
+
+
+		Timestamp orderDateTime = new Timestamp(order.getOrderDate().getTime());
+		Timestamp expectedImportDate = null;
+		if (order.getProduct() == ProductName.CABBAGE_JUICE) {
+			expectedImportDate = rawOrderInsertService.calculateExpectedImportDate(orderDateTime, RawProductName.CABBAGE);
+		} else if (order.getProduct() == ProductName.BLACK_GARLIC_JUICE) {
+			expectedImportDate = rawOrderInsertService.calculateExpectedImportDate(orderDateTime, RawProductName.BLACK_GARLIC);
+		} else if (order.getProduct() == ProductName.PLUM_JELLY_STICK) {
+			expectedImportDate = rawOrderInsertService.calculateExpectedImportDate(orderDateTime, RawProductName.PLUM);
+		} else if (order.getProduct() == ProductName.POMEGRANATE_JELLY_STICK) {
+			expectedImportDate = rawOrderInsertService.calculateExpectedImportDate(orderDateTime, RawProductName.POMEGRANATE);
+		}
+		// 2. Get the list of WorkPlans associated with the ProcessPlan
+		List<WorkPlan> workPlans = workPlanRepository.findAllByProcessPlanId(processPlan.getId());
+
+		// 3. Calculate the total additional processing time excluding unfinished processes
+		long additionalProcessingTimeMinutes = workPlans.stream()
+				.filter(workPlan -> workPlan.getProcessCompletionTime() != null)
+				.mapToLong(workPlan -> {
+					Timestamp completionTime = workPlan.getProcessCompletionTime();
+					Timestamp nowTimestamp = Timestamp.valueOf(LocalDateTime.now());
+					return ChronoUnit.MINUTES.between(nowTimestamp.toLocalDateTime(), completionTime.toLocalDateTime());
+				})
+				.sum();
+		Long expect = getOrderLateDate(processPlan);
+		// 4. Add the additional processing time to the expected import date
+		LocalDateTime expectedDeliveryDateTime = expectedImportDate.toLocalDateTime().plusMinutes(additionalProcessingTimeMinutes + expect);
+		// 5. Return the final delivery date as a string
+		return expectedDeliveryDateTime.toString();
+	}
+
+	public Long getOrderLateDate(ProcessPlan processPlan) {
+		List<ProcessPlan> data = new ArrayList<>();
+		data.add(processPlan);
+		List<WorkPlan> list = workPlanRepository.findByEndTimeIsNullAndProcessPlanNotIn(data);
+		long totalMinutes = list.stream().mapToLong(e -> {
+			Timestamp orderDate = new Timestamp(e.getProcessPlan().getOrder().getOrderDate().getTime());
 			Timestamp nowTimestamp = Timestamp.valueOf(LocalDateTime.now());
-			return ChronoUnit.MINUTES.between(nowTimestamp.toLocalDateTime(), timestamp.toLocalDateTime());
+			return ChronoUnit.MINUTES.between(orderDate.toLocalDateTime(), nowTimestamp.toLocalDateTime());
 		}).sum();
 
-		Timestamp currentProgramTime = programTimeService.getProgramTime().getCurrentProgramTime();
-		return currentProgramTime.toLocalDateTime().plusMinutes(deliveryTimeMinutes).toString();
+		// totalMinutes를 Long으로 반환
+		return totalMinutes;
 	}
+
 
 	public List<WorkPlan> getActivateFacility(Facility facility) {
 		List<WorkPlan> workPlans = workPlanRepository.findByFacility(facility);
