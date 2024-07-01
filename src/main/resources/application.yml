@@ -23,28 +23,3 @@ spring:
       ddl-auto: validate
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
-#server:
-#  port: 8080
-#
-#spring:
-#  servlet:
-#    multipart:
-#      enabled: true
-#      max-request-size: 100MB
-#      max-file-size: 10MB
-#  application:
-#    name: MES
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: "jdbc:mysql://localhost:3306/mes?serverTime=UTC"
-#    username: root
-#    password: 1234
-#  jpa:
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
-#    hibernate:
-#      ddl-auto: validate
-#    database: mysql
-#    database-platform: org.hibernate.dialect.MySQL8Dialect

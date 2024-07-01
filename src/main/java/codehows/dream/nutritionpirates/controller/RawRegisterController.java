@@ -227,4 +227,26 @@ public class RawRegisterController {
         }
     }
 
+    @GetMapping("/orderhistory")
+    public ResponseEntity<?> getorderExcel(HttpServletResponse response) {
+        try {
+            Workbook workbook = rawOrderInsertService.getHistoryRaw();
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+            String fileName = "원자재 발주 현황 내역.xlsx";
+            String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+
+            // Set headers for different browsers
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
+
+            workbook.write(response.getOutputStream());
+            workbook.close();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
