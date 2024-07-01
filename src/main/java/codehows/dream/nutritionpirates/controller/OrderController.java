@@ -68,7 +68,7 @@ public class OrderController {
 			model.addAttribute("dto", orderPage.getContent());
 			model.addAttribute("currentPage", currentPage);
 			model.addAttribute("totalPages", orderPage.getTotalPages());
-			return "/suzu_check";
+			return "suzu_check";
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return "error";
@@ -86,7 +86,7 @@ public class OrderController {
 			model.addAttribute("dto2", orderPage.getContent()); // Set the content, not the repository itself
 			model.addAttribute("currentPage", currentPage);
 			model.addAttribute("totalPages", orderPage.getTotalPages());
-			return "/suzu_check_orderer";
+			return "suzu_check_orderer";
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return "error";

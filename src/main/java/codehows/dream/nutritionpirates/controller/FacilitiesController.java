@@ -31,7 +31,7 @@ public class FacilitiesController {
 		List<FacilityStatusDTO> list = facilityService.getFacilityStatus();
 		model.addAttribute("list", list);
 
-		return "/productionamount";
+		return "productionamount";
 	}
 
 	@GetMapping("/daily")
@@ -42,7 +42,7 @@ public class FacilitiesController {
 		model.addAttribute("list", list);
 		model.addAttribute("data", map);
 
-		return "/productionVolume";
+		return "productionVolume";
 	}
 
 	@GetMapping("/monthly")
@@ -53,6 +53,6 @@ public class FacilitiesController {
 		model.addAttribute("list", list);
 		model.addAttribute("data", map);
 
-		return "/productionVolume";
+		return "productionVolume";
 	}
 }

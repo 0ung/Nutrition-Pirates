@@ -68,4 +68,18 @@ public class MainController {
 	@GetMapping("/suzu")
 	public void suzu() {
 	}
+
+	@GetMapping("/sengsanPlan")
+	public String sengsanPlan() {
+		return "SengSan_Plan";
+	}
+
+	@GetMapping("/systemtime")
+	public String getTime() {
+		return "systemtime";
+	}
+	@GetMapping("/stockcs")
+	public String getStock(){
+		return "stockCS";
+	}
 }
