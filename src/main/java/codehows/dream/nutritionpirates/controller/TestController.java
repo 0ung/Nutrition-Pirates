@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class TestController {
+
+
     @GetMapping(value = "/")
     public String index() {
         return "main";
     }
 
-    @GetMapping(value = {"/chulha", "/ChulHa","/stock/shipment/0"})
+    @GetMapping(value = {"/chulha", "/ChulHa"})
     public String getChulHa(){
         return "ChulHa";
     }
