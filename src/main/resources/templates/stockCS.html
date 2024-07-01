@@ -210,12 +210,17 @@
                                                             label: '현재 보유량',
                                                             data: quantities,
                                                             borderWidth: 1,
-                                                        }]
+                                                        }
+                                                    ]
                                                 },
                                                 options: {
                                                     scales: {
                                                         y: {
-                                                            beginAtZero: true
+                                                            beginAtZero: true,
+                                                            ticks: {
+                                                                stepSize: 100, // 기본 단위를 100으로 설정
+
+                                                            }
                                                         }
                                                     }
                                                 }
