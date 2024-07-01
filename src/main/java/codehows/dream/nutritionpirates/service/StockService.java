@@ -51,61 +51,6 @@ public class StockService {
     private final ProgramTimeService programTimeService;
     private final OrderRepository orderRepository;
     private final ProcessPlanRepository processPlanRepository;
-    /*public StockShowDTO getStockByWorkPlan(Long id) {
-        WorkPlan workPlan = workPlanRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("WorkPlan not found for id: " + id));
-
-        if (workPlan.getFacility() == Facility.boxMachine) {
-            return StockShowDTO.builder()
-
-                    .lotCode(workPlan.getLotCode().toString())
-                    .quantity(workPlan.getSemiProduct()*0.97)
-                    //.createDate(workPlan.getEndTime())
-                    .build();
-        } else {
-            throw new IllegalArgumentException("Facility is not boxMachine for WorkPlan id: " + id);
-        }
-    }*/
-
-    private String parseRawsCodes(String rawsCodes) {
-        if (rawsCodes == null) {
-            return null;
-        }
-
-        if (rawsCodes.contains("G")) {
-            return "흑마늘";
-        } else if (rawsCodes.contains("C")) {
-            return "양배추";
-        } else if (rawsCodes.contains("S")) {
-            return "석류";
-        } else if (rawsCodes.contains("P")) {
-            return "매실";
-        }
-
-        return "알 수 없음"; // 정의되지 않은 경우
-    }
-
-
-    // isExport 가 1(true) 이면 출고 0 (false) 이면 입고
-    /*public List<StockShowDTO> getStock(Pageable pageable) {
-        Page<Stock> stocks = stockRepository.findAll(pageable);
-        List<StockShowDTO> stockShowDTOList = new ArrayList<>();
-
-        stocks.forEach((e) -> {
-            stockShowDTOList.add(
-                    StockShowDTO.builder()
-                            .product(e.getWorkPlan().getProcessPlan().getOrder().getProduct().getValue())
-                            .lotCode(e.getWorkPlan().getLotCode().getLotCode())
-                            .quantity(e.getQuantity())
-                            .createDate(e.getCreateDate())
-                            .isExport(e.getExportDate() == null ? false : true)
-                            .exportDate(e.getExportDate())
-                            .build()
-            );
-        });
-        return stockShowDTOList;
-    }*/
-
     public void releaseStock(Long id) {
         Stock stock = stockRepository.findById(id).orElse(null);
 
@@ -160,45 +105,6 @@ public class StockService {
         });
         return list;
     }
-
-    /*// 출하 DTO 만들기
-    public List<ShipmentListDTO> getShip(Pageable pageable) {
-        //List<Order> orders2 = orderRepository.findAll();
-        Page<Order> orders = orderRepository.findAll(pageable);
-
-        List<ShipmentListDTO> shipmentListDTOList = new ArrayList<>();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        orders.forEach((e) -> {
-            // Format expectedDeliveryDate if it's not null
-            String formattedDate = null;
-            if (e.getExpectedDeliveryDate() != null) {
-                try {
-                    LocalDateTime localDateTime = LocalDateTime.parse(e.getExpectedDeliveryDate());
-                    formattedDate = localDateTime.format(formatter);
-                } catch (DateTimeParseException ex) {
-                    // Handle parsing exception if the format is incorrect
-                    log.error("Error parsing expectedDeliveryDate: " + e.getExpectedDeliveryDate(), ex);
-                }
-            }
-
-            Process process = getProcess(e.getId());
-            shipmentListDTOList.add(
-                    ShipmentListDTO.builder()
-                            .orderName(e.getOrderer().getName())
-                            .product(e.getProduct().getValue())
-                            .quantity(e.getQuantity())
-                            .orderDate(e.getOrderDate())
-                            .expectedDeliveryDate(formattedDate) // Assign formattedDate here
-                            .process(process)
-                            .urgency(e.isUrgency())
-                            .build()
-            );
-        });
-
-        return shipmentListDTOList;
-    }*/
 
     //* process 공정찾는 메서드*/
     public Process getProcess(Long orderId) {

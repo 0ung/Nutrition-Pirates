@@ -23,24 +23,24 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-@Controller  // 스프링에게 이 클래스가 컨트롤러임을 알립니다.
-@RequestMapping("/stock")  // 이 컨트롤러의 모든 매핑의 기본 경로(prefix)를 지정합니다.
-@RequiredArgsConstructor  // 생성자 주입을 위한 롬복 어노테이션입니다.
-@Log4j2  // Log4j2 로깅을 위한 롬복 어노테이션입니다.
+@Controller
+@RequestMapping("/stock")
+@RequiredArgsConstructor
+@Log4j2
 public class StockController {
 
-    private final StockService stockService;  // StockService 의존성 주입을 위한 필드
+    private final StockService stockService;
 
     @GetMapping("/{page}")
     public ResponseEntity<Page<StockShowDTO>> getStocks(Pageable pageable) {
         Page<StockShowDTO> stockShowDTOList = stockService.getStock(pageable);
-        return ResponseEntity.ok(stockShowDTOList);  // 조회된 데이터와 HTTP 상태 코드를 응답으로 반환
+        return ResponseEntity.ok(stockShowDTOList);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> exportStock(@PathVariable(name = "id") Long id) {
         stockService.releaseStock(id);
-        return new ResponseEntity<>(HttpStatus.OK);  // 처리 성공시 OK 응답 반환
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /*재고 입고 현황 조회  그래프 연결*/
@@ -49,7 +49,7 @@ public class StockController {
         try {
             return new ResponseEntity<>(stockService.getGraphStock(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // 예외 발생 시 BAD_REQUEST 반환
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -63,24 +63,6 @@ public class StockController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);  // 예외 발생 시 BAD_REQUEST 반환
         }
     }
-
-    /* 출하 현황 조회
-    @GetMapping("/shipment/{page}")
-    public String getShipmentPage(
-            @PathVariable("page") Optional<Integer>  page, Model model) {
-        try {
-            List<ShipmentListDTO> shipments = stockService.getShip(PageRequest.of(page == null ? 0 : page.get(), 10)); // Adjust page size as needed
-            model.addAttribute("shipments", shipments);
-            model.addAttribute("totalPages",stockService.getTotalPages());
-            model.addAttribute("currentPage" , page);
-
-            return "ChulHa";
-        } catch (Exception e) {
-            log.error("Error fetching shipment data: " + e.getMessage());
-            return "error"; // Handle error page
-        }
-    }*/
-
 
     /*재고 현황 엑셀 다운로드*/
     @GetMapping("/history")
