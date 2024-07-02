@@ -2,7 +2,6 @@ package codehows.dream.nutritionpirates.workplan.process;
 
 import java.sql.Timestamp;
 
-import org.hibernate.jdbc.Work;
 import org.springframework.stereotype.Component;
 
 import codehows.dream.nutritionpirates.constants.Facility;
@@ -38,9 +37,5 @@ public class A2WorkPlan implements WorkPlans {
 			.semiProduct(input)
 			.facilityStatus(FacilityStatus.STANDBY)
 			.build();
-	}
-
-	public String expectTime(int input) {
-		return 0 + "분";
 	}
 }

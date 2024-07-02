@@ -41,9 +41,51 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        <!-- chart.js 설치 -->
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"/>
+
+        async function sendTime(hours) {
+            const url = `/time/${hours}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('네트워크 오류 : error');
+                }
+
+                fetch('/time')
+                    .then(res => res.json())
+                    .then(data => {
+                        const systemTimeElement1 = document.getElementById('jw-time-1');
+                        const systemTimeElement2 = document.getElementById('jw-time-2');
+                        systemTimeElement1.innerText = data.formattedCurrentProgramTime;
+                        systemTimeElement2.innerText = data.formattedCurrentProgramTime;
+                    })
+                    .catch(err => console.error('데이터를 가져오지 못했습니다:', err));
+            } catch (error) {
+                console.error('에러 발생:', error);
+            }
+        }
+
+        // 페이지 로드 시 초기 시스템 시간을 가져와서 표시
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/time')
+                .then(res => res.json())
+                .then(data => {
+                    const systemTimeElement1 = document.getElementById('jw-time-1');
+                    const systemTimeElement2 = document.getElementById('jw-time-2');
+                    systemTimeElement1.innerText = data.formattedCurrentProgramTime;
+                    systemTimeElement2.innerText = data.formattedCurrentProgramTime;
+                })
+                .catch(err => console.error('초기 시스템 시간을 가져오지 못했습니다:', err));
+        });
     </script>
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"/>
 </th:block>
 
 
@@ -55,9 +97,9 @@
             <div class="jw-row">
                 <div class="jw-div1">
                     <label class="main-label">현재 재고 입고 현황
-                        <span style="margin-left: auto; width: 150px">
-                            <label class="jw-timeline">2024-06-19T12:45</label>
-                                </span>
+                        <div class="jw-timeline" style="margin-left: auto; width: 150px; float: right;">
+                            <span id="jw-time-1">Loading...</span> <!-- 시스템 시간을 표시할 곳 -->
+                        </div>
                     </label>
                     <div class="group">
                         <div class="chart1">
@@ -70,36 +112,54 @@
                             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
                             <script>
-                                const ctx = document.querySelector('#myChart1');
+                                document.addEventListener('DOMContentLoaded', function () {
 
-                                //만들위치, 설정값객체
-                                new Chart(ctx, {
-                                    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                                    data: {
-                                        labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
-                                        datasets: [
-                                            {
-                                                type: 'line',
-                                                label: '안전 재고량 적정선',
-                                                data: [1000, 1000, 1000, 1000],
-                                                borderWidth: 1,
-                                            },
-                                            {
-                                                label: '재고(BOX)',
-                                                data: [2000, 500, 1500, 1000],
-                                                borderWidth: 1,
-                                            }],
-
-
-                                    },
-                                    options: {
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true
+                                    // Fetch API를 사용하여 데이터를 가져오기
+                                    fetch('/stock/graphimport')
+                                        .then(res => {
+                                            if (!res.ok) {
+                                                throw new Error('네트워크 응답이 올바르지 않습니다.');
                                             }
-                                        }
-                                    }
+                                            return res.json();
+                                        })
+                                        .then(data => {
+                                            console.log(data); // 데이터 전체를 콘솔에 출력
+
+                                            // 차트를 업데이트
+                                            const ctx = document.getElementById('myChart1').getContext('2d');
+                                            const labels = data.map(item => item.product);
+                                            const quantities = data.map(item => item.quantity);
+
+                                            new Chart(ctx, {
+                                                type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [
+                                                        {
+                                                            type: 'line',
+                                                            label: '안전 재고량 적정선',
+                                                            data: [300, 300, 300, 300],
+                                                            borderWidth: 1,
+                                                        },
+                                                        {
+                                                            label: '현재 보유량',
+                                                            data: quantities,
+                                                            borderWidth: 1,
+                                                        }]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        })
+                                        .catch(err => console.error('데이터 가져오기 오류:', err));
                                 });
+
+
                             </script>
                         </div>
                     </div>
@@ -107,10 +167,10 @@
                 </div>
 
                 <div class="jw-div2">
-                    <label class="main-label">월 재고 출고 현황
-                        <span style="margin-left: auto; width: 150px">
-                            <label class="jw-timeline">2024-06-19T12:45</label>
-                            </span>
+                    <label class="main-label">현재 재고 출고 현황
+                        <div class="jw-timeline" style="margin-left: auto; width: 150px; float: right;">
+                            <span id="jw-time-2">Loading...</span> <!-- 시스템 시간을 표시할 곳 -->
+                        </div>
                     </label>
                     <div class="group">
                         <div class="chart2">
@@ -123,29 +183,50 @@
                             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
                             <script>
-                                const ctx2 = document.querySelector('#myChart2');
+                                document.addEventListener('DOMContentLoaded', function () {
 
-                                //만들위치, 설정값객체
-                                new Chart(ctx2, {
-                                    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
-                                    data: {
-                                        labels: ['양배추즙', '흑마늘즙', '석류 젤리 스틱', '매실 젤리 스틱'],
-                                        datasets: [
-                                            {
-                                                label: '월 재고 출고 현황',
-                                                data: [700, 300, 1500, 1000],
-                                                borderWidth: 1,
-                                            }],
-
-
-                                    },
-                                    options: {
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true
+                                    // Fetch API를 사용하여 데이터를 가져오기
+                                    fetch('/stock/graphexport')
+                                        .then(res => {
+                                            if (!res.ok) {
+                                                throw new Error('네트워크 응답이 올바르지 않습니다.');
                                             }
-                                        }
-                                    }
+                                            return res.json();
+                                        })
+                                        .then(data => {
+                                            console.log(data); // 데이터 전체를 콘솔에 출력
+
+                                            // 차트를 업데이트
+                                            const ctx = document.getElementById('myChart2').getContext('2d');
+                                            const labels = data.map(item => item.product);
+                                            const quantities = data.map(item => item.quantity);
+
+                                            new Chart(ctx, {
+                                                type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [
+                                                        {
+                                                            label: '현재 보유량',
+                                                            data: quantities,
+                                                            borderWidth: 1,
+                                                        }
+                                                    ]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            ticks: {
+                                                                stepSize: 100, // 기본 단위를 100으로 설정
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        })
+                                        .catch(err => console.error('데이터 가져오기 오류:', err));
                                 });
                             </script>
                         </div>

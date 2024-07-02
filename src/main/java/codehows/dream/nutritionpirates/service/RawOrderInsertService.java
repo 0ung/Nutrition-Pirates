@@ -1,31 +1,38 @@
 package codehows.dream.nutritionpirates.service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import codehows.dream.nutritionpirates.constants.RawProductName;
-import codehows.dream.nutritionpirates.constants.ProductName;
-import codehows.dream.nutritionpirates.constants.RawsReason;
-import codehows.dream.nutritionpirates.constants.Status;
 import codehows.dream.nutritionpirates.dto.*;
-import codehows.dream.nutritionpirates.entity.Order;
-import codehows.dream.nutritionpirates.entity.Raws;
-import codehows.dream.nutritionpirates.repository.OrderRepository;
-import codehows.dream.nutritionpirates.repository.RawRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import codehows.dream.nutritionpirates.constants.ProductName;
+import codehows.dream.nutritionpirates.constants.RawProductName;
+import codehows.dream.nutritionpirates.constants.RawsReason;
+import codehows.dream.nutritionpirates.constants.Status;
+import codehows.dream.nutritionpirates.entity.Order;
+import codehows.dream.nutritionpirates.entity.Raws;
+import codehows.dream.nutritionpirates.repository.OrderRepository;
+import codehows.dream.nutritionpirates.repository.RawRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 
 @Service
@@ -83,7 +90,7 @@ public class RawOrderInsertService {
     }
 
 
-    private Timestamp calculateExpectedImportDate(Timestamp orderDateTime, RawProductName product) {
+    public Timestamp calculateExpectedImportDate(Timestamp orderDateTime, RawProductName product) {
         LocalDateTime orderDateTimeLocal = orderDateTime.toLocalDateTime();
         LocalTime time = orderDateTimeLocal.toLocalTime();
         DayOfWeek dayOfWeek = orderDateTimeLocal.getDayOfWeek();
@@ -187,8 +194,6 @@ public class RawOrderInsertService {
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
         LocalDateTime now = timestamp.toLocalDateTime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        //LocalDateTime now = LocalDateTime.now();
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String formattedDate = now.format(formatter);
 
         int quantity = rawOrderInsertDTO.getQuantity();
@@ -243,101 +248,159 @@ public class RawOrderInsertService {
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-        Date importDate = new Date(timestamp.getTime());
+        //Date importDate = new Date(timestamp.getTime());
 
         // deadLine 계산
         LocalDateTime deadLineDateTime = timestamp.toLocalDateTime().plusDays(14);
         Timestamp deadLineTimestamp = Timestamp.valueOf(deadLineDateTime);
 
+        //importDate 를 Timestamp로 설정
+        Timestamp importDate = timestamp;
+
         raw.rawImport(importDate, Status.IMPORT, deadLineTimestamp);
         rawRepository.save(raw);
     }
+
 
     public void rawExport(String rawsCode) {
         Raws raw = rawRepository.findByRawsCode(rawsCode).orElse(null);
 
         // 프로그램 시간설정 적용
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
-        Date exportDate = new Date(timestamp.getTime());
+
+        Timestamp exportDate = timestamp;
+        //Date exportDate = new Date(timestamp.getTime());
 
         raw.rawExport(exportDate, Status.EXPORT, RawsReason.DISPOSE);
         rawRepository.save(raw);
     }
-    // 발주등록이후 테이블
-     /*public List<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
-        List<RawOrderListDTO> list = new ArrayList<>();
+    // 발주 등록 이후 테이블 - pageable로 변환
+    public Page<RawOrderListDTO> getRawOrderList(Pageable pageable) {
 
-        Page<Raws> pages = rawRepository.findAll(pageable);
+        Page<Raws> pages = rawRepository.findByStatusNot(Status.EXPORT, pageable);
 
-//       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-//
-//        pages.forEach((e) -> {
-//            String formattedDate = null;
-//            if(e.getOrderDate() != null) {
-//                //LocalDateTime localDateTime = LocalDateTime.parse(e.getOrderDate());
-//                formattedDate = localDateTime.format(formatter);
-//            }
-//
-//            list.add(
-//                    RawOrderListDTO.builder()
-//                            .rawsCode(e.getRawsCode())
-//                            .product(e.getProduct().getValue())
-//                            .quantity(e.getQuantity())
-//                            .status(e.getStatus().getValue())
-//                            .orderDate(formattedDate)
-//                            .importDate(e.getImportDate())
-//                            .build()
-//            )
-//
-//        });
+        List<RawOrderListDTO> list = pages.stream()
+                .map(e -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    }*/
+                    String formattedOrder = null;
+                    String formattedImport = null;
+
+                    if (e.getOrderDate() != null) {
+                        Timestamp timestamp = e.getOrderDate();
+                        LocalDateTime localDateTime = timestamp.toLocalDateTime();
+                        formattedOrder = localDateTime.format(formatter);
+                    }
+
+                    if (e.getImportDate() != null) {
+                        Timestamp timestamp = e.getImportDate();
+                        LocalDateTime localDateTime = timestamp.toLocalDateTime();
+                        formattedImport = localDateTime.format(formatter);
+                    }
+
+                    return RawOrderListDTO.builder()
+                            .rawsCode(e.getRawsCode())
+                            .product(e.getProduct().getValue())
+                            .quantity(e.getQuantity())
+                            .status(e.getStatus().getValue())
+                            .orderDate(formattedOrder)
+                            .importDate(formattedImport)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
+    }
+
+    // 발주현황에서 엑설 파일로 다운로드
+    @Transactional
+    public Workbook getHistoryRaw() {
+
+        // Pageable을 사용하지 않고 모든 데이터를 가져오기 위해 임의의 Pageable 생성
+        Pageable pageable = Pageable.unpaged();
+
+        // getRawOrderList메서드로 호출하여 RawOrderListDTO 리스트 가져오기
+        Page<RawOrderListDTO> page = getRawOrderList(pageable);
+        List<RawOrderListDTO> list = page.getContent();
+
+        Workbook workbook = new XSSFWorkbook();
+
+        // 엑셀 아래 시트 이름 설정
+        Sheet sheet = workbook.createSheet(LocalDate.now() + " 원자재 입고 내역");
+
+        Row headerRow = sheet.createRow(0);
+        String[] headers = new String[]{"원자재제품코드", "원자재명", "수량", "입고상태", "주문일자", "입고일자"};
+
+        for (int i = 0; i < headers.length; i++) {
+            headerRow.createCell(i).setCellValue(headers[i]);
+        }
+
+        for (int i = 1; i < list.size() + 1; i++) {
+            Row row = sheet.createRow(i);
+            RawOrderListDTO data = list.get(i - 1);
+
+            row.createCell(0).setCellValue(data.getRawsCode());
+            row.createCell(1).setCellValue(data.getProduct());
+            row.createCell(2).setCellValue(data.getQuantity());
+            row.createCell(3).setCellValue(data.getStatus());
+            row.createCell(4).setCellValue(data.getOrderDate());
+            row.createCell(5).setCellValue(data.getImportDate());
+        }
+        return workbook;
+    }
 
 
     // 재고현황 테이블
-    public List<RawsListDTO> getRawStockList(Pageable pageable) {
 
-        List<RawsListDTO> list = new ArrayList<>();
-
+    public Page<RawsListDTO> getRawStockList(Pageable pageable) {
+        // 페이지네이션된 원자재 리스트 조회
         Page<Raws> pages = rawRepository.findAll(pageable);
-        int totalPages = pages.getTotalPages();
 
-        pages.forEach((e) -> {
+        // 각 원자재의 상태에 따라 DTO로 변환하여 리스트 생성
+        List<RawsListDTO> list = pages.stream().map(e -> {
+            // 상태에 따라 적절한 날짜 선택
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-            // 입고대기 - 주문일, 입고 - 입고일 , 출고 - 출고일 날짜 선택
-            Date selectDate;
+            String selectDate = null;
             switch (e.getStatus()) {
                 case WAITING:
-                    //selectDate = e.getOrderDate();
-                    selectDate = new Date(e.getOrderDate().getTime());
+                    if (e.getOrderDate() != null) {
+                        LocalDateTime orderDate = e.getOrderDate().toLocalDateTime();
+                        selectDate = orderDate.format(formatter); // 주문일 선택
+                    }
                     break;
                 case IMPORT:
-                    selectDate = e.getImportDate();
-                    break;
+                    if (e.getImportDate() != null) {
+                        LocalDateTime importDate = e.getImportDate().toLocalDateTime();
+                        selectDate = importDate.format(formatter); // 입고일 선택
+                    }
                 case EXPORT:
-                    selectDate = e.getExportDate();
-                    break;
+                    if (e.getExportDate() != null) {
+                        LocalDateTime exportDate = e.getExportDate().toLocalDateTime();
+                        selectDate = exportDate.format(formatter); // 출고일 선택
+                    }
                 default:
-                    selectDate = new Date(e.getOrderDate().getTime());
+                    if (e.getOrderDate() != null) {
+                        LocalDateTime defaultDate = e.getOrderDate().toLocalDateTime();
+                        selectDate = defaultDate.format(formatter); // 기본적으로 주문일 선택
+                    }
             }
 
-            list.add(RawsListDTO.builder()
+            // RawsListDTO 객체 생성
+            return RawsListDTO.builder()
                     .rawsCode(e.getRawsCode())
                     .status(e.getStatus().getValue())
                     .product(e.getProduct().getValue())
                     .Date(selectDate)
                     .quantity(e.getQuantity())
                     .rawsReason(e.getRawsReason() != null ? e.getRawsReason().getValue() : "")
-                    .build());
-        });
+                    .build();
+        }).collect(Collectors.toList());
 
-        // 원하는 위치에 전체 페이지 수를 사용
-        System.out.println("Total pages: " + totalPages);
-
-        return list;
+        // Page 객체로 변환하여 반환
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
     }
-
 
     // 입고된 총 양만 list에 담아서 보여주기
     public List<RawShowGraphDTO> getRawStockGraph() {
@@ -365,35 +428,44 @@ public class RawOrderInsertService {
     }
 
     // 원자재현황에서 엑설 파일로 다운로드
-    @Transactional
     public Workbook getHistory() {
-        List<Raws> list = rawRepository.findAll();
+        List<Raws> rawsList = rawRepository.findAll();
         Workbook workbook = new XSSFWorkbook();
 
-        // Create a sheet with a name
         Sheet sheet = workbook.createSheet(LocalDate.now() + " 주문 내역");
 
-        // Create header row
         Row headerRow = sheet.createRow(0);
-        String[] headers = new String[]{"원자재제품코드", "원자재명", "상태(입고,출고,입고대기)", "주문일자", "입고일자", "출고일자"
-                , "수량", "사유"};
+        String[] headers = new String[]{"원자재제품코드", "원자재명", "상태(입고,출고,입고대기)", "주문일자", "입고일자", "출고일자", "수량", "사유"};
 
         for (int i = 0; i < headers.length; i++) {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
 
-        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        // Fill data rows
-        for (int i = 1; i < list.size() + 1; i++) {
+        CreationHelper creationHelper = workbook.getCreationHelper();
+        CellStyle dateCellStyle = workbook.createCellStyle();
+        dateCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("yyyy-MM-dd HH:mm"));
+
+        for (int i = 1; i < rawsList.size() + 1; i++) {
             Row row = sheet.createRow(i);
-            Raws data = list.get(i - 1);
-            //Raws raws = rawOrderInsertRepository.findByRawsCode(data.getRawsCode()).orElse(null);
+            Raws data = rawsList.get(i - 1);
+
             row.createCell(0).setCellValue(data.getRawsCode());
             row.createCell(1).setCellValue(data.getProduct().getValue());
             row.createCell(2).setCellValue(data.getStatus().getValue());
-            row.createCell(3).setCellValue(data.getOrderDate());
-            row.createCell(4).setCellValue(data.getImportDate());
-            row.createCell(5).setCellValue(data.getExportDate());
+
+            // Set dates with the proper format
+            Cell orderDateCell = row.createCell(3);
+            orderDateCell.setCellValue(data.getOrderDate());
+            orderDateCell.setCellStyle(dateCellStyle);
+
+            Cell importDateCell = row.createCell(4);
+            importDateCell.setCellValue(data.getImportDate());
+            importDateCell.setCellStyle(dateCellStyle);
+
+            Cell exportDateCell = row.createCell(5);
+            exportDateCell.setCellValue(data.getExportDate());
+            exportDateCell.setCellStyle(dateCellStyle);
+
             row.createCell(6).setCellValue(data.getQuantity());
             if (data.getRawsReason() != null) {
                 row.createCell(7).setCellValue(data.getRawsReason().getValue());
@@ -452,7 +524,8 @@ public class RawOrderInsertService {
         return notification;
     }
 
-    public List<RawPeriodDTO> getPeriodList(Pageable pageable) {
+    /*보관기한 3일 이하 원자재 List - /api/rawperiod/{page}*/
+    public Page<RawPeriodDTO> getPeriodList(Pageable pageable) {
 
         Timestamp timestamp = programTimeService.getProgramTime().getCurrentProgramTime();
         LocalDateTime currentDate = timestamp.toLocalDateTime();
@@ -468,18 +541,18 @@ public class RawOrderInsertService {
                 timestamp,
                 pageable);
 
-        List<RawPeriodDTO> list = new ArrayList<>();
+        List<RawPeriodDTO> list = pages.stream().map(e ->
 
-        pages.forEach((e) -> {
-            list.add(RawPeriodDTO.builder()
+            RawPeriodDTO.builder()
                     .rawsCode(e.getRawsCode())
                     .product(e.getProduct().getValue())
-                    .importDate(e.getImportDate())
+                    .importDate(new Date(e.getImportDate().getTime()))
                     .deadLine(new Date(e.getDeadLine().getTime()))
                     .quantity(e.getQuantity())
-                    .build());
-        });
-        return list;
+                    .build()
+        ).collect(Collectors.toList());
+
+        return new PageImpl<>(list, pageable, pages.getTotalElements());
     }
 
     //첫번쨰 생성이 되면
@@ -515,7 +588,6 @@ public class RawOrderInsertService {
         double paper = Math.ceil(quantity * 30 / 0.97);
         double box = Math.ceil(quantity / 0.97);
 
-        //return new RawBOMDTO(garlic, honey, paper, box);
         return new RawBOMDTO(0, garlic, 0, 0, honey, 0, paper, box);
     }
 
@@ -529,7 +601,6 @@ public class RawOrderInsertService {
         double paper = Math.ceil(quantity * 30 / 0.97);
         double box = Math.ceil(quantity / 0.97);
 
-        //return new RawBOMDTO(cabbage, honey, paper, box);
         return new RawBOMDTO(cabbage, 0, 0, 0, honey, 0, paper, box);
     }
 
@@ -543,7 +614,6 @@ public class RawOrderInsertService {
         double paper = Math.ceil(quantity * 25 / 0.97);
         double box = Math.ceil(quantity / 0.97);
 
-        //return new RawBOMDTO(pomegranate, collagen, paper, box);
         return new RawBOMDTO(0, 0, pomegranate, 0, 0, collagen, paper, box);
     }
 
@@ -557,7 +627,6 @@ public class RawOrderInsertService {
         double paper = Math.ceil(quantity * 25 / 0.97);
         double box = Math.ceil(quantity / 0.97);
 
-        //return new RawBOMDTO(plum, collagen, paper, box);
         return new RawBOMDTO(0, 0, 0, plum, 0, collagen, paper, box);
     }
 
@@ -658,10 +727,6 @@ public class RawOrderInsertService {
                 result.add(new RawOrderPlanDTO(partnerName, rawProductName.getValue(), remainQuantity, formattedExpectedImportDate));
             }
         }
-
         return result;
-
-
     }
-
 }

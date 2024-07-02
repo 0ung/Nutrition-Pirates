@@ -2,7 +2,6 @@ package codehows.dream.nutritionpirates.dto;
 
 import java.util.List;
 
-import codehows.dream.nutritionpirates.entity.WorkPlan;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +22,6 @@ public class ActivateFacilityDTO {
 	private List<WorkPlanDTO> boxMachine;
 	private List<WorkPlanDTO> metalDetector;
 	private List<WorkPlanDTO> washer;
-	private List<WorkPlanDTO> weighing;
 	private List<WorkPlanDTO> freeze;
+	private List<WorkPlanDTO> weighing;
 }

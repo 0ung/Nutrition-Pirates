@@ -1,7 +1,10 @@
 package codehows.dream.nutritionpirates.dto;
 
-
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
@@ -9,18 +12,6 @@ import lombok.*;
 @Builder
 @ToString
 public class RawBOMDTO {
-
-    /*private double ingredient1;
-    private double ingredient2;
-    private double paper;
-    private double box;
-
-    public RawBOMDTO(double ingredient1, double ingredient2, double paper, double box) {
-        this.ingredient1 = ingredient1;
-        this.ingredient2 = ingredient2;
-        this.paper = paper;
-        this.box = box;
-    }*/
 
     private double cabbage;
     private double garlic;

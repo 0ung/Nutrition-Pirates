@@ -1,6 +1,5 @@
 package codehows.dream.nutritionpirates.repository;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +28,8 @@ public interface RawRepository extends JpaRepository<Raws, Long> {
 			Pageable pageable);
 
 	List<Raws> findByProduct(RawProductName rawProductName);
+
+	Page<Raws> findByStatusNot(Status status, Pageable pageable);
 }
 
 

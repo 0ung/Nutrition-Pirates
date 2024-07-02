@@ -32,12 +32,26 @@ public class FacilityService {
 	//각 제품 별 가동상태, 진행률
 	// , 세부 내용 표시
 
+	public List<WorkPlan> getFacilityStatus(Facility facility) {
+		List<WorkPlan> workPlans = workPlanRepository.findByEndTimeIsNullAndFacilityStatusAndFacility(
+			FacilityStatus.WORKING, facility);
+		List<WorkPlan> workPlans1 = workPlanRepository.findByEndTimeIsNullAndFacilityStatusAndFacility(
+			FacilityStatus.AFTER_TREATMENT, facility);
+		List<WorkPlan> result = new ArrayList<>();
+
+		result.addAll(workPlans);
+		result.addAll(workPlans1);
+
+		return result;
+	}
+
 	//가동률
+	//코드 변환
 	public List<FacilityStatusDTO> getFacilityStatus() {
 		HashMap<Facility, List<WorkPlan>> data = new HashMap<>();
 		List<FacilityStatusDTO> list = new ArrayList<>();
 		Arrays.stream(Facility.getAllFacilities()).forEach(
-			e -> data.put(e, workPlanService.getActivateFacility(e))
+			e -> data.put(e, getFacilityStatus(e))
 		);
 		Facility[] facilities = Facility.getAllFacilities();
 
@@ -62,8 +76,8 @@ public class FacilityService {
 			} else {
 				facilityStatusDTO.setFacility(e);
 				facilityStatusDTO.setFacilityStatus(FacilityStatus.STANDBY);
-
 			}
+			facilityStatusDTO.setFacility(e);
 			list.add(facilityStatusDTO);
 		});
 		return list;

@@ -47,19 +47,17 @@ public class Raws {
 
 	//주문날짜
 	@Column(nullable = false)
-	//private Date orderDate;
 	private Timestamp orderDate;
 
 	//예상 입고일
-	//private Date expectedImportDate;
 	private Timestamp expectedImportDate;
 
 	//입고
-	private Date importDate;
-	//private Timestamp importDate;
+	//private Date importDate;
+	private Timestamp importDate;
 
 	//출고
-	private Date exportDate;
+	private Timestamp exportDate;
 
 	//사유
 	@Enumerated(EnumType.STRING)
@@ -73,17 +71,13 @@ public class Raws {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-	public void rawImport(Date importDate, Status status, Timestamp deadLine) {
-
+	public void rawImport(Timestamp importDate, Status status, Timestamp deadLine) {
 		this.importDate = importDate;
 		this.status = status;
 		this.deadLine = deadLine;
 	}
 
-	public void rawExport(Date exportDate, Status status, RawsReason rawsReason) {
-		/*this.exportDate = Date.valueOf(LocalDate.now());
-		this.status = status.EXPORT;
-		this.rawsReason = rawsReason.DISPOSE;*/
+	public void rawExport(Timestamp exportDate, Status status, RawsReason rawsReason) {
 		this.exportDate = exportDate;
 		this.status = status;
 		this.rawsReason = rawsReason;

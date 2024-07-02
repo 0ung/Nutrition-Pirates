@@ -1,62 +1,320 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default}">
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <link th:href="@{/css/main.css}" type="text/css" rel="stylesheet" id="main.css"/>
+    <style>
+        .card {
+            margin: 10px;
+            background: rgb(255, 250, 235);
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </th:block>
-
+<!-- ===============================================-->
+<!--    JavaScripts-->
+<!-- ===============================================-->
+<!-- 사용자 스크립트 추가 -->
 
 <th:block layout:fragment="script">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
+    <!--   title   -->
+
+
+    <!-- chart.js 설치 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            var canvas = document.getElementById('doughnutChartCanvas');
-            var ctx = canvas.getContext('2d');
+        // 서버에서 전달된 데이터를 JSON 형태로 JavaScript 변수로 변환
+        const product = /*[[${product}]]*/ [];
+        const daily = /*[[${daily}]]*/ [];
+        const monthly = /*[[${monthly}]]*/ [];
+        const status = /*[[${status}]]*/ [];
+        const expect = /*[[${expect}]]*/ [];
+        const capa = /*[[${capa}]]*/ [];
+        const raws = /*[[${raws}]]*/ [];
+        const rawsOrder = /*[[${rawsOrder}]]*/ [];
+    </script>
 
-            var total = 100;
-            var used = 70;
-            var remaining = total - used;
+    <script>
+        const ctx = document.getElementById('myChart');
+        // 장비 이름과 해당 데이터를 저장할 객체 생성
+        const dataMap = {
+            '즙포장기1': 0,
+            '즙포장기2': 0,
+            '스틱포장기1': 0,
+            '스틱포장기2': 0,
+            '추출기1': 0,
+            '추출기2': 0,
+            '살균기1': 0,
+            '살균기2': 0,
+            '혼합기': 0,
+            '여과기': 0,
+            'BOX포장기': 0,
+            '금속검출기': 0
+        };
 
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    /*labels: ['진행도'],*/
-                    datasets: [{
-                        /*label: '첫 번째 데이터셋','두 번째 데이터 셋',*/
-                        data: [used, remaining],
-                        backgroundColor:
-                            ['rgba(157,157,157,0.2)',
-                                'rgb(111,150,62,0.2)'],
-                        borderColor: 'rgb(0,0,0,0.2)',
+        daily.forEach(e => {
+            switch (e.facility) {
+                case "juiceMachine1":
+                    dataMap['즙포장기1'] += e.output;
+                    break;
+                case "juiceMachine2":
+                    dataMap['즙포장기2'] += e.output;
+                    break;
+                case "StickMachine1":
+                    dataMap['스틱포장기1'] += e.output;
+                    break;
+                case "StickMachine2":
+                    dataMap['스틱포장기2'] += e.output;
+                    break;
+                case "extractor1":
+                    dataMap['추출기1'] += e.output;
+                    break;
+                case "extractor2":
+                    dataMap['추출기2'] += e.output;
+                    break;
+                case "sterilizer1":
+                    dataMap['살균기1'] += e.output;
+                    break;
+                case "sterilizer2":
+                    dataMap['살균기2'] += e.output;
+                    break;
+                case "mixer":
+                    dataMap['혼합기'] += e.output;
+                    break;
+                case "filter":
+                    dataMap['여과기'] += e.output;
+                    break;
+                case "boxMachine":
+                    dataMap['BOX포장기'] += e.output;
+                    break;
+                case "metalDetector":
+                    dataMap['금속검출기'] += e.output;
+                    break;
+            }
+        });
+
+        // dataMap 객체의 값을 기반으로 labels와 data 배열 생성
+        const labels = Object.keys(dataMap);
+        const data = Object.values(dataMap);
+
+        // Chart.js 차트 생성
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "일일생산량",
+                        data: data,
                         borderWidth: 1,
-                        /* borderRadius: 30,*/
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
+            }
+        });
+    </script>
+    <script>
+        const monthlyChart = document.getElementById('myChart2');
+        // 장비 이름과 해당 데이터를 저장할 객체 생성
+        const dataMapM = {
+            '즙포장기1': 0,
+            '즙포장기2': 0,
+            '스틱포장기1': 0,
+            '스틱포장기2': 0,
+            '추출기1': 0,
+            '추출기2': 0,
+            '살균기1': 0,
+            '살균기2': 0,
+            '혼합기': 0,
+            '여과기': 0,
+            'BOX포장기': 0,
+            '금속검출기': 0
+        };
+
+        daily.forEach(e => {
+            switch (e.facility) {
+                case "juiceMachine1":
+                    dataMapM['즙포장기1'] += e.output;
+                    break;
+                case "juiceMachine2":
+                    dataMapM['즙포장기2'] += e.output;
+                    break;
+                case "StickMachine1":
+                    dataMapM['스틱포장기1'] += e.output;
+                    break;
+                case "StickMachine2":
+                    dataMapM['스틱포장기2'] += e.output;
+                    break;
+                case "extractor1":
+                    dataMapM['추출기1'] += e.output;
+                    break;
+                case "extractor2":
+                    dataMapM['추출기2'] += e.output;
+                    break;
+                case "sterilizer1":
+                    dataMapM['살균기1'] += e.output;
+                    break;
+                case "sterilizer2":
+                    dataMapM['살균기2'] += e.output;
+                    break;
+                case "mixer":
+                    dataMapM['혼합기'] += e.output;
+                    break;
+                case "filter":
+                    dataMapM['여과기'] += e.output;
+                    break;
+                case "boxMachine":
+                    dataMapM['BOX포장기'] += e.output;
+                    break;
+                case "metalDetector":
+                    dataMapM['금속검출기'] += e.output;
+                    break;
+            }
+        });
+
+        // dataMapM 객체의 값을 기반으로 labels와 data 배열 생성
+        const Mlabels = Object.keys(dataMapM);
+        const Mdata = Object.values(dataMapM);
+
+        // Chart.js 차트 생성
+        const chart1 = new Chart(monthlyChart, {
+            type: 'bar',
+            data: {
+                labels: Mlabels,
+                datasets: [
+                    {
+                        label: "월간생산량",
+                        data: Mdata,
+                        borderWidth: 1,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const labels = [];
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '양',
+                        data: [],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderWidth: 2,
+                        borderRadius: Number.MAX_VALUE,
+                        borderSkipped: false,
+                    }
+                ]
+            };
+            product.forEach(e => {
+                labels.push(e.product);
+                data.datasets[0].data.push(e.quantity); // 수정된 부분
             });
+
+            console.log(labels);
+            console.log(data);
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: '완제품 재고 보유한 현황'
+                        }
+                    }
+                },
+            };
+            const myChart = new Chart(
+                document.getElementById('myChart6'),
+                config
+            );
         });
 
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const labels = [];
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '양',
+                        data: [],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderWidth: 2,
+                        borderRadius: Number.MAX_VALUE,
+                        borderSkipped: false,
+                    }
+                ]
+            };
+            raws.forEach(e => {
+                labels.push(e.product);
+                data.datasets[0].data.push(e.quantity); // 수정된 부분
+            });
 
-    <!-- Chart.js 및 Datalabels 플러그인 CDN 링크 추가 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: '원자재 보유 현황'
+                        }
+                    }
+                },
+            };
+            const myChart = new Chart(
+                document.getElementById('myChart7'),
+                config
+            );
+        });
+
+    </script>
 </th:block>
-
-
-
-
 <div layout:fragment="content">
     <div class="main-content">
         <div class="main-container2">
             <div class="main-card2 main-cart">
-                <div class="main-title_form mt-5 mb-5 main-centered"><h1 class="east-sea-dokdo-regular main-title">뉴트리션 해적단 MES 시스템</h1></div>
+                <div class="main-title_form mt-5 mb-5 main-centered"><h1 class="east-sea-dokdo-regular main-title">뉴트리션
+                    해적단 MES 시스템</h1></div>
 
                 <div class="row m-5">
                     <!--  일일 생산량 -->
@@ -77,231 +335,199 @@
                 <div class="row m-5">
                     <!--  모든 설비 진행 현황 -->
                     <div class="col">
-                        <h3 class="east-sea-dokdo-regular  sub-title">모든 설비 진행 현황</h3>
-                        <div style="  display: flex; justify-content: center; align-items: center;">
-                            <div id="main-content">
-                                <div class="main-container" id="main-container">
-                                    <label class="main-label">각 설비 실시간 상태 현황</label>
-                                    <div class="container" style="padding: 20px;  text-align: center; /* 가운데 정렬 */
-    vertical-align: middle; /* 수직 가운데 정렬 */">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label class="main-label">포장기</label>
-                                                <div class="row">
-                                                    <div class="card-group" id="pojang">
-                                                        <div class="col-md-6">
-                                                            <div class="card rounded-3" data-bs-toggle="modal"
-                                                                 data-bs-target="#productionamount" data-title="즙 포장기1">
-                                                                <div class="card-img-top">
-                                                                    <p class="card-text">가동중</p>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <h5 class="card-title">즙 포장기1</h5>
-                                                                </div>
-                                                                <div class="card-footer">
-                                                                    <small class="text-muted">진행도 50%</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card rounded-3" data-bs-toggle="modal"
-                                                                 data-bs-target="#productionamount" data-title="즙 포장기2">
-                                                                <div class="card-img-top">
-                                                                    <p class="card-text">가동중</p>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <h5 class="card-title">즙 포장기2</h5>
-                                                                </div>
-                                                                <div class="card-footer">
-                                                                    <small class="text-muted">진행도 80%</small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="card rounded-3" data-bs-toggle="modal"
-                                                                 data-bs-target="#productionamount" data-title="스틱 포장기1">
-                                                                <div class="card-img-top">
-                                                                    <p class="card-text">비가동중</p>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <h5 class="card-title">스틱 포장기1</h5>
-                                                                </div>
+                        <h3 class="east-sea-dokdo-regular sub-title">모든 설비 진행 현황</h3>
+                        <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
 
-                                                                <div class="card-footer">
-                                                                    <small class="text-muted">-</small>
-                                                                </div>
-                                                            </div>
+                            <!-- Juice Machine 1 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'juiceMachine1'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(#strings.toString(statusItem.facilityStatus)) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">즙 포장기1</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(#strings.toString(statusItem.process)) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
 
-                                                            <div class="card rounded-3" data-bs-toggle="modal"
-                                                                 data-bs-target="#productionamount" data-title="즙 포장기2">
-                                                                <div class="card-img-top">
-                                                                    <p class="card-text">가동중</p>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <h5 class="card-title">스틱 포장기2</h5>
-                                                                </div>
-                                                                <div class="card-footer">
-                                                                    <small class="text-muted">진행도 99%</small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="main-label">추출기</label>
-                                                <div class="card-group" id="chuchul">
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="추출기1">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">추출기1</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 70%</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="추출기2">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">추출기2</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 70%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="main-label">살균기</label>
-                                                <div class="card-group" id="salgyun">
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="살균기1">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">살균기1</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 58%</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="살균기2">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">살균기2</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 80%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="main-label">혼합기</label>
-                                                <div class="card-group" id="honhab">
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="혼합기">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">혼합기</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 90%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="main-label">여과기</label>
-                                                <div class="card-group" id="yeogyoa">
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="여과기">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">비가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">여과기</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 0%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="main-label">BOX포장기</label>
-                                                <div class="card-group" id="boxPojang">
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="BOX포장기">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">BOX포장기</h5>
+                            <!-- Juice Machine 2 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'juiceMachine2'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(#strings.toString(statusItem.facilityStatus)) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">즙 포장기2</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(#strings.toString(statusItem.process)) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
 
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted"> 진행도 75%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="main-label">금속검출기</label>
-                                                <div class="card-group" id="gumsa">
-                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
-                                                         data-title="금속 검출기">
-                                                        <div class="card-img-top">
-                                                            <p class="card-text">가동중</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">금속검출기</h5>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <small class="text-muted">진행도 63%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <!-- Stick Machine 1 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'StickMachine1'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">스틱 포장기1</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
 
+                            <!-- Stick Machine 2 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'StickMachine2'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">스틱 포장기2</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
 
-                                            <div class="modal" id="productionamount" tabindex="-1" >
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">카드 제목</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="chart-card" id="div1">
-                                                                <canvas id="doughnutChartCanvas"></canvas>
-                                                            </div>
-                                                            <div class="chart-card" id="div2">
-                                                                <p>내용</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <!-- Extractor 1 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'extractor1'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">추출기 1</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
 
+                            <!-- Extractor 2 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'extractor2'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">추출기 2</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
 
-                                        </div>
-                                    </div>
+                            <!-- Sterilizer 1 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'sterilizer1'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">살균기1</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
+
+                            <!-- Sterilizer 2 -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'sterilizer2'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">살균기2</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
+
+                            <!-- Filter -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'filter'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">여과기</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
+
+                            <!-- Box Machine -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'boxMachine'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">박스 포장기</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
+                                </div>
+                            </div>
+
+                            <!-- Metal Detector -->
+                            <div th:each="statusItem : ${status}"
+                                 th:if="${#strings.toString(statusItem.facility) == 'metalDetector'}"
+                                 class="card rounded-3">
+                                <div class="card-img-top">
+                                    <p th:text="${#strings.toString(statusItem.facilityStatus) ?: '대기중'}"
+                                       class="card-text">대기중</p>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">검사기</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <small th:text="${#strings.toString(statusItem.process) ?: '정지'}"
+                                           class="text-muted">정지</small>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
                     <!--  생산 완료 예정 -->
                     <div class="col">
                         <h3 class="east-sea-dokdo-regular  sub-title">생산 완료 예정</h3>
@@ -316,30 +542,10 @@
                                     </tr>
                                     </thead>
                                     <tbody class="main-tbody">
-                                    <tr class="main-tr">
-                                        <td class="main-td">1</td>
-                                        <td class="main-td">A3</td>
-                                        <td class="main-td">80</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">2</td>
-                                        <td class="main-td">A8</td>
-                                        <td class="main-td">200</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">3</td>
-                                        <td class="main-td">A1</td>
-                                        <td class="main-td">50</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">4</td>
-                                        <td class="main-td">A5</td>
-                                        <td class="main-td">120</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">5</td>
-                                        <td class="main-td">A2</td>
-                                        <td class="main-td">90</td>
+                                    <tr class="main-tr" th:each="data : ${expect}">
+                                        <td class="main-td" th:text="${data.orderId}"></td>
+                                        <td class="main-td" th:text="${data.process}"></td>
+                                        <td class="main-td" th:text="${data.semiProduct}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -356,50 +562,18 @@
                                 <table class="main-table">
                                     <thead>
                                     <tr class="main-tr">
-                                        <th class="main-th">번호</th>
-                                        <th class="main-th">발주처</th>
-                                        <th class="main-th">제품명</th>
-                                        <th class="main-th">수량</th>
-                                        <th class="main-th">수주일</th>
-                                        <th class="main-th">예상납기일</th>
-                                        <th class="main-th">공정상태</th>
-                                        <th class="main-th">긴급여부</th>
-                                        <th class="main-th">출하상태</th>
+                                        <th class="main-th">작업번호</th>
+                                        <th class="main-th">투입원자재</th>
+                                        <th class="main-th">공정</th>
+                                        <th class="main-th">공정코드</th>
                                     </tr>
                                     </thead>
                                     <tbody class="main-tbody">
-                                    <tr class="main-tr">
-                                        <td class="main-td">1</td>
-                                        <td class="main-td">ABC Corp</td>
-                                        <td class="main-td">Widget A</td>
-                                        <td class="main-td">100</td>
-                                        <td class="main-td">2024-06-01</td>
-                                        <td class="main-td">2024-06-10</td>
-                                        <td class="main-td">생산중</td>
-                                        <td class="main-td">아니오</td>
-                                        <td class="main-td">대기중</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">2</td>
-                                        <td class="main-td">XYZ Ltd</td>
-                                        <td class="main-td">Gadget B</td>
-                                        <td class="main-td">200</td>
-                                        <td class="main-td">2024-06-05</td>
-                                        <td class="main-td">2024-06-15</td>
-                                        <td class="main-td">완료</td>
-                                        <td class="main-td">예</td>
-                                        <td class="main-td">출하완료</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">3</td>
-                                        <td class="main-td">LMN Inc</td>
-                                        <td class="main-td">Device C</td>
-                                        <td class="main-td">150</td>
-                                        <td class="main-td">2024-06-03</td>
-                                        <td class="main-td">2024-06-12</td>
-                                        <td class="main-td">준비중</td>
-                                        <td class="main-td">아니오</td>
-                                        <td class="main-td">대기중</td>
+                                    <tr class="main-tr" th:each="data2:${capa}">
+                                        <td class="main-td" th:text="${data2.workPlanId}">1</td>
+                                        <td class="main-td" th:text="${data2.rawsCode}">1</td>
+                                        <td class="main-td" th:text="${#strings.toString(data2.facility)}">1</td>
+                                        <td class="main-td" th:text="${#strings.toString(data2.process)}">1</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -430,50 +604,18 @@
                                 <table class="main-table">
                                     <thead>
                                     <tr class="main-tr">
-                                        <th class="main-th">번호</th>
                                         <th class="main-th">발주처</th>
-                                        <th class="main-th">제품명</th>
-                                        <th class="main-th">수량</th>
-                                        <th class="main-th">수주일</th>
-                                        <th class="main-th">예상납기일</th>
-                                        <th class="main-th">공정상태</th>
-                                        <th class="main-th">긴급여부</th>
-                                        <th class="main-th">출하상태</th>
+                                        <th class="main-th">제품</th>
+                                        <th class="main-th">남은재고</th>
+                                        <th class="main-th">예상 입고일</th>
                                     </tr>
                                     </thead>
                                     <tbody class="main-tbody">
-                                    <tr class="main-tr">
-                                        <td class="main-td">1</td>
-                                        <td class="main-td">ABC Corp</td>
-                                        <td class="main-td">Widget A</td>
-                                        <td class="main-td">100</td>
-                                        <td class="main-td">2024-06-01</td>
-                                        <td class="main-td">2024-06-10</td>
-                                        <td class="main-td">생산중</td>
-                                        <td class="main-td">아니오</td>
-                                        <td class="main-td">대기중</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">2</td>
-                                        <td class="main-td">XYZ Ltd</td>
-                                        <td class="main-td">Gadget B</td>
-                                        <td class="main-td">200</td>
-                                        <td class="main-td">2024-06-05</td>
-                                        <td class="main-td">2024-06-15</td>
-                                        <td class="main-td">완료</td>
-                                        <td class="main-td">예</td>
-                                        <td class="main-td">출하완료</td>
-                                    </tr>
-                                    <tr class="main-tr">
-                                        <td class="main-td">3</td>
-                                        <td class="main-td">LMN Inc</td>
-                                        <td class="main-td">Device C</td>
-                                        <td class="main-td">150</td>
-                                        <td class="main-td">2024-06-03</td>
-                                        <td class="main-td">2024-06-12</td>
-                                        <td class="main-td">준비중</td>
-                                        <td class="main-td">아니오</td>
-                                        <td class="main-td">대기중</td>
+                                    <tr class="main-tr" th:each="data3 : ${rawsOrder}">
+                                        <td class="main-td" th:text="${data3.partnerName}">1</td>
+                                        <td class="main-td" th:text="${data3.product}">1</td>
+                                        <td class="main-td" th:text="${data3.remainingQuantity}">1</td>
+                                        <td class="main-td" th:text="${data3.expectedImportDate}">1</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -488,316 +630,4 @@
     </div>
 </div>
 
-
-
-<!-- ===============================================-->
-<!--    JavaScripts-->
-<!-- ===============================================-->
-<!-- 사용자 스크립트 추가 -->
-<th:block layout:fragment="script">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet"> <!--   title   -->
-
-
-    <!-- chart.js 설치 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '일일생산량'
-                        }
-                    }
-                },
-            };
-
-            const myChart = new Chart(
-                document.getElementById('myChart'),
-                config
-            );
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '월간 생산량'
-                        }
-                    }
-                },
-            };
-            const myChart = new Chart(
-                document.getElementById('myChart2'),
-                config
-            );
-        });
-
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '모든 설비 진행 현황'
-                        }
-                    }
-                },
-            };
-            const myChart = new Chart(
-                document.getElementById('myChart3'),
-                config
-            );
-        });
-
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '생산 완료 예정'
-                        }
-                    }
-                },
-            };
-            const myChart = new Chart(
-                document.getElementById('myChart4'),
-                config
-            );
-        });
-
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '일일 제공 현황 및 공정별 capa'
-                        }
-                    }
-                },
-            };
-            const myChart = new Chart(
-                document.getElementById('myChart5'),
-                config
-            );
-        });
-
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '완제품 재고 보유한 현황'
-                        }
-                    }
-                },
-            };
-            const myChart = new Chart(
-                document.getElementById('myChart6'),
-                config
-            );
-        });
-
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const labels = ['양배추즙', '흑마늘즙', '석류스틱', '매실스틱'];
-            const data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '양',
-                        data: [500, 1000, 1500, 2000, 3000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        borderRadius: Number.MAX_VALUE,
-                        borderSkipped: false,
-                    }
-                ]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '원자재 보유 현황'
-                        }
-                    }
-                },
-            };
-            const myChart = new Chart(
-                document.getElementById('myChart7'),
-                config
-            );
-        });
-
-    </script>
-</th:block>
 </html>

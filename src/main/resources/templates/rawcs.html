@@ -28,6 +28,12 @@
             background-color: #c3dfd2;
             border-color: #ccc;
         }
+
+        #pagination {
+            bottom: 0;
+            text-align: center; /* 가운데 정렬 */
+            padding: 10px 0;
+        }
     </style>
     <link th:href="@{/css/jw.css}" type="text/css" rel="stylesheet" id="jw.css"/>
 </th:block>
@@ -58,11 +64,18 @@
                         type: 'bar',  // bar, line, pie, doughnut, radar 등등...
                         data: {
                             labels: labels,
-                            datasets: [{
-                                label: '현재 보유량',
-                                data: quantities,
-                                borderWidth: 1,
-                            }]
+                            datasets: [
+                                {
+                                    type: 'line',
+                                    label: '안전 재고량 적정선',
+                                    data: [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000],
+                                    borderWidth: 1,
+                                },
+                                {
+                                    label: '현재 보유량',
+                                    data: quantities,
+                                    borderWidth: 1,
+                                }]
                         },
                         options: {
                             scales: {
@@ -76,54 +89,34 @@
                 .catch(err => console.error('데이터 가져오기 오류:', err));
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-                            const page = 0; // 페이지 번호를 여기에 설정
-                            fetch(`/api/rawperiod/${page}`, {
-                                method: 'GET',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok ' + response.statusText);
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    const tbody = document.getElementById('period-records');
-                                    tbody.innerHTML = ''; // 기존 내용을 비웁니다.
+        // 폐기됨 버튼
+        function handleButtonClick(button) {
+            var rawsCode = button.getAttribute('data-rawscode');
+            console.log('Button clicked for rawsCode:', rawsCode); // 콘솔 로그 추가
 
-                                    data.forEach((item) => {
-                                        const row = document.createElement('tr');
+            // 버튼이 비활성화된 경우 처리
+            if (button.disabled) {
+                return; // 이미 비활성화된 버튼이므로 더 이상의 처리를 하지 않음
+            }
 
-                                        const codeCell = document.createElement('td');
-                                        codeCell.textContent = item.rawsCode; // 제품코드
-                                        row.appendChild(codeCell);
+            fetch(`/api/${rawsCode}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
 
-                                        const productCell = document.createElement('td');
-                                        productCell.textContent = item.product; // 제품명
-                                        row.appendChild(productCell);
+                }
+            })
+                .then(() => {
+                    button.innerHTML = '폐기됨';
+                    button.disabled = true;
+                    button.classList.add('disabled'); // 버튼을 비활성화된 모양으로 변경하는 클래스 추가
+                    window.location.href = '/api/rawperiod/0'
+                })
+                .catch(error => {
+                    console.error('Error importing data:', error);
+                });
+        }
 
-                                        const importDateCell = document.createElement('td');
-                                        importDateCell.textContent = item.importDate; // 입고일자
-                                        row.appendChild(importDateCell);
-
-                                        const deadlineCell = document.createElement('td');
-                                        deadlineCell.textContent = item.deadLine; // 사용기한
-                                        row.appendChild(deadlineCell);
-
-                                        const quantityCell = document.createElement('td');
-                                        quantityCell.textContent = item.quantity; // 수량
-                                        row.appendChild(quantityCell);
-
-                                        tbody.appendChild(row);
-                                    });
-                                })
-                                .catch(error => {
-                                    console.error('Error fetching data:', error);
-                                });
-                        });
 
     </script>
     <!-- Chart.js 라이브러리 추가 -->
@@ -156,71 +149,66 @@
                             <th scpoe="col">입고일자</th>
                             <th scope="col">사용기한</th>
                             <th scope="col">수량</th>
+                            <th scope="col">폐기버튼</th>
                         </tr>
                         </thead>
                         <tbody id="period-records">
-                        <!-- 데이터가 여기에 동적으로 추가될 것입니다. -->
+                        <tr th:each="raws : ${list}">
+                            <td th:text="${raws.rawsCode}"></td>
+                            <td th:text="${raws.product}"></td>
+                            <td th:text="${raws.importDate}"></td>
+                            <td th:text="${raws.deadLine}"></td>
+                            <td th:text="${raws.quantity}"></td>
+                            <td>
+                                <button class="jw-button2"
+                                        th:attr="data-rawscode=${raws.rawsCode}"
+                                        onclick="handleButtonClick(this)">폐기버튼
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
-                      <!--
-                          <tbody></tbody>
-                        <tr>
-                            <td>275437395487</td>
-                            <td>흑마늘</td>
-                            <td>2024-06-10</td>
-                            <td>700kg</td>
-                        </tr>
-                        <tr>
-                            <td>68954802</td>
-                            <td>양배추</td>
-                            <td>2024-06-12</td>
-                            <td>500kg</td>
-
-                        </tr>
-                        <tr>
-                            <td>379075890</td>
-                            <td>흑마늘</td>
-                            <td>2024-06-11</td>
-                            <td>1000kg</td>
-
-                        </tr>
-                        <tr>
-                            <td>28345095802</td>
-                            <td>석류</td>
-                            <td>2024-06-09</td>
-                            <td>300kg</td>
-
-                        </tr>
-                        <tr>
-                            <td>28345095802</td>
-                            <td>석류</td>
-                            <td>2024-06-09</td>
-                            <td>300kg</td>
-
-                        </tr>-->
 
                     </table>
                     <div class="empty-container2"></div>
 
-                    <!-------------
-               ---------------
-               ---------------
-               페이지네이션
-               ---------------
-               ---------------
-               -------------->
-
-
-                    <div id="pagination">
-                        <nav aria-label="...">
+                    <div class="jw-pagination" th:if="${totalPages > 1}">
+                        <nav aria-label="Page navigation">
                             <ul class="pagination">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">&raquo;</a>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                    th:classappend="${i} == ${currentPage} ? ' active'">
+                                    <a class="page-link" th:href="@{'/api/rawperiod/' + ${i}}"
+                                       th:text="${i + 1}"></a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="jw-pagination" th:if="${totalPages <= 1}">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? ' disabled'">
+                                    <a class="page-link" th:href="@{(${currentPage} - 1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" th:href="@{'/api/rawperiod/' + ${i}}">1</a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${currentPage + 1} >= ${totalPages} ? ' disabled'">
+                                    <a class="page-link" th:href="@{ (${currentPage} + 1)}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
                                 </li>
                             </ul>
                         </nav>

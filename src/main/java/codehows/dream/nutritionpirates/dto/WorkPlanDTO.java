@@ -1,7 +1,5 @@
 package codehows.dream.nutritionpirates.dto;
 
-import java.sql.Timestamp;
-
 import codehows.dream.nutritionpirates.constants.Facility;
 import codehows.dream.nutritionpirates.constants.Process;
 import codehows.dream.nutritionpirates.entity.WorkPlan;

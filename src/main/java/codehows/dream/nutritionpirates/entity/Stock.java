@@ -2,6 +2,7 @@ package codehows.dream.nutritionpirates.entity;
 
 import java.sql.Date;
 
+import codehows.dream.nutritionpirates.constants.ProductName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,7 +30,7 @@ public class Stock {
 	@Column(name = "stock_id")
 	private Long id;
 
-	@OneToOne(fetch =  FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "work_plan_id")
 	private WorkPlan workPlan;
 
@@ -42,8 +43,9 @@ public class Stock {
 	private Date exportDate;
 
 	private boolean isExport;
+	private ProductName productName;
 
-	public void updateIsExport (boolean isExport, Date exportDate) {
+	public void updateIsExport(boolean isExport, Date exportDate) {
 		this.isExport = isExport;
 		this.exportDate = exportDate;
 	}
