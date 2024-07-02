@@ -10,6 +10,46 @@
 </th:block>
 
 
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var canvas = document.getElementById('doughnutChartCanvas');
+            var ctx = canvas.getContext('2d');
+
+            var total = 100;
+            var used = 70;
+            var remaining = total - used;
+
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    /*labels: ['진행도'],*/
+                    datasets: [{
+                        /*label: '첫 번째 데이터셋','두 번째 데이터 셋',*/
+                        data: [used, remaining],
+                        backgroundColor:
+                            ['rgba(157,157,157,0.2)',
+                                'rgb(111,150,62,0.2)'],
+                        borderColor: 'rgb(0,0,0,0.2)',
+                        borderWidth: 1,
+                        /* borderRadius: 30,*/
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        });
+
+    </script>
+
+    <!-- Chart.js 및 Datalabels 플러그인 CDN 링크 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</th:block>
+
+
 
 
 <div layout:fragment="content">
@@ -39,7 +79,227 @@
                     <div class="col">
                         <h3 class="east-sea-dokdo-regular  sub-title">모든 설비 진행 현황</h3>
                         <div style="  display: flex; justify-content: center; align-items: center;">
-                            <canvas id="myChart3"></canvas>
+                            <div id="main-content">
+                                <div class="main-container" id="main-container">
+                                    <label class="main-label">각 설비 실시간 상태 현황</label>
+                                    <div class="container" style="padding: 20px;  text-align: center; /* 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label class="main-label">포장기</label>
+                                                <div class="row">
+                                                    <div class="card-group" id="pojang">
+                                                        <div class="col-md-6">
+                                                            <div class="card rounded-3" data-bs-toggle="modal"
+                                                                 data-bs-target="#productionamount" data-title="즙 포장기1">
+                                                                <div class="card-img-top">
+                                                                    <p class="card-text">가동중</p>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">즙 포장기1</h5>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <small class="text-muted">진행도 50%</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card rounded-3" data-bs-toggle="modal"
+                                                                 data-bs-target="#productionamount" data-title="즙 포장기2">
+                                                                <div class="card-img-top">
+                                                                    <p class="card-text">가동중</p>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">즙 포장기2</h5>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <small class="text-muted">진행도 80%</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="card rounded-3" data-bs-toggle="modal"
+                                                                 data-bs-target="#productionamount" data-title="스틱 포장기1">
+                                                                <div class="card-img-top">
+                                                                    <p class="card-text">비가동중</p>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">스틱 포장기1</h5>
+                                                                </div>
+
+                                                                <div class="card-footer">
+                                                                    <small class="text-muted">-</small>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card rounded-3" data-bs-toggle="modal"
+                                                                 data-bs-target="#productionamount" data-title="즙 포장기2">
+                                                                <div class="card-img-top">
+                                                                    <p class="card-text">가동중</p>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">스틱 포장기2</h5>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <small class="text-muted">진행도 99%</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="main-label">추출기</label>
+                                                <div class="card-group" id="chuchul">
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="추출기1">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">추출기1</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 70%</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="추출기2">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">추출기2</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 70%</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="main-label">살균기</label>
+                                                <div class="card-group" id="salgyun">
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="살균기1">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">살균기1</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 58%</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="살균기2">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">살균기2</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 80%</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="main-label">혼합기</label>
+                                                <div class="card-group" id="honhab">
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="혼합기">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">혼합기</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 90%</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="main-label">여과기</label>
+                                                <div class="card-group" id="yeogyoa">
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="여과기">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">비가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">여과기</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 0%</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="main-label">BOX포장기</label>
+                                                <div class="card-group" id="boxPojang">
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="BOX포장기">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">BOX포장기</h5>
+
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted"> 진행도 75%</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="main-label">금속검출기</label>
+                                                <div class="card-group" id="gumsa">
+                                                    <div class="card rounded-3" data-bs-toggle="modal" data-bs-target="#productionamount"
+                                                         data-title="금속 검출기">
+                                                        <div class="card-img-top">
+                                                            <p class="card-text">가동중</p>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">금속검출기</h5>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <small class="text-muted">진행도 63%</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="modal" id="productionamount" tabindex="-1" >
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">카드 제목</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="chart-card" id="div1">
+                                                                <canvas id="doughnutChartCanvas"></canvas>
+                                                            </div>
+                                                            <div class="chart-card" id="div2">
+                                                                <p>내용</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!--  생산 완료 예정 -->

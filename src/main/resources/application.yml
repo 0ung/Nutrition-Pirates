@@ -11,16 +11,16 @@ spring:
     name: MES
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://172.20.21.99:3306/mes?serverTime=UTC"
-    username: hero
-    password: 1234321
+    url: "jdbc:mysql://localhost:3306/mes?serverTime=UTC"
+    username: root
+    password: 1234
   jpa:
     properties:
       hibernate:
         show_sql: true
         format_sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
 #server:
