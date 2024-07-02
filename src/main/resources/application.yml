@@ -11,9 +11,9 @@ spring:
     name: MES
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://222.119.100.89:3382/nutritionpriates?serverTime=UTC"
-    username: nutritionpriates
-    password: codehows213
+    url: 
+    username: 
+    password: 
   jpa:
     properties:
       hibernate:
